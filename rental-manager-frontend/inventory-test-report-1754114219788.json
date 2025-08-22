@@ -1,0 +1,44 @@
+{
+  "testSuite": "Inventory Page Test",
+  "timestamp": "2025-08-02T05:56:59.980Z",
+  "url": "http://localhost:3000/inventory",
+  "apiEndpoint": "http://localhost:8000/api/inventory/stocks_info_all_items_brief",
+  "summary": {
+    "total": 6,
+    "passed": 1,
+    "failed": 5,
+    "successRate": "17%"
+  },
+  "apiCalls": [],
+  "testDetails": [
+    {
+      "test": "Page Navigation",
+      "status": "PASS"
+    },
+    {
+      "test": "API Integration",
+      "status": "FAIL",
+      "error": "Waiting for selector `table tbody tr` failed: Waiting failed: 15000ms exceeded"
+    },
+    {
+      "test": "Data Display",
+      "status": "FAIL",
+      "error": "No items found"
+    },
+    {
+      "test": "Search Functionality",
+      "status": "FAIL",
+      "error": "Search input not found"
+    },
+    {
+      "test": "Sorting Functionality",
+      "status": "FAIL",
+      "error": "Sort buttons not found"
+    },
+    {
+      "test": "Summary Statistics",
+      "status": "FAIL",
+      "details": {}
+    }
+  ]
+}

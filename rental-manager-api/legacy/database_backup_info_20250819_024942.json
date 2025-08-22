@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-08-18T21:19:42.669240+00:00",
+  "tables": {
+    "users": 3,
+    "brands": 2,
+    "categories": 2,
+    "locations": 1,
+    "units_of_measurement": 1,
+    "items": 3,
+    "customers": 0,
+    "suppliers": 1,
+    "stock_levels": 2,
+    "transaction_headers": 48
+  }
+}

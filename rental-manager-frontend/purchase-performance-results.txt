@@ -1,0 +1,207 @@
+
+PURCHASE CRUD PERFORMANCE TEST RESULTS (FAILED)
+===============================================
+Execution Time: 2025-07-19T13:44:27.075Z
+Total Duration: 2.89 seconds
+Status: FAILED
+
+ERROR OUTPUT:
+
+> rental-frontend@0.1.0 test
+> jest tests/purchase-crud-performance.test.js --verbose --runInBand --detectOpenHandles --forceExit
+
+  console.log
+    Setting up Puppeteer tests...
+
+      at Object.<anonymous> (tests/setup.js:2:9)
+
+  console.log
+    Backend API expected at: http://localhost:8000
+
+      at Object.<anonymous> (tests/setup.js:3:9)
+
+  console.log
+    Frontend expected at: http://localhost:3000
+
+      at Object.<anonymous> (tests/setup.js:4:9)
+
+  console.log
+    🚀 Initializing Purchase CRUD Performance Tests...
+
+      at Object.log (tests/purchase-crud-performance.test.js:26:13)
+
+  console.error
+    ❌ Authentication failed: All authentication endpoints failed
+
+      126 |       throw new Error('All authentication endpoints failed');
+      127 |     } catch (error) {
+    > 128 |       console.error('❌ Authentication failed:', error.message);
+          |               ^
+      129 |       throw error;
+      130 |     }
+      131 |   }
+
+      at PurchaseApiClient.error [as authenticate] (tests/helpers/purchase-api-client.js:128:15)
+      at Object.<anonymous> (tests/purchase-crud-performance.test.js:36:7)
+
+  console.warn
+    ⚠️  Authentication failed, proceeding without auth: All authentication endpoints failed
+
+      37 |       console.log('✅ API authentication successful');
+      38 |     } catch (error) {
+    > 39 |       console.warn('⚠️  Authentication failed, proceeding without auth:', error.message);
+         |               ^
+      40 |     }
+      41 |
+      42 |     // Initialize test data factory
+
+      at Object.warn (tests/purchase-crud-performance.test.js:39:15)
+
+  console.warn
+    ⚠️  Test factory initialization failed: Failed to initialize test factory: apiClient.get is not a function
+
+      47 |       console.log('✅ Test factory initialized successfully');
+      48 |     } catch (error) {
+    > 49 |       console.warn('⚠️  Test factory initialization failed:', error.message);
+         |               ^
+      50 |       
+      51 |       // Try to create fallback data
+      52 |       try {
+
+      at Object.warn (tests/purchase-crud-performance.test.js:49:15)
+
+  console.error
+    ❌ Failed to create fallback data: apiClient.post is not a function
+
+      56 |         console.log('✅ Fallback test data created');
+      57 |       } catch (fallbackError) {
+    > 58 |         console.error('❌ Failed to create fallback data:', fallbackError.message);
+         |                 ^
+      59 |         throw new Error('Cannot proceed without test data');
+      60 |       }
+      61 |     }
+
+      at Object.error (tests/purchase-crud-performance.test.js:58:17)
+
+  console.log
+    
+    🧹 Cleaning up test data...
+
+      at Object.log (tests/purchase-crud-performance.test.js:71:13)
+
+  console.log
+    🏁 Performance tests completed
+
+      at Object.log (tests/purchase-crud-performance.test.js:87:13)
+
+
+
+STDERR:
+FAIL tests/purchase-crud-performance.test.js
+  Purchase CRUD Performance Tests
+    CREATE Performance Tests
+      ✕ should create 100 purchases and measure performance (1 ms)
+    READ Performance Tests
+      ✕ should perform 100 read operations and measure performance
+    UPDATE Performance Tests
+      ✕ should perform 50 update operations and measure performance
+    DELETE Performance Tests
+      ✕ should perform 100 delete operations and measure performance
+    Mixed Workload Performance Tests
+      ✕ should perform mixed CRUD operations and measure overall system performance
+    Performance Analysis Summary
+      ✕ should generate comprehensive performance analysis
+
+  ● Purchase CRUD Performance Tests › CREATE Performance Tests › should create 100 purchases and measure performance
+
+    Cannot proceed without test data
+
+      57 |       } catch (fallbackError) {
+      58 |         console.error('❌ Failed to create fallback data:', fallbackError.message);
+    > 59 |         throw new Error('Cannot proceed without test data');
+         |               ^
+      60 |       }
+      61 |     }
+      62 |
+
+      at Object.<anonymous> (tests/purchase-crud-performance.test.js:59:15)
+
+  ● Purchase CRUD Performance Tests › READ Performance Tests › should perform 100 read operations and measure performance
+
+    Cannot proceed without test data
+
+      57 |       } catch (fallbackError) {
+      58 |         console.error('❌ Failed to create fallback data:', fallbackError.message);
+    > 59 |         throw new Error('Cannot proceed without test data');
+         |               ^
+      60 |       }
+      61 |     }
+      62 |
+
+      at Object.<anonymous> (tests/purchase-crud-performance.test.js:59:15)
+
+  ● Purchase CRUD Performance Tests › UPDATE Performance Tests › should perform 50 update operations and measure performance
+
+    Cannot proceed without test data
+
+      57 |       } catch (fallbackError) {
+      58 |         console.error('❌ Failed to create fallback data:', fallbackError.message);
+    > 59 |         throw new Error('Cannot proceed without test data');
+         |               ^
+      60 |       }
+      61 |     }
+      62 |
+
+      at Object.<anonymous> (tests/purchase-crud-performance.test.js:59:15)
+
+  ● Purchase CRUD Performance Tests › DELETE Performance Tests › should perform 100 delete operations and measure performance
+
+    Cannot proceed without test data
+
+      57 |       } catch (fallbackError) {
+      58 |         console.error('❌ Failed to create fallback data:', fallbackError.message);
+    > 59 |         throw new Error('Cannot proceed without test data');
+         |               ^
+      60 |       }
+      61 |     }
+      62 |
+
+      at Object.<anonymous> (tests/purchase-crud-performance.test.js:59:15)
+
+  ● Purchase CRUD Performance Tests › Mixed Workload Performance Tests › should perform mixed CRUD operations and measure overall system performance
+
+    Cannot proceed without test data
+
+      57 |       } catch (fallbackError) {
+      58 |         console.error('❌ Failed to create fallback data:', fallbackError.message);
+    > 59 |         throw new Error('Cannot proceed without test data');
+         |               ^
+      60 |       }
+      61 |     }
+      62 |
+
+      at Object.<anonymous> (tests/purchase-crud-performance.test.js:59:15)
+
+  ● Purchase CRUD Performance Tests › Performance Analysis Summary › should generate comprehensive performance analysis
+
+    Cannot proceed without test data
+
+      57 |       } catch (fallbackError) {
+      58 |         console.error('❌ Failed to create fallback data:', fallbackError.message);
+    > 59 |         throw new Error('Cannot proceed without test data');
+         |               ^
+      60 |       }
+      61 |     }
+      62 |
+
+      at Object.<anonymous> (tests/purchase-crud-performance.test.js:59:15)
+
+Test Suites: 1 failed, 1 total
+Tests:       6 failed, 6 total
+Snapshots:   0 total
+Time:        0.526 s
+Ran all test suites matching tests/purchase-crud-performance.test.js.
+
+
+===============================================
+Test failed at: 2025-07-19T13:44:27.077Z

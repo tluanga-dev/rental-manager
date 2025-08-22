@@ -1,0 +1,316 @@
+{
+  "timestamp": "2025-07-20T05:56:57.949Z",
+  "totalBugs": 16,
+  "bugsBySeverity": {
+    "error": 9,
+    "warning": 7,
+    "medium": 0
+  },
+  "bugs": [
+    {
+      "id": "api-rental-analytics",
+      "description": "Rental Analytics API failed: 404",
+      "severity": "warning",
+      "timestamp": "2025-07-20T05:56:32.515Z",
+      "details": {
+        "endpoint": "/api/analytics/rentals/dashboard",
+        "status": 404,
+        "method": "GET"
+      }
+    },
+    {
+      "id": "api-customers-list",
+      "description": "Customers List API failed: 422",
+      "severity": "warning",
+      "timestamp": "2025-07-20T05:56:32.622Z",
+      "details": {
+        "endpoint": "/api/customers/customers/",
+        "status": 422,
+        "method": "GET"
+      }
+    },
+    {
+      "id": "api-locations-list",
+      "description": "Locations List API failed: 422",
+      "severity": "warning",
+      "timestamp": "2025-07-20T05:56:32.631Z",
+      "details": {
+        "endpoint": "/api/master-data/locations/locations/",
+        "status": 422,
+        "method": "GET"
+      }
+    },
+    {
+      "id": "console-error",
+      "description": "Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "severity": "error",
+      "timestamp": "2025-07-20T05:56:44.804Z",
+      "details": {}
+    },
+    {
+      "id": "console-error",
+      "description": "Console Error: Failed to fetch rental analytics: JSHandle@object",
+      "severity": "error",
+      "timestamp": "2025-07-20T05:56:44.808Z",
+      "details": {}
+    },
+    {
+      "id": "console-error",
+      "description": "Console Error: Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+      "severity": "error",
+      "timestamp": "2025-07-20T05:56:44.808Z",
+      "details": {}
+    },
+    {
+      "id": "console-error",
+      "description": "Console Error: Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+      "severity": "error",
+      "timestamp": "2025-07-20T05:56:45.825Z",
+      "details": {}
+    },
+    {
+      "id": "console-error",
+      "description": "Console Error: Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+      "severity": "error",
+      "timestamp": "2025-07-20T05:56:47.848Z",
+      "details": {}
+    },
+    {
+      "id": "console-error",
+      "description": "Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "severity": "error",
+      "timestamp": "2025-07-20T05:56:50.314Z",
+      "details": {}
+    },
+    {
+      "id": "console-error",
+      "description": "Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "severity": "error",
+      "timestamp": "2025-07-20T05:56:51.619Z",
+      "details": {}
+    },
+    {
+      "id": "request-failed",
+      "description": "Failed Request: http://localhost:3000/rentals/create?_rsc=kvyph - net::ERR_ABORTED",
+      "severity": "warning",
+      "timestamp": "2025-07-20T05:56:51.700Z",
+      "details": {}
+    },
+    {
+      "id": "console-error",
+      "description": "Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "severity": "error",
+      "timestamp": "2025-07-20T05:56:51.706Z",
+      "details": {}
+    },
+    {
+      "id": "rental-creation-route-error",
+      "description": "Error accessing rental creation route /rentals/create: Protocol error (DOM.resolveNode): Node with given id does not belong to the document",
+      "severity": "warning",
+      "timestamp": "2025-07-20T05:56:51.706Z",
+      "details": {
+        "route": "/rentals/create",
+        "error": "Protocol error (DOM.resolveNode): Node with given id does not belong to the document"
+      }
+    },
+    {
+      "id": "request-failed",
+      "description": "Failed Request: http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_tanstack_query-devtools_build_DevtoolsComponent_HH7B3BHX_js.js - net::ERR_ABORTED",
+      "severity": "warning",
+      "timestamp": "2025-07-20T05:56:52.041Z",
+      "details": {}
+    },
+    {
+      "id": "item-selection-error",
+      "description": "Error testing item selection: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'input[placeholder*=\"item\"], button:has-text(\"Add Item\"), button:has-text(\"Add item\"), [class*=\"add-item\"]' is not a valid selector.",
+      "severity": "warning",
+      "timestamp": "2025-07-20T05:56:57.868Z",
+      "details": {
+        "route": "/rentals/create-compact",
+        "error": "SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'input[placeholder*=\"item\"], button:has-text(\"Add Item\"), button:has-text(\"Add item\"), [class*=\"add-item\"]' is not a valid selector."
+      }
+    },
+    {
+      "id": "rental-api-creation-failed",
+      "description": "Rental creation API failed: 500",
+      "severity": "error",
+      "timestamp": "2025-07-20T05:56:57.949Z",
+      "details": {
+        "status": 500,
+        "error": "{\"detail\":\"Internal server error: 1 validation error for NewRentalResponse\\ntransaction_id\\n  UUID input should be a string, bytes or UUID object [type=uuid_type, input_value=None, input_type=NoneType]\\n    For further information visit https://errors.pydantic.dev/2.5/v/uuid_type\"}",
+        "payload": {
+          "transaction_date": "2025-07-20",
+          "customer_id": "f3102baa-73b6-4e6f-b20f-1308a5563f80",
+          "location_id": "245bea95-c842-4066-9997-49e08abb0be0",
+          "payment_method": "CASH",
+          "notes": "Puppeteer bug test rental",
+          "items": [
+            {
+              "item_id": "82d61336-dd89-4e9b-8dbe-89abbc564f01",
+              "quantity": 1,
+              "rental_period_value": 7,
+              "rental_start_date": "2025-07-20",
+              "rental_end_date": "2025-07-27"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "summary": {
+    "criticalIssues": [
+      {
+        "id": "console-error",
+        "description": "Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "severity": "error",
+        "timestamp": "2025-07-20T05:56:44.804Z",
+        "details": {}
+      },
+      {
+        "id": "console-error",
+        "description": "Console Error: Failed to fetch rental analytics: JSHandle@object",
+        "severity": "error",
+        "timestamp": "2025-07-20T05:56:44.808Z",
+        "details": {}
+      },
+      {
+        "id": "console-error",
+        "description": "Console Error: Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+        "severity": "error",
+        "timestamp": "2025-07-20T05:56:44.808Z",
+        "details": {}
+      },
+      {
+        "id": "console-error",
+        "description": "Console Error: Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+        "severity": "error",
+        "timestamp": "2025-07-20T05:56:45.825Z",
+        "details": {}
+      },
+      {
+        "id": "console-error",
+        "description": "Console Error: Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+        "severity": "error",
+        "timestamp": "2025-07-20T05:56:47.848Z",
+        "details": {}
+      },
+      {
+        "id": "console-error",
+        "description": "Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "severity": "error",
+        "timestamp": "2025-07-20T05:56:50.314Z",
+        "details": {}
+      },
+      {
+        "id": "console-error",
+        "description": "Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "severity": "error",
+        "timestamp": "2025-07-20T05:56:51.619Z",
+        "details": {}
+      },
+      {
+        "id": "console-error",
+        "description": "Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "severity": "error",
+        "timestamp": "2025-07-20T05:56:51.706Z",
+        "details": {}
+      },
+      {
+        "id": "rental-api-creation-failed",
+        "description": "Rental creation API failed: 500",
+        "severity": "error",
+        "timestamp": "2025-07-20T05:56:57.949Z",
+        "details": {
+          "status": 500,
+          "error": "{\"detail\":\"Internal server error: 1 validation error for NewRentalResponse\\ntransaction_id\\n  UUID input should be a string, bytes or UUID object [type=uuid_type, input_value=None, input_type=NoneType]\\n    For further information visit https://errors.pydantic.dev/2.5/v/uuid_type\"}",
+          "payload": {
+            "transaction_date": "2025-07-20",
+            "customer_id": "f3102baa-73b6-4e6f-b20f-1308a5563f80",
+            "location_id": "245bea95-c842-4066-9997-49e08abb0be0",
+            "payment_method": "CASH",
+            "notes": "Puppeteer bug test rental",
+            "items": [
+              {
+                "item_id": "82d61336-dd89-4e9b-8dbe-89abbc564f01",
+                "quantity": 1,
+                "rental_period_value": 7,
+                "rental_start_date": "2025-07-20",
+                "rental_end_date": "2025-07-27"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "warnings": [
+      {
+        "id": "api-rental-analytics",
+        "description": "Rental Analytics API failed: 404",
+        "severity": "warning",
+        "timestamp": "2025-07-20T05:56:32.515Z",
+        "details": {
+          "endpoint": "/api/analytics/rentals/dashboard",
+          "status": 404,
+          "method": "GET"
+        }
+      },
+      {
+        "id": "api-customers-list",
+        "description": "Customers List API failed: 422",
+        "severity": "warning",
+        "timestamp": "2025-07-20T05:56:32.622Z",
+        "details": {
+          "endpoint": "/api/customers/customers/",
+          "status": 422,
+          "method": "GET"
+        }
+      },
+      {
+        "id": "api-locations-list",
+        "description": "Locations List API failed: 422",
+        "severity": "warning",
+        "timestamp": "2025-07-20T05:56:32.631Z",
+        "details": {
+          "endpoint": "/api/master-data/locations/locations/",
+          "status": 422,
+          "method": "GET"
+        }
+      },
+      {
+        "id": "request-failed",
+        "description": "Failed Request: http://localhost:3000/rentals/create?_rsc=kvyph - net::ERR_ABORTED",
+        "severity": "warning",
+        "timestamp": "2025-07-20T05:56:51.700Z",
+        "details": {}
+      },
+      {
+        "id": "rental-creation-route-error",
+        "description": "Error accessing rental creation route /rentals/create: Protocol error (DOM.resolveNode): Node with given id does not belong to the document",
+        "severity": "warning",
+        "timestamp": "2025-07-20T05:56:51.706Z",
+        "details": {
+          "route": "/rentals/create",
+          "error": "Protocol error (DOM.resolveNode): Node with given id does not belong to the document"
+        }
+      },
+      {
+        "id": "request-failed",
+        "description": "Failed Request: http://localhost:3000/_next/static/chunks/_app-pages-browser_node_modules_tanstack_query-devtools_build_DevtoolsComponent_HH7B3BHX_js.js - net::ERR_ABORTED",
+        "severity": "warning",
+        "timestamp": "2025-07-20T05:56:52.041Z",
+        "details": {}
+      },
+      {
+        "id": "item-selection-error",
+        "description": "Error testing item selection: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'input[placeholder*=\"item\"], button:has-text(\"Add Item\"), button:has-text(\"Add item\"), [class*=\"add-item\"]' is not a valid selector.",
+        "severity": "warning",
+        "timestamp": "2025-07-20T05:56:57.868Z",
+        "details": {
+          "route": "/rentals/create-compact",
+          "error": "SyntaxError: Failed to execute 'querySelectorAll' on 'Document': 'input[placeholder*=\"item\"], button:has-text(\"Add Item\"), button:has-text(\"Add item\"), [class*=\"add-item\"]' is not a valid selector."
+        }
+      }
+    ],
+    "improvements": []
+  }
+}

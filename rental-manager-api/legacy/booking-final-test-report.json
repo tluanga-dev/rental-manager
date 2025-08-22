@@ -1,0 +1,59 @@
+{
+  "timestamp": "2025-08-09T16:10:27.941Z",
+  "url": "https://www.omomrentals.shop",
+  "tests": [
+    {
+      "test": "Authentication",
+      "success": true,
+      "message": "Successfully authenticated as admin",
+      "details": {
+        "username": "admin",
+        "hasToken": true
+      },
+      "timestamp": "2025-08-09T16:10:29.007Z"
+    },
+    {
+      "test": "Booking List Endpoint",
+      "success": false,
+      "message": "Failed with status: 500",
+      "details": {},
+      "timestamp": "2025-08-09T16:10:29.284Z"
+    },
+    {
+      "test": "Test Data Fetch",
+      "success": false,
+      "message": "Failed to fetch test data",
+      "details": {},
+      "timestamp": "2025-08-09T16:10:30.233Z"
+    },
+    {
+      "test": "Login Page Load",
+      "success": true,
+      "message": "Login page loaded successfully",
+      "details": {
+        "title": "Rental Manager"
+      },
+      "timestamp": "2025-08-09T16:10:35.737Z"
+    },
+    {
+      "test": "UI Login",
+      "success": true,
+      "message": "Successfully logged in",
+      "details": {
+        "redirectedTo": "https://www.omomrentals.shop/"
+      },
+      "timestamp": "2025-08-09T16:10:38.612Z"
+    },
+    {
+      "test": "UI Testing",
+      "success": false,
+      "message": "page.waitForTimeout is not a function",
+      "details": {},
+      "timestamp": "2025-08-09T16:10:41.574Z"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 3
+  }
+}

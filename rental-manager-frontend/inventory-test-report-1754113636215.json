@@ -1,0 +1,44 @@
+{
+  "testSuite": "Inventory Page Test",
+  "timestamp": "2025-08-02T05:47:16.461Z",
+  "url": "http://localhost:3000/inventory",
+  "apiEndpoint": "http://localhost:8000/api/inventory/stocks_info_all_items_brief",
+  "summary": {
+    "total": 6,
+    "passed": 0,
+    "failed": 6,
+    "successRate": "0%"
+  },
+  "apiCalls": [],
+  "testDetails": [
+    {
+      "test": "Page Navigation",
+      "status": "FAIL"
+    },
+    {
+      "test": "API Integration",
+      "status": "FAIL",
+      "error": "Waiting for selector `table tbody tr` failed: Waiting failed: 15000ms exceeded"
+    },
+    {
+      "test": "Data Display",
+      "status": "FAIL",
+      "error": "No items found"
+    },
+    {
+      "test": "Search Functionality",
+      "status": "FAIL",
+      "error": "searchInput.clear is not a function"
+    },
+    {
+      "test": "Sorting Functionality",
+      "status": "FAIL",
+      "error": "SyntaxError: Failed to execute 'querySelector' on 'Document': 'button:has-text(\"Item Name\"), th button' is not a valid selector."
+    },
+    {
+      "test": "Summary Statistics",
+      "status": "FAIL",
+      "details": {}
+    }
+  ]
+}

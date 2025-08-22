@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Rental Manager Development",
+      "Group": "Development",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "rental_dev",
+      "Username": "rental_user",
+      "Password": "rental_pass_dev_2024",
+      "SSLMode": "prefer",
+      "Comment": "Rental Manager Development Database"
+    }
+  }
+}

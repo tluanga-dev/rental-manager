@@ -1,0 +1,185 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: rental_postgres
+    environment:
+      POSTGRES_DB: rental_management
+      POSTGRES_USER: rental_user
+      POSTGRES_PASSWORD: rental_secure_password_2024
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rental_user -d rental_management"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - rental_network
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: rental_redis
+    command: redis-server --appendonly yes --requirepass rental_redis_password_2024
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rental_network
+    restart: unless-stopped
+
+  # Backend Application
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rental_backend
+    environment:
+      # Database Configuration
+      DATABASE_URL: postgresql+asyncpg://rental_user:rental_secure_password_2024@postgres:5432/rental_management
+      POSTGRES_USER: rental_user
+      POSTGRES_PASSWORD: rental_secure_password_2024
+      POSTGRES_DB: rental_management
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_ECHO: false
+      DATABASE_POOL_SIZE: 20
+      DATABASE_MAX_OVERFLOW: 30
+      
+      # Redis Configuration
+      REDIS_URL: redis://:rental_redis_password_2024@redis:6379
+      CACHE_ENABLED: true
+      
+      # Security Configuration
+      SECRET_KEY: docker-test-secret-key-change-in-production-f8e7d6c5b4a39281
+      JWT_ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      REFRESH_TOKEN_EXPIRE_DAYS: 7
+      PASSWORD_MIN_LENGTH: 8
+      PASSWORD_BCRYPT_ROUNDS: 12
+      
+      # Server Configuration
+      HOST: 0.0.0.0
+      PORT: 8000
+      DEBUG: false
+      LOG_LEVEL: info
+      WORKERS: 4
+      TIMEOUT: 120
+      GRACEFUL_TIMEOUT: 30
+      KEEPALIVE: 5
+      MAX_REQUESTS: 1000
+      MAX_REQUESTS_JITTER: 50
+      
+      # Admin User Configuration
+      ADMIN_USERNAME: admin
+      ADMIN_EMAIL: admin@rentalmanager.local
+      ADMIN_PASSWORD: AdminSecure@Password123!
+      ADMIN_FULL_NAME: System Administrator
+      
+      # CORS Configuration
+      USE_WHITELIST_CONFIG: true
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:8000,http://127.0.0.1:3000,http://127.0.0.1:8000
+      
+      # Application Configuration
+      DEFAULT_PAGE_SIZE: 20
+      MAX_PAGE_SIZE: 100
+      MAX_UPLOAD_SIZE: 10485760
+      UPLOAD_DIRECTORY: /app/uploads
+      
+      # Production Flags
+      SEED_MASTER_DATA: true
+      ENVIRONMENT: docker
+      
+    volumes:
+      - backend_uploads:/app/uploads
+      - backend_logs:/app/logs
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - rental_network
+    restart: unless-stopped
+
+  # Database Management (pgAdmin)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: rental_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@rentalmanager.local
+      PGADMIN_DEFAULT_PASSWORD: pgadmin_password_2024
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - rental_network
+    restart: unless-stopped
+    profiles:
+      - admin
+
+  # Redis Management (RedisInsight)
+  redis-insight:
+    image: redislabs/redisinsight:latest
+    container_name: rental_redis_insight
+    ports:
+      - "8001:8001"
+    volumes:
+      - redis_insight_data:/db
+    depends_on:
+      - redis
+    networks:
+      - rental_network
+    restart: unless-stopped
+    profiles:
+      - admin
+
+# Named Volumes for Data Persistence
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  backend_uploads:
+    driver: local
+  backend_logs:
+    driver: local
+  pgadmin_data:
+    driver: local
+  redis_insight_data:
+    driver: local
+
+# Network Configuration
+networks:
+  rental_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

@@ -1,0 +1,97 @@
+from enum import Enum
+
+
+class ItemStatus(str, Enum):
+    """Item status enumeration."""
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    DISCONTINUED = "DISCONTINUED"
+
+
+class InventoryUnitStatus(str, Enum):
+    """Inventory unit status enumeration."""
+    AVAILABLE = "AVAILABLE"
+    RENTED = "RENTED"
+    SOLD = "SOLD"
+    MAINTENANCE = "MAINTENANCE"
+    DAMAGED = "DAMAGED"
+    UNDER_REPAIR = "UNDER_REPAIR"
+    BEYOND_REPAIR = "BEYOND_REPAIR"
+    RETIRED = "RETIRED"
+
+
+class InventoryUnitCondition(str, Enum):
+    """Inventory unit condition enumeration."""
+    NEW = "NEW"
+    EXCELLENT = "EXCELLENT"
+    GOOD = "GOOD"
+    FAIR = "FAIR"
+    POOR = "POOR"
+    DAMAGED = "DAMAGED"
+
+
+class StockMovementType(str, Enum):
+    """Stock movement type enumeration."""
+    PURCHASE = "STOCK_MOVEMENT_PURCHASE"
+    PURCHASE_RETURN = "STOCK_MOVEMENT_PURCHASE_RETURN"
+    SALE = "STOCK_MOVEMENT_SALE"
+    SALE_RETURN = "STOCK_MOVEMENT_SALE_RETURN"
+    RENTAL_OUT = "STOCK_MOVEMENT_RENTAL_OUT"
+    RENTAL_RETURN = "STOCK_MOVEMENT_RENTAL_RETURN"
+    RENTAL_RETURN_DAMAGED = "STOCK_MOVEMENT_RENTAL_RETURN_DAMAGED"
+    RENTAL_RETURN_MIXED = "STOCK_MOVEMENT_RENTAL_RETURN_MIXED"
+    DAMAGE_ASSESSMENT = "STOCK_MOVEMENT_DAMAGE_ASSESSMENT"
+    SENT_FOR_REPAIR = "STOCK_MOVEMENT_SENT_FOR_REPAIR"
+    REPAIR_COMPLETED = "STOCK_MOVEMENT_REPAIR_COMPLETED"
+    WRITE_OFF = "STOCK_MOVEMENT_WRITE_OFF"
+    ADJUSTMENT_POSITIVE = "STOCK_MOVEMENT_ADJUSTMENT_POSITIVE"
+    ADJUSTMENT_NEGATIVE = "STOCK_MOVEMENT_ADJUSTMENT_NEGATIVE"
+    TRANSFER_IN = "STOCK_MOVEMENT_TRANSFER_IN"
+    TRANSFER_OUT = "STOCK_MOVEMENT_TRANSFER_OUT"
+    RESERVATION_EXTENDED = "STOCK_MOVEMENT_RESERVATION_EXTENDED"
+    DAMAGE_LOSS = "STOCK_MOVEMENT_DAMAGE_LOSS"
+    THEFT_LOSS = "STOCK_MOVEMENT_THEFT_LOSS"
+    SYSTEM_CORRECTION = "STOCK_MOVEMENT_SYSTEM_CORRECTION"
+
+
+class DamageType(str, Enum):
+    """Types of damage that can occur."""
+    PHYSICAL = "PHYSICAL"
+    WATER = "WATER"
+    ELECTRICAL = "ELECTRICAL"
+    WEAR_AND_TEAR = "WEAR_AND_TEAR"
+    COSMETIC = "COSMETIC"
+    FUNCTIONAL = "FUNCTIONAL"
+    OTHER = "OTHER"
+
+
+class DamageSeverity(str, Enum):
+    """Severity levels for damage assessment."""
+    MINOR = "MINOR"
+    MODERATE = "MODERATE"
+    SEVERE = "SEVERE"
+    BEYOND_REPAIR = "BEYOND_REPAIR"
+
+
+class RepairStatus(str, Enum):
+    """Status of repair orders."""
+    PENDING = "PENDING"
+    IN_PROGRESS = "IN_PROGRESS"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+
+
+class QualityCheckStatus(str, Enum):
+    """Quality check status for repaired items."""
+    PENDING = "PENDING"
+    PASSED = "PASSED"
+    FAILED = "FAILED"
+
+
+
+
+
+
+
+

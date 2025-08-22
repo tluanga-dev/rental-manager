@@ -1,0 +1,46 @@
+# Development dependencies for FastAPI backend
+# These are installed in addition to requirements.txt in the Docker dev container
+
+# Debugging tools
+ipdb==0.13.13
+debugpy==1.8.0
+
+# Code formatting and linting
+black==23.12.1
+isort==5.13.2
+flake8==7.0.0
+mypy==1.8.0
+pylint==3.0.3
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+pytest-timeout==2.2.0
+httpx==0.26.0
+faker==22.2.0
+
+# Hot reload and file watching
+watchdog[watchmedo]==3.0.0
+
+# Performance monitoring
+memory-profiler==0.61.0
+line-profiler==4.1.2
+
+# Documentation
+mkdocs==1.5.3
+mkdocs-material==9.5.3
+
+# Development utilities
+ipython==8.19.0
+rich==13.7.0
+typer==0.9.0
+
+# Additional async tools
+aiofiles==23.2.1
+aiohttp==3.9.1
+
+# Database tools for development
+alembic-autogenerate-enums==0.1.2
+sqlalchemy-utils==0.41.1

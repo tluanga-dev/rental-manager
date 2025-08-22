@@ -1,0 +1,37 @@
+{
+  "_comment": "Mobile apps are automatically allowed via wildcard CORS in production",
+  "cors_origins": {
+    "production": {
+      "enabled": true,
+      "origins": [
+        "https://www.omomrentals.shop",
+        "https://omomrentals.shop",
+        "https://rental-manager-frontend-three.vercel.app"
+      ],
+      "mobile_apps": {
+        "enabled": true,
+        "comment": "Mobile apps don't send origin headers, handled by wildcard CORS"
+      }
+    },
+    "localhost_range": {
+      "enabled": true,
+      "start_port": 3000,
+      "end_port": 3010,
+      "protocols": [
+        "http",
+        "https"
+      ]
+    },
+    "localhost_aliases": {
+      "enabled": true,
+      "aliases": [
+        "localhost",
+        "127.0.0.1"
+      ]
+    }
+  },
+  "api_endpoints": {
+    "whitelist_enabled": false,
+    "default_access": "open"
+  }
+}

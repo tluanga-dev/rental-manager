@@ -1,0 +1,36 @@
+{
+  "cors_origins": [
+    "http://localhost:3000",
+    "http://localhost:3001", 
+    "http://localhost:3002",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+    "http://127.0.0.1:3002",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000"
+  ],
+  "production_origins": [
+    
+  ],
+  "allowed_endpoints": [
+    
+  ],
+  "blocked_ips": [
+    
+  ],
+  "rate_limits": {
+    "default": {
+      "requests": 100,
+      "period": 60
+    },
+    "auth": {
+      "requests": 10,
+      "period": 60
+    }
+  },
+  "security": {
+    "require_https_in_production": true,
+    "block_suspicious_user_agents": false,
+    "allowed_methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+  }
+}

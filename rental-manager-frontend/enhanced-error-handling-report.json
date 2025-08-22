@@ -1,0 +1,97 @@
+{
+  "timestamp": "2025-08-17T02:27:50.524Z",
+  "testResults": {
+    "enhancedErrorDisplay": false,
+    "consoleErrorLogs": 0,
+    "networkErrors": 0,
+    "debugDashboardAccessible": false
+  },
+  "consoleLogs": [
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+      "timestamp": "2025-08-17T02:27:37.243Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Environment Debug: JSHandle@object",
+      "timestamp": "2025-08-17T02:27:37.291Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Environment Debug: JSHandle@object",
+      "timestamp": "2025-08-17T02:27:37.292Z"
+    },
+    {
+      "type": "startGroup",
+      "text": "🚀 Environment Configuration",
+      "timestamp": "2025-08-17T02:27:37.292Z"
+    },
+    {
+      "type": "table",
+      "text": "JSHandle@object",
+      "timestamp": "2025-08-17T02:27:37.292Z"
+    },
+    {
+      "type": "endGroup",
+      "text": "console.groupEnd",
+      "timestamp": "2025-08-17T02:27:37.292Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Environment Debug: JSHandle@object",
+      "timestamp": "2025-08-17T02:27:37.292Z"
+    },
+    {
+      "type": "log",
+      "text": "🔌 Axios API Client Configuration: JSHandle@object",
+      "timestamp": "2025-08-17T02:27:37.292Z"
+    },
+    {
+      "type": "verbose",
+      "text": "[DOM] Input elements should have autocomplete attributes (suggested: \"current-password\"): (More info: https://goo.gl/9p2vKq) %o",
+      "timestamp": "2025-08-17T02:27:37.481Z"
+    },
+    {
+      "type": "log",
+      "text": "[Fast Refresh] rebuilding",
+      "timestamp": "2025-08-17T02:27:40.483Z"
+    },
+    {
+      "type": "log",
+      "text": "[Fast Refresh] done in 1684ms",
+      "timestamp": "2025-08-17T02:27:42.167Z"
+    },
+    {
+      "type": "log",
+      "text": "[Fast Refresh] rebuilding",
+      "timestamp": "2025-08-17T02:27:51.537Z"
+    },
+    {
+      "type": "log",
+      "text": "[Fast Refresh] done in 636ms",
+      "timestamp": "2025-08-17T02:27:52.172Z"
+    }
+  ],
+  "networkRequests": [
+    {
+      "url": "https://rental-manager-backend-production.up.railway.app/api/health",
+      "method": "GET",
+      "timestamp": "2025-08-17T02:27:37.400Z"
+    }
+  ],
+  "networkResponses": [
+    {
+      "url": "https://rental-manager-backend-production.up.railway.app/api/health",
+      "status": 200,
+      "statusText": "",
+      "timestamp": "2025-08-17T02:27:37.706Z"
+    }
+  ],
+  "screenshots": [
+    "login-page-error-test.png",
+    "after-login-error-test.png",
+    "inventory-error-display.png",
+    "debug-dashboard.png"
+  ]
+}

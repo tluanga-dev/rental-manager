@@ -1,0 +1,70 @@
+{
+  "timestamp": "2025-08-11T15:02:42.728098",
+  "backend": {
+    "models": [
+      {
+        "test": "Import security models",
+        "success": false,
+        "error": "No module named 'rental_manager_backend'"
+      },
+      {
+        "test": "Import security schemas",
+        "success": false,
+        "error": "No module named 'rental_manager_backend'"
+      }
+    ],
+    "routes": [
+      {
+        "test": "Import security routes",
+        "success": false,
+        "error": "No module named 'rental_manager_backend'"
+      }
+    ],
+    "services": [
+      {
+        "test": "Import SecurityService",
+        "success": false,
+        "error": "No module named 'rental_manager_backend'"
+      }
+    ]
+  },
+  "frontend": {
+    "components": [
+      {
+        "test": "Security page exists",
+        "success": false
+      },
+      {
+        "test": "Component SecurityDashboard.tsx",
+        "success": false
+      },
+      {
+        "test": "Component RoleManagement.tsx",
+        "success": false
+      },
+      {
+        "test": "Component PermissionManagement.tsx",
+        "success": false
+      },
+      {
+        "test": "Component AuditLogs.tsx",
+        "success": false
+      },
+      {
+        "test": "Component UserSecurity.tsx",
+        "success": false
+      }
+    ],
+    "api_service": [
+      {
+        "test": "Security API service exists",
+        "success": false
+      }
+    ]
+  },
+  "summary": {
+    "total": 11,
+    "passed": 0,
+    "failed": 11
+  }
+}

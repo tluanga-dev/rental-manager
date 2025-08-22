@@ -1,0 +1,63 @@
+# Core dependencies for Rental Manager Backend
+
+# FastAPI and web framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+gunicorn==21.2.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+asyncpg==0.29.0
+psycopg2-binary==2.9.9
+
+# Redis and caching
+redis==5.0.1
+hiredis==2.3.2
+
+# Authentication and security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.2
+pyjwt==2.8.0
+
+# Data validation and serialization
+pydantic==2.5.3
+pydantic-settings==2.1.0
+email-validator==2.1.0.post1
+
+# HTTP client
+httpx==0.26.0
+aiohttp==3.9.1
+
+# Date and time
+python-dateutil==2.8.2
+pytz==2023.3.post1
+
+# Utilities
+python-dotenv==1.0.0
+pyyaml==6.0.1
+orjson==3.9.10
+
+# Logging and monitoring
+structlog==24.1.0
+colorama==0.4.6
+
+# Background tasks
+apscheduler==3.10.4
+
+# File handling
+aiofiles==23.2.1
+python-magic==0.4.27
+
+# Excel/CSV support
+openpyxl==3.1.2
+pandas==2.1.4
+
+# Image processing (if needed)
+pillow==10.2.0
+
+# Performance
+ujson==5.9.0
+msgpack==1.0.7

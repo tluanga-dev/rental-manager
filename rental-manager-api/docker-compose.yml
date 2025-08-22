@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: rental_manager_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-rental_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rental_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-rental_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rental_user} -d ${POSTGRES_DB:-rental_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  redis:
+    image: redis:8-alpine
+    container_name: rental_manager_redis
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  pgadmin:
+    image: dpage/pgadmin4:9.6
+    container_name: rental_manager_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@rentalmanager.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: rental_manager_api
+    volumes:
+      - ./app:/code/app
+      - ./alembic:/code/alembic
+      - ./tests:/code/tests
+      - ./scripts:/code/scripts
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-rental_user}:${POSTGRES_PASSWORD:-rental_pass}@postgres:5432/${POSTGRES_DB:-rental_db}
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=development
+      - DEBUG=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  app_network:
+    driver: bridge

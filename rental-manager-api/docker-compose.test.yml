@@ -1,0 +1,258 @@
+
+services:
+  test-postgres:
+    image: postgres:17-alpine
+    container_name: rental_test_postgres
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass
+      POSTGRES_DB: test_rental_db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
+      POSTGRES_HOST_AUTH_METHOD: md5
+    ports:
+      - "5433:5432"  # Different port to avoid conflicts
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+      - ./scripts/test_data:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d test_rental_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - test_network
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=128MB
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=4MB
+      -c huge_pages=off
+      -c wal_level=replica
+      -c max_wal_size=1GB
+      -c min_wal_size=80MB
+
+  test-redis:
+    image: redis:8-alpine
+    container_name: rental_test_redis
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6380:6379"  # Different port to avoid conflicts
+    volumes:
+      - test_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - test_network
+
+  test-app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+      args:
+        - PYTHON_VERSION=3.11
+    container_name: rental_test_api
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+    environment:
+      # Database configuration
+      DATABASE_URL: postgresql+asyncpg://test_user:test_pass@test-postgres:5432/test_rental_db
+      SYNC_DATABASE_URL: postgresql://test_user:test_pass@test-postgres:5432/test_rental_db
+      
+      # Redis configuration
+      REDIS_URL: redis://test-redis:6379/0
+      
+      # Testing environment
+      ENVIRONMENT: testing
+      TESTING: "true"
+      DEBUG: "true"
+      
+      # API configuration
+      API_V1_STR: /api/v1
+      PROJECT_NAME: "Rental Manager Test"
+      SECRET_KEY: test_secret_key_for_testing_only
+      
+      # Testing specific
+      TEST_DATABASE_URL: postgresql+asyncpg://test_user:test_pass@test-postgres:5432/test_rental_db
+      PYTEST_WORKERS: 4
+      
+      # Performance testing
+      LOAD_TEST_USERS: 100
+      LOAD_TEST_DURATION: 60
+      
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+      - ./scripts:/app/scripts
+      - ./alembic:/app/alembic
+      - ./test_results:/app/test_results
+      - ./coverage_reports:/app/coverage_reports
+    ports:
+      - "8001:8000"  # Different port for testing
+    networks:
+      - test_network
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 5 &&
+        echo 'Running migrations...' &&
+        alembic upgrade head &&
+        echo 'Starting test server...' &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  test-data-generator:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    container_name: rental_test_data_generator
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+      test-app:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql+asyncpg://test_user:test_pass@test-postgres:5432/test_rental_db
+      PYTHONPATH: /app
+    volumes:
+      - ./app:/app/app
+      - ./scripts:/app/scripts
+      - ./test_data:/app/test_data
+    networks:
+      - test_network
+    command: >
+      sh -c "
+        echo 'Waiting for API to be ready...' &&
+        sleep 10 &&
+        echo 'Generating hierarchical test data...' &&
+        python scripts/generate_hierarchical_brand_data.py
+      "
+    profiles:
+      - data-generation
+
+  test-runner:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    container_name: rental_test_runner
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+      test-app:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql+asyncpg://test_user:test_pass@test-postgres:5432/test_rental_db
+      REDIS_URL: redis://test-redis:6379/0
+      API_URL: http://test-app:8000
+      PYTHONPATH: /app
+      PYTEST_WORKERS: 4
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+      - ./test_results:/app/test_results
+      - ./coverage_reports:/app/coverage_reports
+      - ./htmlcov:/app/htmlcov
+    networks:
+      - test_network
+    command: >
+      sh -c "
+        echo 'Waiting for services to be ready...' &&
+        sleep 15 &&
+        echo 'Running test suite...' &&
+        pytest tests/ -v --tb=short \
+          --cov=app \
+          --cov-report=html:htmlcov \
+          --cov-report=xml:coverage_reports/coverage.xml \
+          --cov-report=term-missing \
+          --html=test_results/report.html \
+          --self-contained-html \
+          --maxfail=10 \
+          --color=yes
+      "
+    profiles:
+      - testing
+
+  performance-tester:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    container_name: rental_performance_tester
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+      test-app:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql+asyncpg://test_user:test_pass@test-postgres:5432/test_rental_db
+      API_URL: http://test-app:8000
+      PYTHONPATH: /app
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+      - ./test_results:/app/test_results
+      - ./performance_reports:/app/performance_reports
+    networks:
+      - test_network
+    command: >
+      sh -c "
+        echo 'Waiting for test data to be loaded...' &&
+        sleep 20 &&
+        echo 'Running performance tests...' &&
+        pytest tests/performance/ -v --tb=short \
+          --html=performance_reports/performance.html \
+          --self-contained-html
+      "
+    profiles:
+      - performance
+
+  load-tester:
+    image: locustio/locust:latest
+    container_name: rental_load_tester
+    depends_on:
+      test-app:
+        condition: service_started
+    environment:
+      LOCUST_HOST: http://test-app:8000
+      LOCUST_USERS: 100
+      LOCUST_SPAWN_RATE: 10
+      LOCUST_RUN_TIME: 5m
+    volumes:
+      - ./tests/load:/mnt/locust
+      - ./load_test_results:/mnt/locust/results
+    networks:
+      - test_network
+    command: >
+      -f /mnt/locust/locustfile.py
+      --headless
+      --users 100
+      --spawn-rate 10
+      --run-time 5m
+      --html /mnt/locust/results/load_test_report.html
+    profiles:
+      - load-testing
+    ports:
+      - "8089:8089"  # Locust web UI
+
+volumes:
+  test_postgres_data:
+    driver: local
+  test_redis_data:
+    driver: local
+
+networks:
+  test_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16

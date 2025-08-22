@@ -1,0 +1,129 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: rental_manager_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-rental_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rental_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-rental_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rental_user} -d ${POSTGRES_DB:-rental_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  redis:
+    image: redis:8-alpine
+    container_name: rental_manager_redis
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  pgadmin:
+    image: dpage/pgadmin4:9.6
+    container_name: rental_manager_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@rentalmanager.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+
+  rental-manager-api:
+    build:
+      context: ./rental-manager-api
+      dockerfile: docker/Dockerfile.dev
+    container_name: rental_manager_api
+    volumes:
+      - ./rental-manager-api/app:/code/app
+      - ./rental-manager-api/alembic:/code/alembic
+      - ./rental-manager-api/tests:/code/tests
+      - ./rental-manager-api/scripts:/code/scripts
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-rental_user}:${POSTGRES_PASSWORD:-rental_pass}@postgres:5432/${POSTGRES_DB:-rental_db}
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=development
+      - DEBUG=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  rental-manager-frontend:
+    build:
+      context: ./rental-manager-frontend
+      dockerfile: docker/Dockerfile.dev
+    container_name: rental_manager_frontend
+    volumes:
+      - ./rental-manager-frontend/src:/app/src
+      - ./rental-manager-frontend/public:/app/public
+      - ./rental-manager-frontend/package.json:/app/package.json
+      - ./rental-manager-frontend/package-lock.json:/app/package-lock.json
+      - ./rental-manager-frontend/next.config.js:/app/next.config.js
+      - ./rental-manager-frontend/tailwind.config.js:/app/tailwind.config.js
+      - ./rental-manager-frontend/tsconfig.json:/app/tsconfig.json
+    ports:
+      - "3001:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8001/api
+      - NODE_ENV=development
+    depends_on:
+      - rental-manager-api
+    networks:
+      - app_network
+
+  celery-worker:
+    build:
+      context: ./rental-manager-api
+      dockerfile: docker/Dockerfile.dev
+    container_name: rental_manager_celery_worker
+    volumes:
+      - ./rental-manager-api/app:/code/app
+      - ./rental-manager-api/alembic:/code/alembic
+      - ./rental-manager-api/scripts:/code/scripts
+    command: ["celery", "-A", "app.core.celery", "worker", "--loglevel=info"]
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-rental_user}:${POSTGRES_PASSWORD:-rental_pass}@postgres:5432/${POSTGRES_DB:-rental_db}
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=development
+      - DEBUG=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  app_network:
+    driver: bridge

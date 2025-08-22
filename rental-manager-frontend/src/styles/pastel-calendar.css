@@ -1,0 +1,241 @@
+/* Pastel Calendar Styles */
+.pastel-calendar-wrapper .react-calendar {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  font-family: inherit;
+  background: white;
+  width: 100%;
+}
+
+/* Navigation */
+.pastel-calendar-wrapper .react-calendar__navigation {
+  margin-bottom: 1rem;
+  border-radius: 0.375rem;
+  background: rgb(249 250 251);
+  padding: 0.25rem;
+}
+
+.pastel-calendar-wrapper .react-calendar__navigation button {
+  color: rgb(55 65 81);
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pastel-calendar-wrapper .react-calendar__navigation button:hover {
+  background: rgb(229 231 235);
+}
+
+.pastel-calendar-wrapper .react-calendar__navigation button:disabled {
+  background: transparent;
+  color: rgb(156 163 175);
+  cursor: not-allowed;
+}
+
+/* Weekdays Header */
+.pastel-calendar-wrapper .react-calendar__month-view__weekdays {
+  margin-bottom: 0.5rem;
+}
+
+.pastel-calendar-wrapper .react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0.375rem;
+  margin: 0 0.125rem;
+  text-align: center;
+}
+
+/* Weekday-specific header colors */
+.pastel-calendar-wrapper .react-calendar__month-view__weekdays__weekday:nth-child(1) {
+  background: rgb(254 242 242); /* Sunday - rose-50 */
+  color: rgb(159 18 57); /* rose-800 */
+}
+
+.pastel-calendar-wrapper .react-calendar__month-view__weekdays__weekday:nth-child(2) {
+  background: rgb(236 253 245); /* Monday - emerald-50 */
+  color: rgb(6 95 70); /* emerald-800 */
+}
+
+.pastel-calendar-wrapper .react-calendar__month-view__weekdays__weekday:nth-child(3) {
+  background: rgb(250 245 255); /* Tuesday - purple-50 */
+  color: rgb(107 33 168); /* purple-800 */
+}
+
+.pastel-calendar-wrapper .react-calendar__month-view__weekdays__weekday:nth-child(4) {
+  background: rgb(253 242 248); /* Wednesday - pink-50 */
+  color: rgb(157 23 77); /* pink-800 */
+}
+
+.pastel-calendar-wrapper .react-calendar__month-view__weekdays__weekday:nth-child(5) {
+  background: rgb(240 249 255); /* Thursday - sky-50 */
+  color: rgb(7 89 133); /* sky-800 */
+}
+
+.pastel-calendar-wrapper .react-calendar__month-view__weekdays__weekday:nth-child(6) {
+  background: rgb(255 247 237); /* Friday - orange-50 */
+  color: rgb(154 52 18); /* orange-800 */
+}
+
+.pastel-calendar-wrapper .react-calendar__month-view__weekdays__weekday:nth-child(7) {
+  background: rgb(254 252 232); /* Saturday - yellow-50 */
+  color: rgb(133 77 14); /* yellow-800 */
+}
+
+/* Date tiles */
+.pastel-calendar-wrapper .react-calendar__tile {
+  border: none;
+  border-radius: 0.375rem;
+  margin: 0.125rem;
+  padding: 0.5rem 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  position: relative;
+  transition: all 0.2s;
+  cursor: pointer;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pastel-calendar-wrapper .react-calendar__tile:hover {
+  background: rgb(243 244 246);
+}
+
+/* Active/Selected date */
+.pastel-calendar-wrapper .react-calendar__tile--active {
+  font-weight: 600;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+}
+
+/* Today's date */
+.pastel-calendar-wrapper .react-calendar__tile--now {
+  background: rgb(239 246 255);
+  color: rgb(29 78 216);
+  font-weight: 600;
+}
+
+/* Disabled dates */
+.pastel-calendar-wrapper .react-calendar__tile:disabled {
+  background: rgb(249 250 251);
+  color: rgb(156 163 175);
+  cursor: not-allowed;
+}
+
+.pastel-calendar-wrapper .react-calendar__tile:disabled:hover {
+  background: rgb(249 250 251);
+}
+
+/* Neighboring month dates */
+.pastel-calendar-wrapper .react-calendar__month-view__days__day--neighboringMonth {
+  color: rgb(156 163 175);
+}
+
+/* Weekday-specific selected date colors */
+.pastel-calendar-wrapper .react-calendar__tile--active.weekday-0 {
+  background: rgb(254 205 211); /* Sunday - rose-200 */
+  color: rgb(159 18 57); /* rose-800 */
+  border: 2px solid rgb(244 63 94); /* rose-500 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile--active.weekday-1 {
+  background: rgb(167 243 208); /* Monday - emerald-200 */
+  color: rgb(6 95 70); /* emerald-800 */
+  border: 2px solid rgb(34 197 94); /* emerald-500 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile--active.weekday-2 {
+  background: rgb(221 214 254); /* Tuesday - purple-200 */
+  color: rgb(107 33 168); /* purple-800 */
+  border: 2px solid rgb(147 51 234); /* purple-500 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile--active.weekday-3 {
+  background: rgb(251 207 232); /* Wednesday - pink-200 */
+  color: rgb(157 23 77); /* pink-800 */
+  border: 2px solid rgb(236 72 153); /* pink-500 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile--active.weekday-4 {
+  background: rgb(186 230 253); /* Thursday - sky-200 */
+  color: rgb(7 89 133); /* sky-800 */
+  border: 2px solid rgb(14 165 233); /* sky-500 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile--active.weekday-5 {
+  background: rgb(254 215 170); /* Friday - orange-200 */
+  color: rgb(154 52 18); /* orange-800 */
+  border: 2px solid rgb(249 115 22); /* orange-500 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile--active.weekday-6 {
+  background: rgb(254 240 138); /* Saturday - yellow-200 */
+  color: rgb(133 77 14); /* yellow-800 */
+  border: 2px solid rgb(234 179 8); /* yellow-500 */
+}
+
+/* Hover effects for weekdays */
+.pastel-calendar-wrapper .react-calendar__tile.weekday-0:hover:not(.react-calendar__tile--active) {
+  background: rgb(254 228 230); /* rose-100 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile.weekday-1:hover:not(.react-calendar__tile--active) {
+  background: rgb(209 250 229); /* emerald-100 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile.weekday-2:hover:not(.react-calendar__tile--active) {
+  background: rgb(243 232 255); /* purple-100 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile.weekday-3:hover:not(.react-calendar__tile--active) {
+  background: rgb(252 231 243); /* pink-100 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile.weekday-4:hover:not(.react-calendar__tile--active) {
+  background: rgb(224 242 254); /* sky-100 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile.weekday-5:hover:not(.react-calendar__tile--active) {
+  background: rgb(255 237 213); /* orange-100 */
+}
+
+.pastel-calendar-wrapper .react-calendar__tile.weekday-6:hover:not(.react-calendar__tile--active) {
+  background: rgb(254 249 195); /* yellow-100 */
+}
+
+/* Dark mode support */
+.dark .pastel-calendar-wrapper .react-calendar {
+  background: rgb(31 41 55);
+  color: rgb(243 244 246);
+}
+
+.dark .pastel-calendar-wrapper .react-calendar__navigation {
+  background: rgb(55 65 81);
+}
+
+.dark .pastel-calendar-wrapper .react-calendar__navigation button {
+  color: rgb(209 213 219);
+}
+
+.dark .pastel-calendar-wrapper .react-calendar__navigation button:hover {
+  background: rgb(75 85 99);
+}
+
+.dark .pastel-calendar-wrapper .react-calendar__tile:hover {
+  background: rgb(55 65 81);
+}
+
+.dark .pastel-calendar-wrapper .react-calendar__tile--now {
+  background: rgb(30 58 138);
+  color: rgb(147 197 253);
+}

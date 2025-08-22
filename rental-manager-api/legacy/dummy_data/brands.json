@@ -1,0 +1,517 @@
+[
+  {
+    "name": "Caterpillar",
+    "code": "CAT",
+    "description": "Leading global manufacturer of construction and mining equipment, diesel and natural gas engines, industrial gas turbines and diesel-electric locomotives"
+  },
+  {
+    "name": "John Deere",
+    "code": "JD",
+    "description": "American corporation that manufactures agricultural machinery, heavy equipment, forestry machinery, diesel engines, drivetrains"
+  },
+  {
+    "name": "Komatsu",
+    "code": "KOM",
+    "description": "Japanese multinational corporation that manufactures construction, mining, forestry and military equipment, as well as diesel engines and industrial equipment"
+  },
+  {
+    "name": "Volvo Construction Equipment",
+    "code": "VOLVO-CE",
+    "description": "Swedish manufacturer of construction equipment including excavators, wheel loaders, articulated haulers and compactors"
+  },
+  {
+    "name": "Liebherr",
+    "code": "LIEBH",
+    "description": "German-Swiss multinational equipment manufacturer specializing in construction machinery, mining equipment, and aerospace components"
+  },
+  {
+    "name": "Hitachi Construction Machinery",
+    "code": "HIT-CM",
+    "description": "Japanese manufacturer specializing in construction machinery including hydraulic excavators, wheel loaders, and dump trucks"
+  },
+  {
+    "name": "Hyundai Heavy Industries",
+    "code": "HYU-HI",
+    "description": "South Korean heavy industry conglomerate manufacturing construction equipment, ships, offshore platforms, and industrial plants"
+  },
+  {
+    "name": "JCB",
+    "code": "JCB",
+    "description": "British multinational corporation manufacturing equipment for construction, agriculture, waste handling and demolition"
+  },
+  {
+    "name": "Case Construction Equipment",
+    "code": "CASE-CE",
+    "description": "American brand of construction equipment including excavators, motor graders, wheel loaders, and vibratory compactors"
+  },
+  {
+    "name": "New Holland Construction",
+    "code": "NH-CONST",
+    "description": "Global brand for construction equipment including compact track loaders, skid steer loaders, and backhoe loaders"
+  },
+  {
+    "name": "Bobcat Company",
+    "code": "BOBCAT",
+    "description": "American-based manufacturer of farm and construction equipment, known for compact equipment including skid-steer loaders"
+  },
+  {
+    "name": "Kubota Corporation",
+    "code": "KUBOTA",
+    "description": "Japanese multinational corporation manufacturing compact tractors, construction machinery, and industrial equipment"
+  },
+  {
+    "name": "Takeuchi Manufacturing",
+    "code": "TAKEUCHI",
+    "description": "Japanese manufacturer specializing in compact construction equipment including mini excavators and compact track loaders"
+  },
+  {
+    "name": "Yanmar",
+    "code": "YANMAR",
+    "description": "Japanese diesel engine and machinery manufacturer, known for compact excavators and construction equipment"
+  },
+  {
+    "name": "Doosan Infracore",
+    "code": "DOOSAN",
+    "description": "South Korean manufacturer of construction equipment, machine tools, and diesel engines for industrial applications"
+  },
+  {
+    "name": "Makita Corporation",
+    "code": "MAKITA",
+    "description": "Japanese manufacturer of power tools, outdoor power equipment, and pneumatic tools for construction and woodworking"
+  },
+  {
+    "name": "DeWalt",
+    "code": "DEWALT",
+    "description": "American worldwide brand of power tools and hand tools for construction, manufacturing and woodworking industries"
+  },
+  {
+    "name": "Milwaukee Tool",
+    "code": "MILWAUKEE",
+    "description": "American manufacturer and marketer of heavy-duty power tools, hand tools, and accessories for professional users"
+  },
+  {
+    "name": "Robert Bosch Tool Corporation",
+    "code": "BOSCH",
+    "description": "German multinational engineering and technology company manufacturing power tools and measuring tools"
+  },
+  {
+    "name": "Hilti Corporation",
+    "code": "HILTI",
+    "description": "Liechtenstein multinational company developing, manufacturing and marketing products for construction professionals"
+  },
+  {
+    "name": "Weber-Stephen Products",
+    "code": "WEBER",
+    "description": "American manufacturer of charcoal, gas, and electric outdoor grills and accessories for residential and commercial use"
+  },
+  {
+    "name": "Viking Range Corporation",
+    "code": "VIKING",
+    "description": "American manufacturer of high-end kitchen appliances including ranges, refrigerators, and commercial cooking equipment"
+  },
+  {
+    "name": "Hobart Corporation",
+    "code": "HOBART",
+    "description": "American mid-tier commercial food equipment manufacturer specializing in dishwashers, mixers, and food preparation"
+  },
+  {
+    "name": "Vulcan Equipment",
+    "code": "VULCAN",
+    "description": "American manufacturer of commercial cooking equipment including ranges, fryers, steamers, and ovens for foodservice"
+  },
+  {
+    "name": "Garland Group",
+    "code": "GARLAND",
+    "description": "American manufacturer of heavy-duty commercial cooking equipment including ranges, griddles, and broilers"
+  },
+  {
+    "name": "True Manufacturing",
+    "code": "TRUE-MFG",
+    "description": "American manufacturer of commercial refrigeration equipment including reach-in refrigerators and freezers"
+  },
+  {
+    "name": "Beverage-Air Corporation",
+    "code": "BEV-AIR",
+    "description": "American manufacturer of commercial refrigeration equipment for foodservice and retail applications"
+  },
+  {
+    "name": "Traulsen",
+    "code": "TRAULSEN",
+    "description": "American manufacturer of commercial refrigerators, freezers, and heated holding cabinets for foodservice"
+  },
+  {
+    "name": "Cambro Manufacturing",
+    "code": "CAMBRO",
+    "description": "American manufacturer of food service equipment and supplies including food storage containers and serving equipment"
+  },
+  {
+    "name": "The Vollrath Company",
+    "code": "VOLLRATH",
+    "description": "American manufacturer of stainless steel and aluminum equipment and smallwares for foodservice operations"
+  },
+  {
+    "name": "Yamaha Corporation",
+    "code": "YAMAHA",
+    "description": "Japanese multinational corporation manufacturing musical instruments, audio equipment, and professional sound systems"
+  },
+  {
+    "name": "JBL Professional",
+    "code": "JBL-PRO",
+    "description": "American audio equipment manufacturer specializing in professional loudspeakers and audio systems"
+  },
+  {
+    "name": "Bose Professional",
+    "code": "BOSE-PRO",
+    "description": "American corporation manufacturing premium audio equipment and professional sound systems"
+  },
+  {
+    "name": "Shure Incorporated",
+    "code": "SHURE",
+    "description": "American audio products corporation manufacturing microphones, wireless microphone systems, and audio electronics"
+  },
+  {
+    "name": "QSC Audio Products",
+    "code": "QSC",
+    "description": "American manufacturer of professional audio products including power amplifiers, loudspeakers, and digital mixers"
+  },
+  {
+    "name": "Mackie",
+    "code": "MACKIE",
+    "description": "American professional audio products company manufacturing mixing consoles, studio monitors, and audio interfaces"
+  },
+  {
+    "name": "Chauvet Professional",
+    "code": "CHAUVET",
+    "description": "American manufacturer of professional lighting equipment including LED fixtures, moving lights, and controllers"
+  },
+  {
+    "name": "Martin Professional",
+    "code": "MARTIN",
+    "description": "Danish manufacturer of professional entertainment lighting, video, and atmospheric effects equipment"
+  },
+  {
+    "name": "Electronic Theatre Controls",
+    "code": "ETC",
+    "description": "American manufacturer of entertainment and architectural lighting systems, including control consoles and LED fixtures"
+  },
+  {
+    "name": "American DJ",
+    "code": "ADJ",
+    "description": "American manufacturer of DJ and club lighting equipment including moving heads, LED fixtures, and fog machines"
+  },
+  {
+    "name": "Elation Professional",
+    "code": "ELATION",
+    "description": "American manufacturer of professional lighting equipment for entertainment, architectural, and television applications"
+  },
+  {
+    "name": "Sennheiser",
+    "code": "SENNHEISER",
+    "description": "German audio company specializing in professional microphones, headphones, and wireless audio systems"
+  },
+  {
+    "name": "Audio-Technica",
+    "code": "AUDIO-TECH",
+    "description": "Japanese company designing and manufacturing microphones, headphones, turntables, and other audio equipment"
+  },
+  {
+    "name": "Crown Audio",
+    "code": "CROWN",
+    "description": "American manufacturer of power amplifiers for professional audio applications including live sound and installation"
+  },
+  {
+    "name": "Electro-Voice",
+    "code": "EV",
+    "description": "American manufacturer of professional audio equipment including microphones, speakers, and wireless systems"
+  },
+  {
+    "name": "Soundcraft",
+    "code": "SOUNDCRAFT",
+    "description": "British manufacturer of mixing consoles for live sound, broadcast, and recording applications"
+  },
+  {
+    "name": "Allen & Heath",
+    "code": "A-H",
+    "description": "British manufacturer of professional audio mixing consoles for live sound, installation, and broadcast"
+  },
+  {
+    "name": "Midas Consoles",
+    "code": "MIDAS",
+    "description": "British manufacturer of high-end professional audio mixing consoles for live sound and recording"
+  },
+  {
+    "name": "Behringer",
+    "code": "BEHRINGER",
+    "description": "German audio equipment company manufacturing mixers, amplifiers, speakers, and digital audio equipment"
+  },
+  {
+    "name": "PreSonus Audio Electronics",
+    "code": "PRESONUS",
+    "description": "American manufacturer of professional audio equipment including digital mixers, audio interfaces, and studio monitors"
+  },
+  {
+    "name": "Focusrite",
+    "code": "FOCUSRITE",
+    "description": "British audio equipment manufacturer specializing in audio interfaces, microphone preamps, and recording equipment"
+  },
+  {
+    "name": "Universal Audio",
+    "code": "UA",
+    "description": "American audio hardware and software company manufacturing audio interfaces, plugins, and analog equipment"
+  },
+  {
+    "name": "Rode Microphones",
+    "code": "RODE",
+    "description": "Australian manufacturer of microphones and audio equipment for broadcast, film, and recording applications"
+  },
+  {
+    "name": "AKG Acoustics",
+    "code": "AKG",
+    "description": "Austrian manufacturer of microphones, headphones, and wireless audio systems for professional applications"
+  },
+  {
+    "name": "Neumann",
+    "code": "NEUMANN",
+    "description": "German manufacturer of professional studio microphones and monitoring loudspeakers"
+  },
+  {
+    "name": "Genelec",
+    "code": "GENELEC",
+    "description": "Finnish manufacturer of active studio monitors and professional loudspeakers for audio production"
+  },
+  {
+    "name": "KRK Systems",
+    "code": "KRK",
+    "description": "American manufacturer of studio monitors and professional loudspeakers for music production and mixing"
+  },
+  {
+    "name": "JBL Professional",
+    "code": "JBL",
+    "description": "American manufacturer of professional loudspeakers, studio monitors, and sound reinforcement systems"
+  },
+  {
+    "name": "Meyer Sound",
+    "code": "MEYER",
+    "description": "American manufacturer of professional loudspeaker systems for live sound reinforcement and cinema"
+  },
+  {
+    "name": "d&b audiotechnik",
+    "code": "DB-AUDIO",
+    "description": "German manufacturer of professional loudspeaker systems for live sound, installation, and broadcast applications"
+  },
+  {
+    "name": "L-Acoustics",
+    "code": "L-ACOUSTICS",
+    "description": "French manufacturer of professional sound systems for live events, installations, and high-end venues"
+  },
+  {
+    "name": "Funktion-One",
+    "code": "F-ONE",
+    "description": "British manufacturer of high-end professional loudspeaker systems for clubs, festivals, and live events"
+  },
+  {
+    "name": "EAW",
+    "code": "EAW",
+    "description": "American manufacturer of professional loudspeaker systems for live sound reinforcement and installation"
+  },
+  {
+    "name": "Nexo",
+    "code": "NEXO",
+    "description": "French manufacturer of professional loudspeaker systems for live sound, touring, and fixed installations"
+  },
+  {
+    "name": "Robe Lighting",
+    "code": "ROBE",
+    "description": "Czech manufacturer of professional moving lights and LED fixtures for entertainment and architectural lighting"
+  },
+  {
+    "name": "Clay Paky",
+    "code": "CLAY-PAKY",
+    "description": "Italian manufacturer of professional moving lights and LED fixtures for entertainment and architectural applications"
+  },
+  {
+    "name": "GLP German Light Products",
+    "code": "GLP",
+    "description": "German manufacturer of innovative LED lighting fixtures and moving lights for professional applications"
+  },
+  {
+    "name": "Ayrton",
+    "code": "AYRTON",
+    "description": "French manufacturer of high-end moving lights and LED fixtures for professional entertainment lighting"
+  },
+  {
+    "name": "Vari-Lite",
+    "code": "VARI-LITE",
+    "description": "American manufacturer of automated lighting systems and moving lights for entertainment applications"
+  },
+  {
+    "name": "High End Systems",
+    "code": "HES",
+    "description": "American manufacturer of professional lighting equipment including moving lights, LED fixtures, and control systems"
+  },
+  {
+    "name": "Philips Entertainment",
+    "code": "PHILIPS-ENT",
+    "description": "Dutch manufacturer of professional lighting solutions for entertainment, architectural, and broadcast applications"
+  },
+  {
+    "name": "Osram",
+    "code": "OSRAM",
+    "description": "German lighting manufacturer producing professional lighting solutions including LED fixtures and lamps"
+  },
+  {
+    "name": "Coemar",
+    "code": "COEMAR",
+    "description": "Italian manufacturer of professional moving lights and LED fixtures for entertainment and architectural lighting"
+  },
+  {
+    "name": "SGM Light",
+    "code": "SGM",
+    "description": "Italian manufacturer of professional LED lighting fixtures and moving lights for entertainment applications"
+  },
+  {
+    "name": "PR Lighting",
+    "code": "PR-LIGHT",
+    "description": "Chinese manufacturer of professional moving lights and LED fixtures for entertainment and architectural lighting"
+  },
+  {
+    "name": "ADJ Products",
+    "code": "ADJ-PROD",
+    "description": "American manufacturer of DJ lighting, fog machines, and special effects equipment for entertainment"
+  },
+  {
+    "name": "Antari Fog Machine",
+    "code": "ANTARI",
+    "description": "Taiwanese manufacturer of fog machines, haze machines, and special effects equipment for entertainment"
+  },
+  {
+    "name": "Look Solutions",
+    "code": "LOOK-SOL",
+    "description": "Belgian manufacturer of atmospheric effects equipment including fog machines, hazers, and snow machines"
+  },
+  {
+    "name": "Le Maitre",
+    "code": "LE-MAITRE",
+    "description": "British manufacturer of pyrotechnics, atmospheric effects, and special effects equipment for entertainment"
+  },
+  {
+    "name": "MDG Atmosphere",
+    "code": "MDG",
+    "description": "German manufacturer of professional atmospheric effects equipment including fog and haze machines"
+  },
+  {
+    "name": "Jem Smoke Machine",
+    "code": "JEM",
+    "description": "British manufacturer of professional fog machines and atmospheric effects equipment for entertainment"
+  },
+  {
+    "name": "Ultratec Special Effects",
+    "code": "ULTRATEC",
+    "description": "American manufacturer of special effects equipment including fog machines, confetti cannons, and pyrotechnics"
+  },
+  {
+    "name": "Magic FX",
+    "code": "MAGIC-FX",
+    "description": "Dutch manufacturer of special effects equipment including confetti cannons, streamers, and atmospheric effects"
+  },
+  {
+    "name": "Showtec",
+    "code": "SHOWTEC",
+    "description": "Dutch manufacturer of professional lighting equipment, trussing systems, and stage equipment"
+  },
+  {
+    "name": "Global Truss",
+    "code": "GLOBAL-TRUSS",
+    "description": "Taiwanese manufacturer of aluminum trussing systems and staging equipment for entertainment industry"
+  },
+  {
+    "name": "Prolyte Group",
+    "code": "PROLYTE",
+    "description": "Dutch manufacturer of aluminum trussing systems, staging, and rigging equipment for events and entertainment"
+  },
+  {
+    "name": "Milos Structural Systems",
+    "code": "MILOS",
+    "description": "Czech manufacturer of aluminum trussing systems and structural solutions for events and exhibitions"
+  },
+  {
+    "name": "Tomcat USA",
+    "code": "TOMCAT",
+    "description": "American manufacturer of aluminum trussing systems and staging equipment for entertainment industry"
+  },
+  {
+    "name": "Staging Concepts",
+    "code": "STAGING-CON",
+    "description": "American manufacturer of portable staging systems, risers, and platforms for events and performances"
+  },
+  {
+    "name": "Wenger Corporation",
+    "code": "WENGER",
+    "description": "American manufacturer of music education equipment, acoustic shells, and performance staging systems"
+  },
+  {
+    "name": "StageRight Corporation",
+    "code": "STAGERIGHT",
+    "description": "American manufacturer of portable staging systems, choir risers, and performance platforms"
+  },
+  {
+    "name": "Intellistage",
+    "code": "INTELLISTAGE",
+    "description": "American manufacturer of portable staging platforms and risers for events and performances"
+  },
+  {
+    "name": "All-Terrain Staging",
+    "code": "ALL-TERRAIN",
+    "description": "American manufacturer of portable staging systems designed for outdoor and uneven surfaces"
+  },
+  {
+    "name": "Top Tents",
+    "code": "TOP-TENTS",
+    "description": "American manufacturer of event tents, canopies, and temporary structures for outdoor events"
+  },
+  {
+    "name": "Anchor Industries",
+    "code": "ANCHOR-IND",
+    "description": "American manufacturer of event tents, party tents, and temporary structures for outdoor events"
+  },
+  {
+    "name": "Celina Tent",
+    "code": "CELINA",
+    "description": "American manufacturer of commercial tents, canopies, and temporary structures for events and industrial use"
+  },
+  {
+    "name": "Eureka Tents",
+    "code": "EUREKA",
+    "description": "American manufacturer of outdoor tents, canopies, and temporary shelters for events and camping"
+  },
+  {
+    "name": "American Tent",
+    "code": "AMERICAN-TENT",
+    "description": "American manufacturer of commercial tents, event structures, and temporary buildings"
+  },
+  {
+    "name": "Aztec Tents",
+    "code": "AZTEC",
+    "description": "American manufacturer of event tents, party tents, and temporary structures for outdoor celebrations"
+  },
+  {
+    "name": "Tentnology",
+    "code": "TENTNOLOGY",
+    "description": "American manufacturer of high-end event tents and temporary structures for luxury events"
+  },
+  {
+    "name": "Roder Tent Rental",
+    "code": "RODER",
+    "description": "German manufacturer of high-quality event tents and temporary structures for professional events"
+  },
+  {
+    "name": "Losberger De Boer",
+    "code": "LOSBERGER",
+    "description": "German manufacturer of temporary structures, event tents, and modular buildings for events and industry"
+  },
+  {
+    "name": "GL events",
+    "code": "GL-EVENTS",
+    "description": "French manufacturer of temporary structures, event tents, and modular buildings for exhibitions and events"
+  }
+]

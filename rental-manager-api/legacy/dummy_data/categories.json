@@ -1,0 +1,362 @@
+[
+  {
+    "name": "Construction Equipment",
+    "category_code": "CON",
+    "category_path": "Construction Equipment",
+    "category_level": 1,
+    "display_order": 1,
+    "parent_category_id": null,
+    "is_leaf": false
+  },
+  {
+    "name": "Excavators",
+    "category_code": "CON-EXC",
+    "category_path": "Construction Equipment/Excavators",
+    "category_level": 2,
+    "display_order": 1,
+    "parent_category_id": "CON",
+    "is_leaf": true
+  },
+  {
+    "name": "Bulldozers",
+    "category_code": "CON-BUL",
+    "category_path": "Construction Equipment/Bulldozers",
+    "category_level": 2,
+    "display_order": 2,
+    "parent_category_id": "CON",
+    "is_leaf": true
+  },
+  {
+    "name": "Cranes",
+    "category_code": "CON-CRN",
+    "category_path": "Construction Equipment/Cranes",
+    "category_level": 2,
+    "display_order": 3,
+    "parent_category_id": "CON",
+    "is_leaf": true
+  },
+  {
+    "name": "Forklifts & Telehandlers",
+    "category_code": "CON-FOR",
+    "category_path": "Construction Equipment/Forklifts & Telehandlers",
+    "category_level": 2,
+    "display_order": 4,
+    "parent_category_id": "CON",
+    "is_leaf": true
+  },
+  {
+    "name": "Aerial Work Platforms",
+    "category_code": "CON-AWP",
+    "category_path": "Construction Equipment/Aerial Work Platforms",
+    "category_level": 2,
+    "display_order": 5,
+    "parent_category_id": "CON",
+    "is_leaf": true
+  },
+  {
+    "name": "Loaders",
+    "category_code": "CON-LOD",
+    "category_path": "Construction Equipment/Loaders",
+    "category_level": 2,
+    "display_order": 6,
+    "parent_category_id": "CON",
+    "is_leaf": true
+  },
+  {
+    "name": "Compactors & Rollers",
+    "category_code": "CON-CMP",
+    "category_path": "Construction Equipment/Compactors & Rollers",
+    "category_level": 2,
+    "display_order": 7,
+    "parent_category_id": "CON",
+    "is_leaf": true
+  },
+  {
+    "name": "Pavers & Concrete Equipment",
+    "category_code": "CON-CNC",
+    "category_path": "Construction Equipment/Pavers & Concrete Equipment",
+    "category_level": 2,
+    "display_order": 8,
+    "parent_category_id": "CON",
+    "is_leaf": true
+  },
+  {
+    "name": "Hydraulic Machinery & Drilling Rigs",
+    "category_code": "CON-HYD",
+    "category_path": "Construction Equipment/Hydraulic Machinery & Drilling Rigs",
+    "category_level": 2,
+    "display_order": 9,
+    "parent_category_id": "CON",
+    "is_leaf": true
+  },
+  {
+    "name": "Catering Equipment",
+    "category_code": "CAT",
+    "category_path": "Catering Equipment",
+    "category_level": 1,
+    "display_order": 2,
+    "parent_category_id": null,
+    "is_leaf": false
+  },
+  {
+    "name": "Cooking Equipment",
+    "category_code": "CAT-COOK",
+    "category_path": "Catering Equipment/Cooking Equipment",
+    "category_level": 2,
+    "display_order": 1,
+    "parent_category_id": "CAT",
+    "is_leaf": false
+  },
+  {
+    "name": "Commercial Ovens",
+    "category_code": "CAT-COOK-OVN",
+    "category_path": "Catering Equipment/Cooking Equipment/Commercial Ovens",
+    "category_level": 3,
+    "display_order": 1,
+    "parent_category_id": "CAT-COOK",
+    "is_leaf": true
+  },
+  {
+    "name": "Gas Ranges",
+    "category_code": "CAT-COOK-GR",
+    "category_path": "Catering Equipment/Cooking Equipment/Gas Ranges",
+    "category_level": 3,
+    "display_order": 2,
+    "parent_category_id": "CAT-COOK",
+    "is_leaf": true
+  },
+  {
+    "name": "Deep Fryers",
+    "category_code": "CAT-COOK-DF",
+    "category_path": "Catering Equipment/Cooking Equipment/Deep Fryers",
+    "category_level": 3,
+    "display_order": 3,
+    "parent_category_id": "CAT-COOK",
+    "is_leaf": true
+  },
+  {
+    "name": "Food Warmers",
+    "category_code": "CAT-COOK-FW",
+    "category_path": "Catering Equipment/Cooking Equipment/Food Warmers",
+    "category_level": 3,
+    "display_order": 4,
+    "parent_category_id": "CAT-COOK",
+    "is_leaf": true
+  },
+  {
+    "name": "Food Prep & Processing",
+    "category_code": "CAT-PREP",
+    "category_path": "Catering Equipment/Food Prep & Processing",
+    "category_level": 2,
+    "display_order": 2,
+    "parent_category_id": "CAT",
+    "is_leaf": false
+  },
+  {
+    "name": "Blenders & Mixers",
+    "category_code": "CAT-PREP-BM",
+    "category_path": "Catering Equipment/Food Prep & Processing/Blenders & Mixers",
+    "category_level": 3,
+    "display_order": 1,
+    "parent_category_id": "CAT-PREP",
+    "is_leaf": true
+  },
+  {
+    "name": "Food Processors",
+    "category_code": "CAT-PREP-FP",
+    "category_path": "Catering Equipment/Food Prep & Processing/Food Processors",
+    "category_level": 3,
+    "display_order": 2,
+    "parent_category_id": "CAT-PREP",
+    "is_leaf": true
+  },
+  {
+    "name": "Hot Holding & Serving",
+    "category_code": "CAT-SERVE",
+    "category_path": "Catering Equipment/Hot Holding & Serving",
+    "category_level": 2,
+    "display_order": 3,
+    "parent_category_id": "CAT",
+    "is_leaf": true
+  },
+  {
+    "name": "Beverage Equipment",
+    "category_code": "CAT-BEV",
+    "category_path": "Catering Equipment/Beverage Equipment",
+    "category_level": 2,
+    "display_order": 4,
+    "parent_category_id": "CAT",
+    "is_leaf": true
+  },
+  {
+    "name": "Display & Buffet Accessories",
+    "category_code": "CAT-DISP",
+    "category_path": "Catering Equipment/Display & Buffet Accessories",
+    "category_level": 2,
+    "display_order": 5,
+    "parent_category_id": "CAT",
+    "is_leaf": true
+  },
+  {
+    "name": "Cold Holding & Transport",
+    "category_code": "CAT-COLD",
+    "category_path": "Catering Equipment/Cold Holding & Transport",
+    "category_level": 2,
+    "display_order": 6,
+    "parent_category_id": "CAT",
+    "is_leaf": true
+  },
+  {
+    "name": "Event Management Equipment",
+    "category_code": "EVT",
+    "category_path": "Event Management Equipment",
+    "category_level": 1,
+    "display_order": 3,
+    "parent_category_id": null,
+    "is_leaf": false
+  },
+  {
+    "name": "Audio Equipment",
+    "category_code": "EVT-AUD",
+    "category_path": "Event Management Equipment/Audio Equipment",
+    "category_level": 2,
+    "display_order": 1,
+    "parent_category_id": "EVT",
+    "is_leaf": true
+  },
+  {
+    "name": "Visual Equipment",
+    "category_code": "EVT-VIS",
+    "category_path": "Event Management Equipment/Visual Equipment",
+    "category_level": 2,
+    "display_order": 2,
+    "parent_category_id": "EVT",
+    "is_leaf": true
+  },
+  {
+    "name": "Lighting & Effects",
+    "category_code": "EVT-LGT",
+    "category_path": "Event Management Equipment/Lighting & Effects",
+    "category_level": 2,
+    "display_order": 3,
+    "parent_category_id": "EVT",
+    "is_leaf": true
+  },
+  {
+    "name": "Staging & Rigging",
+    "category_code": "EVT-STR",
+    "category_path": "Event Management Equipment/Staging & Rigging",
+    "category_level": 2,
+    "display_order": 4,
+    "parent_category_id": "EVT",
+    "is_leaf": true
+  },
+  {
+    "name": "Furniture & Décor",
+    "category_code": "EVT-FURN",
+    "category_path": "Event Management Equipment/Furniture & Décor",
+    "category_level": 2,
+    "display_order": 5,
+    "parent_category_id": "EVT",
+    "is_leaf": true
+  },
+  {
+    "name": "Support Equipment",
+    "category_code": "EVT-SUP",
+    "category_path": "Event Management Equipment/Support Equipment",
+    "category_level": 2,
+    "display_order": 6,
+    "parent_category_id": "EVT",
+    "is_leaf": true
+  },
+  {
+    "name": "Transport & Logistics",
+    "category_code": "EVT-LOG",
+    "category_path": "Event Management Equipment/Transport & Logistics",
+    "category_level": 2,
+    "display_order": 7,
+    "parent_category_id": "EVT",
+    "is_leaf": true
+  },
+  {
+    "name": "Power & Electrical Tools",
+    "category_code": "PWR",
+    "category_path": "Power & Electrical Tools",
+    "category_level": 1,
+    "display_order": 4,
+    "parent_category_id": null,
+    "is_leaf": false
+  },
+  {
+    "name": "Power Drills",
+    "category_code": "PWR-DRL",
+    "category_path": "Power & Electrical Tools/Power Drills",
+    "category_level": 2,
+    "display_order": 1,
+    "parent_category_id": "PWR",
+    "is_leaf": true
+  },
+  {
+    "name": "Angle Grinders",
+    "category_code": "PWR-GRD",
+    "category_path": "Power & Electrical Tools/Angle Grinders",
+    "category_level": 2,
+    "display_order": 2,
+    "parent_category_id": "PWR",
+    "is_leaf": true
+  },
+  {
+    "name": "Extension Cords",
+    "category_code": "PWR-EXT",
+    "category_path": "Power & Electrical Tools/Extension Cords",
+    "category_level": 2,
+    "display_order": 3,
+    "parent_category_id": "PWR",
+    "is_leaf": true
+  },
+  {
+    "name": "Cleaning & Sanitation Equipment",
+    "category_code": "CLN",
+    "category_path": "Cleaning & Sanitation Equipment",
+    "category_level": 1,
+    "display_order": 5,
+    "parent_category_id": null,
+    "is_leaf": false
+  },
+  {
+    "name": "Vacuum Cleaners",
+    "category_code": "CLN-VAC",
+    "category_path": "Cleaning & Sanitation Equipment/Vacuum Cleaners",
+    "category_level": 2,
+    "display_order": 1,
+    "parent_category_id": "CLN",
+    "is_leaf": true
+  },
+  {
+    "name": "Pressure Washers",
+    "category_code": "CLN-PW",
+    "category_path": "Cleaning & Sanitation Equipment/Pressure Washers",
+    "category_level": 2,
+    "display_order": 2,
+    "parent_category_id": "CLN",
+    "is_leaf": true
+  },
+  {
+    "name": "Floor Scrubbers",
+    "category_code": "CLN-SCRUB",
+    "category_path": "Cleaning & Sanitation Equipment/Floor Scrubbers",
+    "category_level": 2,
+    "display_order": 3,
+    "parent_category_id": "CLN",
+    "is_leaf": true
+  },
+  {
+    "name": "Mops & Buckets",
+    "category_code": "CLN-MB",
+    "category_path": "Cleaning & Sanitation Equipment/Mops & Buckets",
+    "category_level": 2,
+    "display_order": 4,
+    "parent_category_id": "CLN",
+    "is_leaf": true
+  }
+]

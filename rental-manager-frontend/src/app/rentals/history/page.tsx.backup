@@ -1,0 +1,254 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { ProtectedRoute } from '@/components/auth/protected-route';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { 
+  LayoutGrid, 
+  List, 
+  ChevronLeft, 
+  ChevronRight,
+  Plus
+} from 'lucide-react';
+
+import { rentalsApi } from '@/services/api/rentals';
+import { RentalFilterParams } from '@/types/rentals';
+import { RentalFilters } from '@/components/rentals/filters/RentalFilters';
+import { RentalList } from '@/components/rentals/list/RentalList';
+import { RentalCard } from '@/components/rentals/list/RentalCard';
+import { ExportButton } from '@/components/rentals/ExportButton';
+import { usePaginatedRentals } from '@/hooks/usePaginatedRentals';
+
+function RentalHistoryContent() {
+  const router = useRouter();
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
+  
+  // Use paginated rentals hook
+  const {
+    rentals,
+    isLoading,
+    error,
+    pagination,
+    filters,
+    setFilters,
+    setPage,
+    setPageSize,
+    nextPage,
+    previousPage,
+    refetch,
+  } = usePaginatedRentals(1, 20);
+
+  // Load analytics for summary stats (kept for dashboard stats)
+  const { data: analytics } = useQuery({
+    queryKey: ['rental-analytics'],
+    queryFn: () => rentalsApi.getRentalAnalytics(),
+  });
+
+  const handleFiltersChange = (newFilters: RentalFilterParams) => {
+    setFilters(newFilters);
+  };
+
+  const handleRentalClick = (rental: any) => {
+    router.push(`/rentals/${rental.id}`);
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
+  };
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Rental History
+          </h1>
+          <p className="text-gray-600">
+            View and manage all rental transactions with advanced filtering
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <ExportButton filters={filters} />
+          <Button onClick={() => router.push('/rentals/create-compact')}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Rental
+          </Button>
+        </div>
+      </div>
+
+      {/* Statistics */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Rentals</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{analytics?.overview.total_rentals || 0}</div>
+            <p className="text-xs text-muted-foreground">All time</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Active Rentals</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{analytics?.overview.active_rentals || 0}</div>
+            <p className="text-xs text-muted-foreground">Currently active</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Late/Overdue Rentals</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{analytics?.overview.overdue_rentals || 0}</div>
+            <p className="text-xs text-muted-foreground">Require attention</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(analytics?.overview.total_revenue || 0)}</div>
+            <p className="text-xs text-muted-foreground">All time</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Enhanced Filters */}
+      <RentalFilters 
+        onFiltersChange={handleFiltersChange}
+        initialFilters={filters}
+        showAdvanced={true}
+      />
+
+      {/* View Toggle and Results */}
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle>
+              Rental Transactions ({pagination.totalItems} total)
+            </CardTitle>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border rounded-lg p-1">
+                <Button
+                  variant={viewMode === 'table' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('table')}
+                  className="h-8"
+                >
+                  <List className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'cards' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('cards')}
+                  className="h-8"
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {error && (
+            <div className="text-center py-8 text-red-600">
+              Error loading rentals: {error.message}
+              <Button onClick={refetch} className="mt-2 ml-2" size="sm" variant="outline">
+                Retry
+              </Button>
+            </div>
+          )}
+          
+          {viewMode === 'table' ? (
+            <RentalList 
+              rentals={rentals}
+              isLoading={isLoading}
+              onRentalClick={handleRentalClick}
+            />
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {isLoading ? (
+                [...Array(6)].map((_, i) => (
+                  <Card key={i} className="h-64 animate-pulse">
+                    <CardContent className="p-4">
+                      <div className="space-y-3">
+                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                rentals.map((rental) => (
+                  <RentalCard
+                    key={rental.id}
+                    rental={rental}
+                    onClick={handleRentalClick}
+                  />
+                ))
+              )}
+            </div>
+          )}
+          
+          {/* Pagination */}
+          {pagination.totalItems > 0 && (
+            <div className="mt-6 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-gray-600">
+                  Showing {(pagination.currentPage - 1) * pagination.pageSize + 1} to{' '}
+                  {Math.min(pagination.currentPage * pagination.pageSize, pagination.totalItems)} of{' '}
+                  {pagination.totalItems} results
+                </p>
+                <Badge variant="outline" className="text-xs">
+                  Page {pagination.currentPage} of {pagination.totalPages}
+                </Badge>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  disabled={!pagination.hasPreviousPage || isLoading}
+                  onClick={previousPage}
+                >
+                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  Previous
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  disabled={!pagination.hasNextPage || isLoading}
+                  onClick={nextPage}
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function RentalHistoryPage() {
+  return (
+    <ProtectedRoute requiredPermissions={['RENTAL_VIEW']}>
+      <RentalHistoryContent />
+    </ProtectedRoute>
+  );
+}

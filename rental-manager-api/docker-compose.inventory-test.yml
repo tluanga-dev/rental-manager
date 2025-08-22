@@ -1,0 +1,273 @@
+version: '3.8'
+
+services:
+  # Test Database for Inventory Testing
+  inventory_test_db:
+    image: postgres:17-alpine
+    container_name: inventory_test_postgres
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: inventory_test_db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "5433:5432"
+    volumes:
+      - inventory_test_db_data:/var/lib/postgresql/data
+      - ./scripts/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d inventory_test_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - inventory_test_network
+
+  # Test Redis for Inventory Testing
+  inventory_test_redis:
+    image: redis:8-alpine
+    container_name: inventory_test_redis
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - inventory_test_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - inventory_test_network
+
+  # Main Application for Testing
+  inventory_test_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: inventory_test_app
+    environment:
+      # Database Configuration
+      DATABASE_URL: postgresql+asyncpg://test_user:test_password@inventory_test_db:5432/inventory_test_db
+      
+      # Redis Configuration
+      REDIS_URL: redis://inventory_test_redis:6379/0
+      
+      # Application Configuration
+      ENVIRONMENT: testing
+      DEBUG: "true"
+      SECRET_KEY: test_secret_key_for_inventory_testing
+      
+      # CORS Configuration
+      BACKEND_CORS_ORIGINS: '["http://localhost:3000", "http://localhost:8080"]'
+      
+      # API Configuration
+      API_V1_STR: /api/v1
+      PROJECT_NAME: "Rental Manager API - Inventory Testing"
+      
+      # Testing Configuration
+      TEST_DATABASE_URL: postgresql+asyncpg://test_user:test_password@inventory_test_db:5432/inventory_test_db
+      PYTEST_TIMEOUT: 300
+      COVERAGE_THRESHOLD: 80
+      
+      # Logging Configuration
+      LOG_LEVEL: DEBUG
+      LOG_FORMAT: json
+      
+      # Performance Configuration
+      WORKER_TIMEOUT: 300
+      MAX_CONNECTIONS: 100
+      
+    ports:
+      - "8001:8000"
+    volumes:
+      - .:/code
+      - inventory_test_coverage:/code/coverage_reports
+      - inventory_test_logs:/code/logs
+    depends_on:
+      inventory_test_db:
+        condition: service_healthy
+      inventory_test_redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - inventory_test_network
+    command: >
+      sh -c "
+        echo '🚀 Starting Inventory Test Environment...' &&
+        uv run alembic upgrade head &&
+        echo '✅ Database migrations complete' &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+      "
+
+  # Inventory Load Testing Service
+  inventory_load_tester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: inventory_load_tester
+    environment:
+      DATABASE_URL: postgresql+asyncpg://test_user:test_password@inventory_test_db:5432/inventory_test_db
+      REDIS_URL: redis://inventory_test_redis:6379/0
+      TARGET_API_URL: http://inventory_test_app:8000
+      LOAD_TEST_DURATION: 300
+      CONCURRENT_USERS: 10
+      RAMP_UP_TIME: 60
+    volumes:
+      - .:/code
+      - inventory_test_results:/code/load_test_results
+    depends_on:
+      inventory_test_app:
+        condition: service_healthy
+    networks:
+      - inventory_test_network
+    profiles:
+      - load-test
+    command: >
+      sh -c "
+        echo '🧪 Starting Inventory Load Tests...' &&
+        python /code/scripts/generate_inventory_test_data.py --preset large --output-dir /code/test_data &&
+        echo '📊 Test data generated' &&
+        uv run pytest tests/load/test_inventory_load.py -v -s --maxfail=5 --tb=short
+      "
+
+  # Inventory Unit Test Runner
+  inventory_unit_tester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: inventory_unit_tester
+    environment:
+      DATABASE_URL: postgresql+asyncpg://test_user:test_password@inventory_test_db:5432/inventory_test_db
+      REDIS_URL: redis://inventory_test_redis:6379/0
+      PYTHONPATH: /code
+    volumes:
+      - .:/code
+      - inventory_test_coverage:/code/coverage_reports
+    depends_on:
+      inventory_test_db:
+        condition: service_healthy
+    networks:
+      - inventory_test_network
+    profiles:
+      - unit-test
+    command: >
+      sh -c "
+        echo '🧪 Running Inventory Unit Tests...' &&
+        uv run pytest tests/unit/test_inventory_models.py -v -s --cov=app.models.inventory --cov-report=html:/code/coverage_reports/unit --cov-report=term-missing --cov-fail-under=80
+      "
+
+  # Inventory Integration Test Runner
+  inventory_integration_tester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: inventory_integration_tester
+    environment:
+      DATABASE_URL: postgresql+asyncpg://test_user:test_password@inventory_test_db:5432/inventory_test_db
+      REDIS_URL: redis://inventory_test_redis:6379/0
+      TARGET_API_URL: http://inventory_test_app:8000
+      PYTHONPATH: /code
+    volumes:
+      - .:/code
+      - inventory_test_coverage:/code/coverage_reports
+    depends_on:
+      inventory_test_app:
+        condition: service_healthy
+    networks:
+      - inventory_test_network
+    profiles:
+      - integration-test
+    command: >
+      sh -c "
+        echo '🧪 Running Inventory Integration Tests...' &&
+        uv run pytest tests/integration/test_inventory_api.py -v -s --cov=app.api.v1.endpoints.inventory --cov-report=html:/code/coverage_reports/integration --cov-report=term-missing
+      "
+
+  # Test Data Generator Service
+  inventory_data_generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: inventory_data_generator
+    environment:
+      DATABASE_URL: postgresql+asyncpg://test_user:test_password@inventory_test_db:5432/inventory_test_db
+      REDIS_URL: redis://inventory_test_redis:6379/0
+      PYTHONPATH: /code
+    volumes:
+      - .:/code
+      - inventory_test_data:/code/generated_data
+    depends_on:
+      inventory_test_db:
+        condition: service_healthy
+    networks:
+      - inventory_test_network
+    profiles:
+      - data-generator
+    command: >
+      sh -c "
+        echo '🏭 Generating Inventory Test Data...' &&
+        python /code/scripts/generate_inventory_test_data.py --preset xlarge --output-dir /code/generated_data --format json &&
+        echo '✅ Test data generation complete' &&
+        ls -la /code/generated_data/
+      "
+
+  # Performance Monitoring
+  inventory_test_monitor:
+    image: prom/prometheus:latest
+    container_name: inventory_test_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus-test.yml:/etc/prometheus/prometheus.yml
+      - inventory_test_prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=7d'
+      - '--web.enable-lifecycle'
+    networks:
+      - inventory_test_network
+    profiles:
+      - monitoring
+
+volumes:
+  inventory_test_db_data:
+    driver: local
+    name: inventory_test_postgres_data
+  
+  inventory_test_redis_data:
+    driver: local
+    name: inventory_test_redis_data
+    
+  inventory_test_coverage:
+    driver: local
+    name: inventory_test_coverage_reports
+    
+  inventory_test_results:
+    driver: local
+    name: inventory_test_load_results
+    
+  inventory_test_data:
+    driver: local
+    name: inventory_test_generated_data
+    
+  inventory_test_logs:
+    driver: local
+    name: inventory_test_application_logs
+    
+  inventory_test_prometheus_data:
+    driver: local
+    name: inventory_test_prometheus_storage
+
+networks:
+  inventory_test_network:
+    driver: bridge
+    name: inventory_test_net

@@ -1,0 +1,359 @@
+'use client';
+
+// Rental Return Page - Main component for processing returns with sidebar navigation
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { 
+  CheckCircle as CheckCircleIcon,
+  Printer as PrinterIcon
+} from 'lucide-react';
+import { useRentalReturn } from '../hooks/useRentalReturn';
+import RentalReturnSidebar, { TabType } from './RentalReturnSidebar';
+import { RentalItemsTab, FinancialTab, ReturnNotesTab } from './tabs';
+import { ReturnableRental, RentalReturnResponse } from '../types/rental-return';
+import { ReturnPageLoadingSkeleton } from './LoadingSkeletons';
+import { ErrorAlert, ErrorBoundary, NetworkStatus } from './ErrorComponents';
+import { ReturnConfirmationDialog } from './ConfirmationDialogs';
+import { PageTransition, AnimatedButton } from './AnimationComponents';
+
+interface RentalReturnPageProps {
+  rentalId: string;
+}
+
+export default function RentalReturnPage({ rentalId }: RentalReturnPageProps) {
+  const [mounted, setMounted] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>('items');
+  const router = useRouter();
+  
+  const {
+    returnData,
+    returnItems,
+    loading,
+    error,
+    processingReturn,
+    fetchReturnData,
+    updateReturnItem,
+    toggleAllItems,
+    setReturnActionForAll,
+    processReturn,
+    calculateFinancialPreview,
+    canProcessReturn,
+    selectedItemsCount,
+    totalItemsCount,
+    hasOverdueItems
+  } = useRentalReturn(rentalId);
+
+  const [returnNotes, setReturnNotes] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [returnResult, setReturnResult] = useState<RentalReturnResponse | null>(null);
+  const [showReturnConfirmation, setShowReturnConfirmation] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      fetchReturnData();
+    }
+  }, [mounted, fetchReturnData]);
+
+  const handleProcessReturn = async () => {
+    if (!canProcessReturn()) return;
+    setShowReturnConfirmation(false);
+    
+    try {
+      const result = await processReturn(returnNotes);
+      setReturnResult(result);
+      setShowConfirmation(true);
+    } catch (err) {
+      console.error('Return processing failed:', err);
+    }
+  };
+
+  const handleReturnClick = () => {
+    if (canProcessReturn()) {
+      setShowReturnConfirmation(true);
+    }
+  };
+
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString();
+  };
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      'RENTAL_INPROGRESS': { 
+        color: 'bg-blue-100 text-blue-800', 
+        label: 'In Progress' 
+      },
+      'RENTAL_COMPLETED': { 
+        color: 'bg-green-100 text-green-800', 
+        label: 'Completed' 
+      },
+      'RENTAL_LATE': { 
+        color: 'bg-red-100 text-red-800', 
+        label: 'Late' 
+      }
+    };
+
+    const config = statusConfig[status as keyof typeof statusConfig] || {
+      color: 'bg-gray-100 text-gray-800',
+      label: status
+    };
+
+    return (
+      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
+        {config.label}
+      </span>
+    );
+  };
+
+  const financialPreview = calculateFinancialPreview();
+
+  // Safe navigation function
+  const navigateTo = (path: string) => {
+    if (mounted && router) {
+      router.push(path);
+    }
+  };
+
+  // Render active tab content
+  const renderActiveTab = () => {
+    if (!returnData) return null;
+
+    switch (activeTab) {
+      case 'items':
+        return (
+          <RentalItemsTab
+            returnItems={returnItems}
+            onUpdateItem={updateReturnItem}
+            onToggleAll={toggleAllItems}
+            onSetActionForAll={setReturnActionForAll}
+            selectedCount={selectedItemsCount}
+            totalCount={totalItemsCount}
+            isProcessing={processingReturn}
+            hasOverdueItems={hasOverdueItems}
+          />
+        );
+      case 'financial':
+        return (
+          <FinancialTab
+            financialPreview={financialPreview}
+            returnData={returnData}
+            selectedItemsCount={selectedItemsCount}
+          />
+        );
+      case 'notes':
+        return (
+          <ReturnNotesTab
+            returnNotes={returnNotes}
+            onReturnNotesChange={setReturnNotes}
+            onProcessReturn={handleReturnClick}
+            canProcessReturn={canProcessReturn()}
+            isProcessing={processingReturn}
+            selectedItemsCount={selectedItemsCount}
+            financialPreview={financialPreview}
+            rentalId={rentalId}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  // Return loading state until component is mounted (prevents SSR issues)
+  if (!mounted) {
+    return (
+      <>
+        <NetworkStatus />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Initializing...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (loading) {
+    return (
+      <>
+        <NetworkStatus />
+        <ReturnPageLoadingSkeleton />
+      </>
+    );
+  }
+
+  if (error || !returnData) {
+    return (
+      <>
+        <NetworkStatus />
+        <PageTransition>
+          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="max-w-md w-full mx-4">
+              <ErrorAlert
+                error={{
+                  type: 'not_found_error',
+                  message: error || 'Unable to load return data',
+                  details: 'The rental return information could not be retrieved.'
+                }}
+                onRetry={() => fetchReturnData()}
+              />
+              <div className="mt-6 text-center">
+                <AnimatedButton
+                  onClick={() => navigateTo(`/rentals/${rentalId}`)}
+                  variant="secondary"
+                >
+                  Back to Rental Details
+                </AnimatedButton>
+              </div>
+            </div>
+          </div>
+        </PageTransition>
+      </>
+    );
+  }
+
+  // Success confirmation modal
+  if (showConfirmation && returnResult) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center">
+            <CheckCircleIcon className="mx-auto h-16 w-16 text-green-500" />
+            <h2 className="mt-4 text-2xl font-bold text-gray-900">Return Processed Successfully!</h2>
+            <p className="mt-2 text-gray-600">
+              {returnResult.items_returned.length} items have been returned successfully.
+            </p>
+            
+            {/* Return Summary */}
+            <div className="mt-6 bg-gray-50 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Return Summary</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Transaction:</span>
+                  <span className="font-medium">{returnResult.transaction_number}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Return Date:</span>
+                  <span className="font-medium">{formatDate(returnResult.return_date)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>New Status:</span>
+                  <span>{getStatusBadge(returnResult.rental_status)}</span>
+                </div>
+                {returnResult.financial_impact && (
+                  <>
+                    <div className="border-t pt-2 mt-2">
+                      <div className="flex justify-between">
+                        <span>Deposit Amount:</span>
+                        <span className="font-medium">${returnResult.financial_impact.deposit_amount.toFixed(2)}</span>
+                      </div>
+                      {returnResult.financial_impact.late_fees > 0 && (
+                        <div className="flex justify-between text-red-600">
+                          <span>Late Fees:</span>
+                          <span className="font-medium">-${returnResult.financial_impact.late_fees.toFixed(2)}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between font-bold text-lg border-t pt-2 mt-2">
+                        <span>Refund Amount:</span>
+                        <span className="text-green-600">${returnResult.financial_impact.total_refund.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="mt-8 flex justify-center space-x-4">
+              <button
+                onClick={() => window.print()}
+                className="bg-gray-600 text-white px-6 py-2 rounded-md hover:bg-gray-700 flex items-center"
+              >
+                <PrinterIcon className="w-4 h-4 mr-2" />
+                Print Receipt
+              </button>
+              <button
+                onClick={() => navigateTo(`/rentals/${rentalId}`)}
+                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+              >
+                View Rental Details
+              </button>
+              <button
+                onClick={() => navigateTo('/rentals')}
+                className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"
+              >
+                Back to Rentals
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <ErrorBoundary>
+      <NetworkStatus />
+      <PageTransition>
+        <div className="h-screen bg-gray-50 flex overflow-hidden">
+          {/* Sidebar */}
+          <RentalReturnSidebar
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            rentalId={rentalId}
+            transactionNumber={returnData?.transaction_number}
+            canProcessReturn={canProcessReturn()}
+            isProcessing={processingReturn}
+            selectedItemsCount={selectedItemsCount}
+            onProcessReturn={handleReturnClick}
+          />
+          
+          {/* Main Content Area */}
+          <div className="flex-1 overflow-auto">
+            <div className="max-w-7xl mx-auto p-6">
+              {renderActiveTab()}
+            </div>
+          </div>
+
+          {/* Error Display */}
+          {error && (
+            <div className="fixed bottom-4 right-4 max-w-md z-50">
+              <ErrorAlert
+                error={{
+                  type: 'server_error',
+                  message: 'Return Processing Failed',
+                  details: error
+                }}
+                onRetry={() => fetchReturnData()}
+              />
+            </div>
+          )}
+
+          {/* Return Confirmation Dialog */}
+          <ReturnConfirmationDialog
+            isOpen={showReturnConfirmation}
+            onClose={() => setShowReturnConfirmation(false)}
+            onConfirm={handleProcessReturn}
+            loading={processingReturn}
+            selectedItems={returnItems
+              .filter(item => item.selected)
+              .map(item => ({
+                item_name: item.item.item_name,
+                return_quantity: item.return_quantity
+              }))
+            }
+            financialImpact={financialPreview}
+          />
+        </div>
+      </PageTransition>
+    </ErrorBoundary>
+  );
+}

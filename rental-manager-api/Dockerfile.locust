@@ -1,0 +1,35 @@
+FROM python:3.11-slim
+
+LABEL maintainer="Rental Manager Team"
+LABEL description="Locust load testing container for Item API"
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies for Locust
+RUN pip install --no-cache-dir \
+    locust \
+    requests \
+    faker \
+    pydantic
+
+# Copy locust test files
+COPY locust-tests/ /app/locust-tests/
+
+# Create results directory
+RUN mkdir -p /app/test-results
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV LOCUST_HOST=http://localhost:8000
+
+# Expose Locust web interface port
+EXPOSE 8089
+
+# Default command
+CMD ["locust", "--help"]

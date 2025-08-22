@@ -1,0 +1,67 @@
+[
+  {
+    "location_code": "MAIN-WH",
+    "location_name": "Main Warehouse",
+    "location_type": "WAREHOUSE",
+    "address": "1250 Industrial Boulevard, Building A",
+    "city": "Denver",
+    "state": "Colorado",
+    "postal_code": "80204",
+    "country": "United States",
+    "contact_number": "+1-303-555-0101",
+    "email": "warehouse@rentalcompany.com",
+    "manager_user_id": null
+  },
+  {
+    "location_code": "DOWNTOWN",
+    "location_name": "Downtown Store",
+    "location_type": "STORE",
+    "address": "456 Main Street, Suite 100",
+    "city": "Denver",
+    "state": "Colorado",
+    "postal_code": "80202",
+    "country": "United States",
+    "contact_number": "+1-303-555-0102",
+    "email": "downtown@rentalcompany.com",
+    "manager_user_id": null
+  },
+  {
+    "location_code": "AIRPORT",
+    "location_name": "Airport Service Center",
+    "location_type": "SERVICE_CENTER",
+    "address": "8900 Airport Way, Terminal Access Road",
+    "city": "Denver",
+    "state": "Colorado",
+    "postal_code": "80249",
+    "country": "United States",
+    "contact_number": "+1-303-555-0103",
+    "email": "airport@rentalcompany.com",
+    "manager_user_id": null
+  },
+  {
+    "location_code": "NORTH-WH",
+    "location_name": "North Side Warehouse",
+    "location_type": "WAREHOUSE",
+    "address": "3401 North Federal Boulevard",
+    "city": "Westminster",
+    "state": "Colorado",
+    "postal_code": "80031",
+    "country": "United States",
+    "contact_number": "+1-303-555-0104",
+    "email": "northside@rentalcompany.com",
+    "manager_user_id": null
+  },
+  {
+    "location_code": "SOUTH-ST",
+    "location_name": "South Store",
+    "location_type": "STORE",
+    "address": "7825 South Broadway, Unit 15",
+    "city": "Littleton",
+    "state": "Colorado",
+    "postal_code": "80122",
+    "country": "United States",
+    "contact_number": "+1-303-555-0105",
+    "email": "south@rentalcompany.com",
+    "manager_user_id": null
+  }
+]

@@ -1,0 +1,238 @@
+version: '3.8'
+
+services:
+  # PostgreSQL for UOM testing
+  uom-test-postgres:
+    image: postgres:17-alpine
+    container_name: uom_test_postgres
+    environment:
+      POSTGRES_USER: uom_test_user
+      POSTGRES_PASSWORD: uom_test_pass
+      POSTGRES_DB: uom_test_db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
+    ports:
+      - "5434:5432"
+    volumes:
+      - uom_test_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uom_test_user -d uom_test_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - uom_test_network
+
+  # Redis for UOM testing
+  uom-test-redis:
+    image: redis:8-alpine
+    container_name: uom_test_redis
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6381:6379"
+    volumes:
+      - uom_test_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - uom_test_network
+
+  # API server for UOM testing
+  uom-test-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+      args:
+        - PYTHON_VERSION=3.11
+    container_name: uom_test_api
+    depends_on:
+      uom-test-postgres:
+        condition: service_healthy
+      uom-test-redis:
+        condition: service_healthy
+    environment:
+      # Database configuration
+      DATABASE_URL: postgresql+asyncpg://uom_test_user:uom_test_pass@uom-test-postgres:5432/uom_test_db
+      SYNC_DATABASE_URL: postgresql://uom_test_user:uom_test_pass@uom-test-postgres:5432/uom_test_db
+      
+      # Redis configuration
+      REDIS_URL: redis://uom-test-redis:6379/0
+      
+      # Testing environment
+      ENVIRONMENT: testing
+      TESTING: "true"
+      DEBUG: "true"
+      
+      # API configuration
+      API_V1_STR: /api/v1
+      PROJECT_NAME: "UOM Test Manager"
+      SECRET_KEY: uom_test_secret_key
+      
+      # Admin credentials for testing
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: Admin123!
+      ADMIN_EMAIL: admin@uomtest.com
+      
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+      - ./scripts:/app/scripts
+      - ./alembic:/app/alembic
+      - ./test_results:/app/test_results
+    ports:
+      - "8002:8000"
+    networks:
+      - uom_test_network
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 5 &&
+        echo 'Running migrations...' &&
+        alembic upgrade head &&
+        echo 'Creating admin user...' &&
+        python scripts/create_admin.py &&
+        echo 'Starting test server...' &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  # UOM Data Generator - Creates 1000 units
+  uom-data-generator:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    container_name: uom_data_generator
+    depends_on:
+      uom-test-api:
+        condition: service_started
+    environment:
+      API_URL: http://uom-test-api:8000
+      PYTHONPATH: /app
+    volumes:
+      - ./tests:/app/tests
+      - ./test_results:/app/test_results
+    networks:
+      - uom_test_network
+    command: >
+      sh -c "
+        echo 'Waiting for API to be ready...' &&
+        sleep 15 &&
+        echo 'Generating 1000 units of measurement...' &&
+        python tests/load/test_uom_1000_stress.py
+      "
+    profiles:
+      - data-generation
+
+  # UOM Integration Test Runner
+  uom-integration-tester:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    container_name: uom_integration_tester
+    depends_on:
+      uom-test-api:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql+asyncpg://uom_test_user:uom_test_pass@uom-test-postgres:5432/uom_test_db
+      API_URL: http://uom-test-api:8000
+      PYTHONPATH: /app
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+      - ./test_results:/app/test_results
+      - ./coverage_reports:/app/coverage_reports
+    networks:
+      - uom_test_network
+    command: >
+      sh -c "
+        echo 'Waiting for API to be ready...' &&
+        sleep 15 &&
+        echo 'Running integration tests...' &&
+        pytest tests/integration/test_unit_of_measurement_api.py -v --tb=short \
+          --cov=app.models.unit_of_measurement \
+          --cov=app.schemas.unit_of_measurement \
+          --cov=app.crud.unit_of_measurement \
+          --cov=app.services.unit_of_measurement \
+          --cov=app.api.v1.endpoints.unit_of_measurement \
+          --cov-report=html:coverage_reports/uom_coverage \
+          --cov-report=term-missing \
+          --html=test_results/uom_integration_report.html \
+          --self-contained-html
+      "
+    profiles:
+      - integration-testing
+
+  # UOM Performance Test Runner
+  uom-performance-tester:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    container_name: uom_performance_tester
+    depends_on:
+      uom-test-api:
+        condition: service_started
+      uom-data-generator:
+        condition: service_completed_successfully
+    environment:
+      API_URL: http://uom-test-api:8000
+      PYTHONPATH: /app
+      PERFORMANCE_TEST_ITEMS: 1000
+    volumes:
+      - ./tests:/app/tests
+      - ./performance_reports:/app/performance_reports
+    networks:
+      - uom_test_network
+    command: >
+      sh -c "
+        echo 'Waiting for data generation to complete...' &&
+        sleep 5 &&
+        echo 'Running performance tests...' &&
+        python tests/load/test_uom_1000_stress.py > performance_reports/uom_performance.txt 2>&1
+      "
+    profiles:
+      - performance-testing
+
+  # UOM Load Test with Locust
+  uom-load-tester:
+    image: locustio/locust:latest
+    container_name: uom_load_tester
+    depends_on:
+      uom-test-api:
+        condition: service_started
+      uom-data-generator:
+        condition: service_completed_successfully
+    environment:
+      LOCUST_HOST: http://uom-test-api:8000
+      LOCUST_USERS: 50
+      LOCUST_SPAWN_RATE: 5
+      LOCUST_RUN_TIME: 2m
+    volumes:
+      - ./tests/load:/mnt/locust
+      - ./load_test_results:/mnt/locust/results
+    networks:
+      - uom_test_network
+    command: >
+      -f /mnt/locust/uom_locustfile.py
+      --headless
+      --users 50
+      --spawn-rate 5
+      --run-time 2m
+      --html /mnt/locust/results/uom_load_test_report.html
+    profiles:
+      - load-testing
+    ports:
+      - "8090:8089"
+
+volumes:
+  uom_test_postgres_data:
+    driver: local
+  uom_test_redis_data:
+    driver: local
+
+networks:
+  uom_test_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.26.0.0/16

@@ -1,0 +1,269 @@
+services:
+  # PostgreSQL database for testing
+  test_postgres:
+    image: postgres:15
+    container_name: item_test_postgres
+    environment:
+      POSTGRES_DB: rental_manager_test
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: TestPass123!
+      POSTGRES_HOST_AUTH_METHOD: md5
+    ports:
+      - "5433:5432"
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d rental_manager_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - item_test_network
+    profiles: ["test-infrastructure", "all-tests"]
+
+  # Redis for caching
+  test_redis:
+    image: redis:7-alpine
+    container_name: item_test_redis
+    ports:
+      - "6380:6379"
+    command: redis-server --requirepass TestRedis123!
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "TestRedis123!", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - item_test_network
+    profiles: ["test-infrastructure", "all-tests"]
+
+  # Main API service for testing
+  item_test_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: item_test_api
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://test_user:TestPass123!@test_postgres:5432/rental_manager_test
+      - REDIS_URL=redis://:TestRedis123!@test_redis:6379
+      - SECRET_KEY=test_secret_key_12345
+      - DEBUG=true
+      - ADMIN_USERNAME=testadmin
+      - ADMIN_EMAIL=testadmin@test.com
+      - ADMIN_PASSWORD=TestAdmin123!
+      - ADMIN_FULL_NAME=Test Administrator
+    ports:
+      - "8001:8000"
+    volumes:
+      - .:/app
+      - ./test-logs:/app/logs
+    depends_on:
+      test_postgres:
+        condition: service_healthy
+      test_redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - item_test_network
+    profiles: ["test-api", "all-tests"]
+
+  # Data generation service
+  item_data_generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: item_data_generator
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://test_user:TestPass123!@test_postgres:5432/rental_manager_test
+      - REDIS_URL=redis://:TestRedis123!@test_redis:6379
+      - SECRET_KEY=test_secret_key_12345
+    volumes:
+      - .:/app
+      - ./test-results:/app/test-results
+    depends_on:
+      test_postgres:
+        condition: service_healthy
+      item_test_api:
+        condition: service_healthy
+    command: python scripts/generate_1000_items_test_data.py
+    networks:
+      - item_test_network
+    profiles: ["data-generation"]
+
+  # Unit tests runner
+  item_unit_tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    container_name: item_unit_tests
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://test_user:TestPass123!@test_postgres:5432/rental_manager_test
+      - REDIS_URL=redis://:TestRedis123!@test_redis:6379
+      - SECRET_KEY=test_secret_key_12345
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app
+      - ./test-results:/app/test-results
+    depends_on:
+      test_postgres:
+        condition: service_healthy
+      test_redis:
+        condition: service_healthy
+    command: >
+      sh -c "
+        echo '🧪 Running Unit Tests for Item Module...' &&
+        pytest tests/unit/test_item_*.py -v --tb=short --cov=app.services.item --cov=app.crud.item --cov=app.services.sku_generator --cov-report=html:/app/test-results/unit-coverage &&
+        echo '✅ Unit tests completed!'
+      "
+    networks:
+      - item_test_network
+    profiles: ["unit-tests"]
+
+  # Integration tests runner
+  item_integration_tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    container_name: item_integration_tests
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://test_user:TestPass123!@test_postgres:5432/rental_manager_test
+      - REDIS_URL=redis://:TestRedis123!@test_redis:6379
+      - SECRET_KEY=test_secret_key_12345
+      - API_BASE_URL=http://item_test_api:8000
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app
+      - ./test-results:/app/test-results
+    depends_on:
+      item_test_api:
+        condition: service_healthy
+      item_data_generator:
+        condition: service_completed_successfully
+    command: >
+      sh -c "
+        echo '🔗 Running Integration Tests for Item API...' &&
+        pytest tests/integration/test_item_api.py -v --tb=short --cov-report=html:/app/test-results/integration-coverage &&
+        echo '✅ Integration tests completed!'
+      "
+    networks:
+      - item_test_network
+    profiles: ["integration-tests"]
+
+  # Performance/Load testing with Locust
+  item_load_tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.locust
+    container_name: item_load_tests
+    environment:
+      - API_BASE_URL=http://item_test_api:8000
+      - TEST_USERS=50
+      - SPAWN_RATE=5
+      - RUN_TIME=300
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./test-results:/app/test-results
+      - ./locust-tests:/app/locust-tests
+    depends_on:
+      item_test_api:
+        condition: service_healthy
+      item_data_generator:
+        condition: service_completed_successfully
+    command: >
+      sh -c "
+        echo '⚡ Starting Load Tests for Item API...' &&
+        locust -f /app/locust-tests/item_locustfile.py --host=http://item_test_api:8000 --users=50 --spawn-rate=5 --run-time=300s --html=/app/test-results/load-test-report.html --csv=/app/test-results/load-test &&
+        echo '✅ Load tests completed!'
+      "
+    networks:
+      - item_test_network
+    profiles: ["load-tests"]
+
+  # End-to-end test orchestrator
+  item_e2e_tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    container_name: item_e2e_tests
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://test_user:TestPass123!@test_postgres:5432/rental_manager_test
+      - API_BASE_URL=http://item_test_api:8000
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app
+      - ./test-results:/app/test-results
+    depends_on:
+      item_test_api:
+        condition: service_healthy
+      item_data_generator:
+        condition: service_completed_successfully
+    command: >
+      sh -c "
+        echo '🎯 Running End-to-End Tests...' &&
+        pytest tests/e2e/test_item_workflows.py -v --tb=short &&
+        echo '✅ E2E tests completed!'
+      "
+    networks:
+      - item_test_network
+    profiles: ["e2e-tests"]
+
+  # Database migration tester
+  migration_test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: migration_test
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://test_user:TestPass123!@test_postgres:5432/rental_manager_test
+    volumes:
+      - .:/app
+    depends_on:
+      test_postgres:
+        condition: service_healthy
+    command: >
+      sh -c "
+        echo '🗄️ Testing database migrations...' &&
+        alembic upgrade head &&
+        echo '✅ Migrations applied successfully!' &&
+        python -c 'from app.models import *; print(\"📋 Models imported successfully\")' &&
+        echo '✅ Migration test completed!'
+      "
+    networks:
+      - item_test_network
+    profiles: ["migration-tests"]
+
+  # Test results collector
+  test_reporter:
+    image: nginx:alpine
+    container_name: test_reporter
+    ports:
+      - "8082:80"
+    volumes:
+      - ./test-results:/usr/share/nginx/html/results:ro
+      - ./nginx-test.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - item_test_network
+    profiles: ["test-reporter"]
+
+volumes:
+  test_postgres_data:
+    driver: local
+
+networks:
+  item_test_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

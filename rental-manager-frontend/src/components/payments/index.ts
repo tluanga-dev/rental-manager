@@ -1,0 +1,9 @@
+// Barrel export for payment components
+export { PaymentMethodSelector } from './PaymentMethodSelector';
+export { PaymentAmountInput } from './PaymentAmountInput';
+export { PaymentRecordingForm } from './PaymentRecordingForm';
+export { PaymentHistory } from './PaymentHistory';
+export { PaymentReceipt } from './PaymentReceipt';
+export { PaymentSearch } from './PaymentSearch';
+export { PaymentAnalytics } from './PaymentAnalytics';
+export { PaymentExport } from './PaymentExport';

@@ -1,0 +1,259 @@
+version: '3.8'
+
+services:
+  # Test database for transaction testing
+  test-postgres:
+    image: postgres:17-alpine
+    container_name: test_transactions_postgres
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass
+      POSTGRES_DB: test_transactions_db
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+    ports:
+      - "5433:5432"
+    volumes:
+      - test_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d test_transactions_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - test_network
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=128MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=4MB
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+
+  # Test Redis for caching
+  test-redis:
+    image: redis:8-alpine
+    container_name: test_transactions_redis
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6380:6379"
+    volumes:
+      - test_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - test_network
+
+  # Test application service
+  test-app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+      args:
+        PYTHON_VERSION: "3.13"
+    container_name: test_transactions_api
+    volumes:
+      - ./app:/code/app
+      - ./alembic:/code/alembic
+      - ./tests:/code/tests
+      - ./scripts:/code/scripts
+      - ./test_results:/code/test_results
+    ports:
+      - "8001:8000"
+    environment:
+      # Database configuration
+      DATABASE_URL: postgresql+asyncpg://test_user:test_pass@test-postgres:5432/test_transactions_db
+      TEST_DATABASE_URL: postgresql+asyncpg://test_user:test_pass@test-postgres:5432/test_transactions_db
+      DATABASE_ECHO: "false"
+      
+      # Redis configuration
+      REDIS_URL: redis://test-redis:6379/0
+      
+      # Application settings
+      ENVIRONMENT: testing
+      DEBUG: "true"
+      TESTING: "true"
+      SECRET_KEY: test_secret_key_for_transaction_testing
+      
+      # Admin user for testing
+      ADMIN_USERNAME: test_admin
+      ADMIN_EMAIL: test_admin@test.com
+      ADMIN_PASSWORD: TestAdmin123!
+      ADMIN_FULL_NAME: Test Administrator
+      
+      # Performance settings
+      DATABASE_POOL_SIZE: 20
+      DATABASE_MAX_OVERFLOW: 40
+      DATABASE_POOL_TIMEOUT: 30
+      DATABASE_POOL_RECYCLE: 1800
+      
+      # Test configuration
+      TEST_TRANSACTION_COUNT: 1000
+      TEST_BATCH_SIZE: 100
+      TEST_PARALLEL_WORKERS: 10
+      
+      # Logging
+      LOG_LEVEL: INFO
+      LOG_FILE: /code/test_results/test_transactions.log
+      
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+    networks:
+      - test_network
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 5 &&
+        echo 'Running database migrations...' &&
+        alembic upgrade head &&
+        echo 'Creating test admin user...' &&
+        python scripts/create_admin.py &&
+        echo 'Seeding test data...' &&
+        python scripts/seed_test_transactions.py &&
+        echo 'Starting test server...' &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  # Load testing service with Locust
+  test-locust:
+    image: locustio/locust:latest
+    container_name: test_transactions_locust
+    ports:
+      - "8089:8089"
+      - "5557:5557"
+    volumes:
+      - ./tests/load:/mnt/locust
+      - ./test_results:/mnt/test_results
+    environment:
+      LOCUST_HOST: http://test-app:8000
+      LOCUST_USERS: 100
+      LOCUST_SPAWN_RATE: 10
+      LOCUST_RUN_TIME: 10m
+      LOCUST_HEADLESS: "false"
+      LOCUST_HTML: /mnt/test_results/locust_report.html
+    networks:
+      - test_network
+    command: >
+      -f /mnt/locust/transaction_locustfile.py
+      --host=http://test-app:8000
+      --users=100
+      --spawn-rate=10
+    depends_on:
+      - test-app
+
+  # Test monitoring with Prometheus
+  test-prometheus:
+    image: prom/prometheus:latest
+    container_name: test_transactions_prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9091:9090"
+    networks:
+      - test_network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+
+  # Test monitoring dashboard with Grafana
+  test-grafana:
+    image: grafana/grafana:latest
+    container_name: test_transactions_grafana
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - test_network
+    depends_on:
+      - test-prometheus
+
+  # Database admin for debugging
+  test-pgadmin:
+    image: dpage/pgadmin4:9.6
+    container_name: test_transactions_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.com
+      PGADMIN_DEFAULT_PASSWORD: test123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "5051:80"
+    depends_on:
+      - test-postgres
+    networks:
+      - test_network
+
+  # Test runner service for automated testing
+  test-runner:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    container_name: test_transactions_runner
+    volumes:
+      - ./app:/code/app
+      - ./tests:/code/tests
+      - ./scripts:/code/scripts
+      - ./test_results:/code/test_results
+      - ./htmlcov:/code/htmlcov
+    environment:
+      DATABASE_URL: postgresql+asyncpg://test_user:test_pass@test-postgres:5432/test_transactions_db
+      REDIS_URL: redis://test-redis:6379/0
+      ENVIRONMENT: testing
+      PYTHONPATH: /code
+    depends_on:
+      test-postgres:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+    networks:
+      - test_network
+    entrypoint: >
+      sh -c "
+        echo 'Waiting for services...' &&
+        sleep 10 &&
+        echo 'Running database migrations...' &&
+        alembic upgrade head &&
+        echo 'Running transaction module tests...' &&
+        pytest tests/unit/test_transaction_*.py -v --tb=short --color=yes &&
+        pytest tests/integration/test_transaction_*.py -v --tb=short --color=yes &&
+        echo 'Running load tests...' &&
+        python tests/load/test_transaction_1000_stress.py &&
+        echo 'Generating coverage report...' &&
+        pytest tests/ --cov=app.models.transaction --cov=app.services.transaction --cov=app.crud.transaction --cov=app.api.v1.endpoints.transactions --cov-report=html --cov-report=term &&
+        echo 'Tests completed! Results in test_results/'
+      "
+
+volumes:
+  test_postgres_data:
+  test_redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  test_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16

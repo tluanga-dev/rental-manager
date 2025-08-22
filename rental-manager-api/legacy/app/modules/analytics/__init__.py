@@ -1,0 +1,1 @@
+# Analytics module for rental performance metrics and insights

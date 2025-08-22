@@ -1,0 +1,56 @@
+{
+  "name": "rental-manager-e2e-tests",
+  "version": "1.0.0",
+  "description": "Comprehensive E2E testing suite for the Rental Management System using Puppeteer",
+  "main": "main-test-runner.js",
+  "scripts": {
+    "test": "node main-test-runner.js",
+    "test:visible": "node main-test-runner.js --visible",
+    "test:purchase": "node transactions/purchase-transaction-tests.js",
+    "test:rental": "node transactions/rental-transaction-tests.js",
+    "test:edge-cases": "node edge-cases/edge-case-tests.js",
+    "test:parallel": "node main-test-runner.js --parallel",
+    "test:ci": "node main-test-runner.js --headless",
+    "test:purchase-only": "node main-test-runner.js --suites=purchase",
+    "test:rental-only": "node main-test-runner.js --suites=rental",
+    "test:validation-only": "node main-test-runner.js --suites=validation",
+    "clean": "rm -rf test-screenshots",
+    "setup": "npm install && mkdir -p test-screenshots"
+  },
+  "keywords": [
+    "e2e",
+    "testing",
+    "puppeteer",
+    "rental-management",
+    "automation",
+    "transactions",
+    "validation"
+  ],
+  "author": "Rental Management System Team",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^21.11.0"
+  },
+  "devDependencies": {
+    "lodash": "^4.17.21"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourorg/rental-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourorg/rental-manager/issues"
+  },
+  "homepage": "https://github.com/yourorg/rental-manager#readme",
+  "config": {
+    "test_timeout": 30000,
+    "default_viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "screenshot_dir": "./test-screenshots"
+  }
+}

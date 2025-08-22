@@ -1,0 +1,44 @@
+FROM python:3.13-slim-bookworm
+
+WORKDIR /code
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    postgresql-client \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install UV for ultra-fast package management
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
+# Copy dependency files
+COPY pyproject.toml /code/
+
+# Install dependencies using pip
+RUN pip install --no-cache-dir \
+    fastapi==0.116.1 \
+    "uvicorn[standard]==0.35.0" \
+    sqlalchemy==2.0.39 \
+    alembic==1.16.4 \
+    psycopg2-binary==2.9.10 \
+    redis==6.4.0 \
+    pydantic==2.11.7 \
+    pydantic-settings==2.10.1 \
+    joserfc==1.0.0 \
+    "passlib[bcrypt]==1.7.4" \
+    python-multipart==0.0.20 \
+    email-validator==2.2.0 \
+    python-dotenv==1.1.1 \
+    httpx==0.28.1 \
+    asyncpg==0.30.0
+
+# Copy application
+COPY . /code/
+
+# Create non-root user
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /code
+USER appuser
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
