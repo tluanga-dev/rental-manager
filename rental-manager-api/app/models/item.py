@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from app.models.category import Category
     from app.models.unit_of_measurement import UnitOfMeasurement
     from app.models.transaction import TransactionLine
+    from app.models.inventory import InventoryUnit, StockMovement, StockLevel
 
 
 class Item(RentalManagerBaseModel):
@@ -296,8 +297,10 @@ class Item(RentalManagerBaseModel):
     unit_of_measurement = relationship("UnitOfMeasurement", back_populates="items", lazy="select")
     transaction_lines = relationship("TransactionLine", back_populates="item", lazy="dynamic")
     
-    # Inventory units relationship (to be added when inventory module is migrated)
-    # inventory_units = relationship("InventoryUnit", back_populates="item", lazy="select")
+    # Inventory relationships
+    inventory_units = relationship("InventoryUnit", back_populates="item", lazy="select")
+    stock_movements = relationship("StockMovement", back_populates="item", lazy="dynamic")
+    stock_levels = relationship("StockLevel", back_populates="item", lazy="select")
     
     # Indexes for performance optimization
     __table_args__ = (

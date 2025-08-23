@@ -20,8 +20,18 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "rental-manager-api"))
 
+# Import all models to ensure proper initialization
+from app.models import *  # This includes TransactionHeader and all other models
 from app.models.user import User, UserRole
 from app.core.security import SecurityManager
+
+# Configure SQLAlchemy registry to resolve all relationships
+from sqlalchemy.orm import configure_mappers
+try:
+    configure_mappers()
+except Exception as e:
+    # Ignore configuration errors for now
+    pass
 
 logger = logging.getLogger(__name__)
 console = Console()

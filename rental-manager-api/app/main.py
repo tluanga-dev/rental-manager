@@ -74,15 +74,17 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Set up CORS middleware
-if settings.BACKEND_CORS_ORIGINS:
+# Set up CORS middleware using whitelist configuration
+cors_origins = settings.cors_origins
+if cors_origins:
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+        allow_origins=cors_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    logger.info(f"CORS configured with origins: {cors_origins}")
 
 
 # Add request ID middleware for tracking

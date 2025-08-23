@@ -225,5 +225,11 @@ class Config:
         return len(issues) == 0, issues
 
 
+# Import all models to ensure proper SQLAlchemy initialization
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent / "rental-manager-api"))
+from app.models import *  # This ensures all models including TransactionHeader are loaded
+
 # Global config instance
 config = Config()

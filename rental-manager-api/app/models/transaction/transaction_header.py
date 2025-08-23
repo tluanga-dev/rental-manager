@@ -302,6 +302,9 @@ class TransactionHeader(RentalManagerBaseModel):
         "TransactionEvent", back_populates="transaction", lazy="select",
         cascade="all, delete-orphan"
     )
+    stock_movements: Mapped[List["StockMovement"]] = relationship(
+        "StockMovement", back_populates="transaction_header", lazy="select"
+    )
     
     # Table constraints and indexes
     __table_args__ = (

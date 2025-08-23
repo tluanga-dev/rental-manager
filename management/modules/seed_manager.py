@@ -22,6 +22,8 @@ from rich.prompt import Confirm
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "rental-manager-api"))
 
+# Import all models to ensure proper initialization
+from app.models import *  # This includes TransactionHeader and all other models
 from app.models.brand import Brand
 from app.models.category import Category
 from app.models.customer import Customer

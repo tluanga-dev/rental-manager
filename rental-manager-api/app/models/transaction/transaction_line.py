@@ -4,7 +4,7 @@ Migrated from legacy system with modern FastAPI patterns.
 """
 
 from enum import Enum as PyEnum
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, List
 from decimal import Decimal
 from datetime import datetime, date, timezone
 from uuid import UUID
@@ -215,6 +215,9 @@ class TransactionLine(RentalManagerBaseModel):
     )
     inspection: Mapped[Optional["TransactionInspection"]] = relationship(
         "TransactionInspection", back_populates="transaction_line", lazy="select", uselist=False
+    )
+    stock_movements: Mapped[List["StockMovement"]] = relationship(
+        "StockMovement", back_populates="transaction_line", lazy="select"
     )
     
     # Table constraints and indexes

@@ -27,6 +27,9 @@ from datetime import datetime
 # Add rental-manager-api to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "rental-manager-api"))
 
+# Import all models first to ensure proper SQLAlchemy initialization
+from app.models import *  # This includes TransactionHeader and all other models
+
 import typer
 from rich.console import Console
 from rich.panel import Panel
