@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-08-23T23:16:34.520Z",
+  "results": {
+    "auth": true,
+    "createTypes": {
+      "MANUFACTURER": true,
+      "DISTRIBUTOR": true,
+      "SERVICE": true
+    },
+    "createTiers": {
+      "PREMIUM": true,
+      "STANDARD": true,
+      "BASIC": true
+    },
+    "bulkCreate": true,
+    "pagination": true,
+    "filtering": false,
+    "sorting": false,
+    "edgeCases": true,
+    "validation": true,
+    "performance": true
+  },
+  "metrics": {
+    "createTimes": [
+      26,
+      10,
+      9
+    ],
+    "queryTimes": [
+      8
+    ],
+    "totalSuppliers": 16
+  },
+  "summary": {
+    "totalTests": 14,
+    "passedTests": 12,
+    "failedTests": 2,
+    "successRate": "85.7"
+  }
+}

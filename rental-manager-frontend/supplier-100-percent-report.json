@@ -1,0 +1,68 @@
+{
+  "timestamp": "2025-08-23T23:25:57.001Z",
+  "results": {
+    "auth": true,
+    "createTypes": {
+      "MANUFACTURER": true,
+      "DISTRIBUTOR": true,
+      "SERVICE": true,
+      "WHOLESALER": true,
+      "RETAILER": true,
+      "INVENTORY": true,
+      "DIRECT": true
+    },
+    "createTiers": {
+      "PREMIUM": true,
+      "STANDARD": true,
+      "BASIC": true,
+      "TRIAL": true
+    },
+    "createPaymentTerms": {
+      "IMMEDIATE": true,
+      "NET30": true,
+      "NET45": true,
+      "NET60": true,
+      "NET90": true,
+      "COD": true
+    },
+    "bulkCreate": true,
+    "pagination": true,
+    "filtering": true,
+    "sorting": true,
+    "search": true,
+    "edgeCases": true,
+    "validation": true,
+    "performance": true,
+    "statusManagement": true,
+    "softDelete": true,
+    "statistics": true
+  },
+  "metrics": {
+    "createTimes": [
+      38,
+      13,
+      11,
+      12,
+      12,
+      6,
+      7
+    ],
+    "queryTimes": [
+      7
+    ],
+    "updateTimes": [],
+    "deleteTimes": [
+      6
+    ],
+    "totalSuppliers": 37,
+    "totalTests": 29,
+    "passedTests": 29
+  },
+  "summary": {
+    "totalTests": 29,
+    "passedTests": 29,
+    "failedTests": 0,
+    "successRate": "100.0",
+    "suppliersCreated": 37
+  }
+}
