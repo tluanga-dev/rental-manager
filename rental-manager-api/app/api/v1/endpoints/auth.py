@@ -96,6 +96,48 @@ async def login(
         expires_delta=timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
     )
     
+    # Define role-based permissions
+    role_permissions = {
+        "admin": [
+            # Dashboard permissions
+            "SALE_VIEW", "RENTAL_VIEW", "DASHBOARD_VIEW", "ANALYTICS_VIEW",
+            # Customer permissions
+            "CUSTOMER_VIEW", "CUSTOMER_CREATE", "CUSTOMER_UPDATE", "CUSTOMER_DELETE",
+            # Inventory permissions
+            "INVENTORY_VIEW", "INVENTORY_CREATE", "INVENTORY_UPDATE", "INVENTORY_DELETE",
+            # Sales permissions
+            "SALE_VIEW", "SALE_CREATE", "SALE_UPDATE", "SALE_DELETE",
+            # Rental permissions
+            "RENTAL_VIEW", "RENTAL_CREATE", "RENTAL_UPDATE", "RENTAL_DELETE",
+            # Reports permissions
+            "REPORT_VIEW", "REPORT_CREATE",
+            # Admin permissions
+            "USER_VIEW", "USER_CREATE", "USER_UPDATE", "USER_DELETE",
+            "ROLE_VIEW", "ROLE_CREATE", "ROLE_UPDATE", "ROLE_DELETE",
+            "AUDIT_VIEW", "SYSTEM_CONFIG",
+        ],
+        "landlord": [
+            "SALE_VIEW", "RENTAL_VIEW", "CUSTOMER_VIEW", "INVENTORY_VIEW",
+            "RENTAL_CREATE", "RENTAL_UPDATE", "CUSTOMER_CREATE", "REPORT_VIEW"
+        ],
+        "tenant": [
+            "RENTAL_VIEW", "DASHBOARD_VIEW"
+        ],
+        "maintenance": [
+            "INVENTORY_VIEW", "RENTAL_VIEW", "CUSTOMER_VIEW"
+        ],
+        "viewer": [
+            "DASHBOARD_VIEW", "RENTAL_VIEW", "SALE_VIEW", "CUSTOMER_VIEW", "INVENTORY_VIEW"
+        ]
+    }
+    
+    # Get permissions for user's role
+    user_permissions = role_permissions.get(user.role, [])
+    
+    # Superusers get all permissions
+    if user.is_superuser:
+        user_permissions = list(set([perm for perms in role_permissions.values() for perm in perms]))
+    
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
@@ -107,9 +149,15 @@ async def login(
             "first_name": user.first_name,
             "last_name": user.last_name,
             "role": user.role,
+            "userType": user.role.upper(),  # Frontend expects userType
             "is_active": user.is_active,
             "is_superuser": user.is_superuser,
+            "isSuperuser": user.is_superuser,  # Frontend expects camelCase
             "is_verified": user.is_verified,
+            "effectivePermissions": {
+                "all_permissions": user_permissions,
+                "allPermissions": user_permissions  # Support both naming conventions
+            }
         }
     }
 

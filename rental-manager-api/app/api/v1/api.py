@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from typing import Any
 
-from app.api.v1.endpoints import auth, users, customers, suppliers, companies, contact_persons, categories, unit_of_measurement, brands, items, locations
+from app.api.v1.endpoints import auth, users, customers, suppliers, companies, contact_persons, categories, unit_of_measurement, brands, items, locations, analytics
 from app.api.v1.endpoints.inventory import router as inventory_router
 from app.core.config import settings
 
@@ -35,3 +35,4 @@ api_router.include_router(brands.router, prefix="/brands", tags=["brands"])
 api_router.include_router(items.router, prefix="/items", tags=["items"])
 api_router.include_router(locations.router, prefix="/locations", tags=["locations"])
 api_router.include_router(inventory_router, prefix="/inventory", tags=["inventory"])
+api_router.include_router(analytics.router, prefix="/analytics", tags=["analytics"])

@@ -43,11 +43,11 @@ export function LoginForm() {
       ...loginPayload,
       password: '***HIDDEN***' // Don't log actual password
     });
-    console.log('📤 Sending login request to:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/v1/auth/login`);
+    console.log('📤 Sending login request to:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api/v1'}/auth/login`);
 
     try {
       // Real API call to backend
-      const response = await apiClient.post('/v1/auth/login', loginPayload);
+      const response = await apiClient.post('/auth/login', loginPayload);
 
       const responseData = response.data.data || response.data;
       const { user, access_token, refresh_token } = responseData;
@@ -124,10 +124,10 @@ export function LoginForm() {
         ...demoPayload,
         password: '***HIDDEN***' // Don't log actual password
       });
-      console.log('📤 Making demo API call to:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/v1/auth/login`);
+      console.log('📤 Making demo API call to:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api/v1'}/auth/login`);
       
       // Use real API call
-      const response = await apiClient.post('/v1/auth/login', demoPayload);
+      const response = await apiClient.post('/auth/login', demoPayload);
 
       console.log('✅ Demo API response status:', response.status);
       console.log('📥 Demo API response data:', response.data);

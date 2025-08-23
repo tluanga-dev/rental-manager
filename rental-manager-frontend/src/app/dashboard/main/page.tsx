@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { AuthConnectionGuard } from '@/components/auth/auth-connection-guard';
-import { ProtectedRoute } from '@/components/auth/protected-route';
+// Authentication is handled by MainLayout - no need for additional guards
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
@@ -188,35 +187,29 @@ export default function MainDashboardPage() {
 
   if (overviewError) {
     return (
-      <AuthConnectionGuard>
-        <ProtectedRoute>
-          <div className="p-8">
-            <Card className="border-red-200 bg-red-50">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-2 text-red-600">
-                  <AlertCircle className="w-5 h-5" />
-                  <span>Failed to load dashboard data. Please try refreshing.</span>
-                </div>
-                <Button 
-                  onClick={handleRefresh} 
-                  className="mt-4"
-                  variant="outline"
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Retry
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </ProtectedRoute>
-      </AuthConnectionGuard>
+      <div className="p-8">
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2 text-red-600">
+              <AlertCircle className="w-5 h-5" />
+              <span>Failed to load dashboard data. Please try refreshing.</span>
+            </div>
+            <Button 
+              onClick={handleRefresh} 
+              className="mt-4"
+              variant="outline"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <AuthConnectionGuard>
-      <ProtectedRoute>
-        <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
@@ -437,26 +430,26 @@ export default function MainDashboardPage() {
                           <div className="flex justify-between items-center">
                             <span>Collection Rate</span>
                             <Badge variant="outline">
-                              {financialData.data.payment_collection.collection_rate}%
+                              {financialData.data.payment_collection?.collection_rate || 0}%
                             </Badge>
                           </div>
                           <div className="space-y-2">
                             <div className="flex justify-between text-sm">
                               <span>Paid</span>
                               <span className="text-green-600">
-                                {financialData.data.payment_collection.paid}
+                                {financialData.data.payment_collection?.paid || 0}
                               </span>
                             </div>
                             <div className="flex justify-between text-sm">
                               <span>Partial</span>
                               <span className="text-yellow-600">
-                                {financialData.data.payment_collection.partial}
+                                {financialData.data.payment_collection?.partial || 0}
                               </span>
                             </div>
                             <div className="flex justify-between text-sm">
                               <span>Pending</span>
                               <span className="text-red-600">
-                                {financialData.data.payment_collection.pending}
+                                {financialData.data.payment_collection?.pending || 0}
                               </span>
                             </div>
                           </div>
@@ -477,11 +470,11 @@ export default function MainDashboardPage() {
                       <div className="flex items-center justify-between">
                         <span>Total Outstanding</span>
                         <span className="text-2xl font-bold text-orange-600">
-                          {formatCurrencySync(financialData.data.outstanding_balances.total)}
+                          {formatCurrencySync(financialData.data.outstanding_balances?.total || 0)}
                         </span>
                       </div>
                       <p className="text-sm text-gray-600 mt-2">
-                        {financialData.data.outstanding_balances.count} transactions pending payment
+                        {financialData.data.outstanding_balances?.count || 0} transactions pending payment
                       </p>
                     </CardContent>
                   </Card>
@@ -650,8 +643,6 @@ export default function MainDashboardPage() {
               ) : null}
             </TabsContent>
           </Tabs>
-        </div>
-      </ProtectedRoute>
-    </AuthConnectionGuard>
+    </div>
   );
 }
