@@ -1,0 +1,86 @@
+[
+  {
+    "username": "manager",
+    "email": "manager@rentalcompany.com",
+    "password": "Manager123!",
+    "first_name": "Jane",
+    "last_name": "Manager",
+    "phone": "+1-217-555-2001",
+    "role": "admin",
+    "is_active": true,
+    "is_verified": true,
+    "is_superuser": false
+  },
+  {
+    "username": "supervisor",
+    "email": "supervisor@rentalcompany.com",
+    "password": "Supervisor123!",
+    "first_name": "Bob",
+    "last_name": "Supervisor",
+    "phone": "+1-217-555-2002",
+    "role": "landlord",
+    "is_active": true,
+    "is_verified": true,
+    "is_superuser": false
+  },
+  {
+    "username": "clerk1",
+    "email": "clerk1@rentalcompany.com",
+    "password": "Clerk123!",
+    "first_name": "Alice",
+    "last_name": "Johnson",
+    "phone": "+1-217-555-2003",
+    "role": "tenant",
+    "is_active": true,
+    "is_verified": true,
+    "is_superuser": false
+  },
+  {
+    "username": "clerk2",
+    "email": "clerk2@rentalcompany.com",
+    "password": "Clerk123!",
+    "first_name": "Tom",
+    "last_name": "Wilson",
+    "phone": "+1-217-555-2004",
+    "role": "tenant",
+    "is_active": true,
+    "is_verified": true,
+    "is_superuser": false
+  },
+  {
+    "username": "maintenance",
+    "email": "maintenance@rentalcompany.com",
+    "password": "Maintenance123!",
+    "first_name": "Frank",
+    "last_name": "Repair",
+    "phone": "+1-217-555-2005",
+    "role": "maintenance",
+    "is_active": true,
+    "is_verified": true,
+    "is_superuser": false
+  },
+  {
+    "username": "viewer1",
+    "email": "viewer1@rentalcompany.com",
+    "password": "Viewer123!",
+    "first_name": "Linda",
+    "last_name": "Observer",
+    "phone": "+1-217-555-2006",
+    "role": "viewer",
+    "is_active": true,
+    "is_verified": true,
+    "is_superuser": false
+  },
+  {
+    "username": "demo",
+    "email": "demo@rentalcompany.com",
+    "password": "Demo123!",
+    "first_name": "Demo",
+    "last_name": "User",
+    "phone": "+1-217-555-2007",
+    "role": "viewer",
+    "is_active": true,
+    "is_verified": true,
+    "is_superuser": false
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "unit_name": "Each",
+    "unit_symbol": "ea",
+    "unit_type": "count",
+    "description": "Individual items or pieces",
+    "conversion_factor": 1.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Pair",
+    "unit_symbol": "pr",
+    "unit_type": "count",
+    "description": "Two items as a set",
+    "conversion_factor": 2.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Set",
+    "unit_symbol": "set",
+    "unit_type": "count",
+    "description": "Multiple items grouped together",
+    "conversion_factor": 1.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Hour",
+    "unit_symbol": "hr",
+    "unit_type": "time",
+    "description": "Hourly rental period",
+    "conversion_factor": 1.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Day",
+    "unit_symbol": "day",
+    "unit_type": "time",
+    "description": "Daily rental period",
+    "conversion_factor": 24.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Week",
+    "unit_symbol": "wk",
+    "unit_type": "time",
+    "description": "Weekly rental period",
+    "conversion_factor": 168.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Month",
+    "unit_symbol": "mo",
+    "unit_type": "time",
+    "description": "Monthly rental period",
+    "conversion_factor": 720.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Kilogram",
+    "unit_symbol": "kg",
+    "unit_type": "weight",
+    "description": "Metric unit of weight",
+    "conversion_factor": 1.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Pound",
+    "unit_symbol": "lb",
+    "unit_type": "weight",
+    "description": "Imperial unit of weight",
+    "conversion_factor": 0.453592,
+    "is_active": true
+  },
+  {
+    "unit_name": "Ton",
+    "unit_symbol": "ton",
+    "unit_type": "weight",
+    "description": "Heavy weight measurement",
+    "conversion_factor": 1000.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Meter",
+    "unit_symbol": "m",
+    "unit_type": "length",
+    "description": "Metric unit of length",
+    "conversion_factor": 1.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Foot",
+    "unit_symbol": "ft",
+    "unit_type": "length",
+    "description": "Imperial unit of length",
+    "conversion_factor": 0.3048,
+    "is_active": true
+  },
+  {
+    "unit_name": "Inch",
+    "unit_symbol": "in",
+    "unit_type": "length",
+    "description": "Imperial unit of small measurements",
+    "conversion_factor": 0.0254,
+    "is_active": true
+  },
+  {
+    "unit_name": "Square Meter",
+    "unit_symbol": "m²",
+    "unit_type": "area",
+    "description": "Metric unit of area",
+    "conversion_factor": 1.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Square Foot",
+    "unit_symbol": "ft²",
+    "unit_type": "area",
+    "description": "Imperial unit of area",
+    "conversion_factor": 0.092903,
+    "is_active": true
+  },
+  {
+    "unit_name": "Liter",
+    "unit_symbol": "L",
+    "unit_type": "volume",
+    "description": "Metric unit of volume",
+    "conversion_factor": 1.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Gallon",
+    "unit_symbol": "gal",
+    "unit_type": "volume",
+    "description": "Imperial unit of volume",
+    "conversion_factor": 3.78541,
+    "is_active": true
+  },
+  {
+    "unit_name": "Watt",
+    "unit_symbol": "W",
+    "unit_type": "power",
+    "description": "Unit of electrical power",
+    "conversion_factor": 1.0,
+    "is_active": true
+  },
+  {
+    "unit_name": "Horsepower",
+    "unit_symbol": "hp",
+    "unit_type": "power",
+    "description": "Unit of mechanical power",
+    "conversion_factor": 745.7,
+    "is_active": true
+  },
+  {
+    "unit_name": "Volt",
+    "unit_symbol": "V",
+    "unit_type": "electrical",
+    "description": "Unit of electrical voltage",
+    "conversion_factor": 1.0,
+    "is_active": true
+  }
+]

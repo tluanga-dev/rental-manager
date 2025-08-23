@@ -1,0 +1,112 @@
+[
+  {
+    "brand_name": "DeWalt",
+    "brand_code": "DEWALT",
+    "description": "Professional power tools and accessories for construction, manufacturing, and industrial applications",
+    "website": "https://www.dewalt.com",
+    "contact_info": {
+      "email": "support@dewalt.com",
+      "phone": "+1-800-433-9258"
+    },
+    "is_active": true
+  },
+  {
+    "brand_name": "Milwaukee Tool",
+    "brand_code": "MILWAUKEE",
+    "description": "Heavy-duty power tools and accessories designed for professional trade applications",
+    "website": "https://www.milwaukeetool.com",
+    "contact_info": {
+      "email": "customer.service@milwaukeetool.com",
+      "phone": "+1-800-729-3878"
+    },
+    "is_active": true
+  },
+  {
+    "brand_name": "Makita",
+    "brand_code": "MAKITA",
+    "description": "Innovative power tools, outdoor power equipment, and pneumatic tools",
+    "website": "https://www.makita.com",
+    "contact_info": {
+      "email": "info@makita.com",
+      "phone": "+1-800-462-5482"
+    },
+    "is_active": true
+  },
+  {
+    "brand_name": "Bosch",
+    "brand_code": "BOSCH",
+    "description": "Engineering excellence in power tools, measuring tools, and accessories",
+    "website": "https://www.bosch.com",
+    "contact_info": {
+      "email": "support@bosch.com",
+      "phone": "+1-877-267-2499"
+    },
+    "is_active": true
+  },
+  {
+    "brand_name": "Caterpillar",
+    "brand_code": "CAT",
+    "description": "Heavy construction equipment, generators, and industrial machinery",
+    "website": "https://www.cat.com",
+    "contact_info": {
+      "email": "rental@cat.com",
+      "phone": "+1-800-447-4986"
+    },
+    "is_active": true
+  },
+  {
+    "brand_name": "JLG Industries",
+    "brand_code": "JLG",
+    "description": "Aerial work platforms, telehandlers, and low-level access equipment",
+    "website": "https://www.jlg.com",
+    "contact_info": {
+      "email": "info@jlg.com",
+      "phone": "+1-877-554-5438"
+    },
+    "is_active": true
+  },
+  {
+    "brand_name": "United Rentals",
+    "brand_code": "UNITED",
+    "description": "Comprehensive equipment rental solutions for construction and industrial applications",
+    "website": "https://www.unitedrentals.com",
+    "contact_info": {
+      "email": "customerservice@unitedrentals.com",
+      "phone": "+1-800-736-8253"
+    },
+    "is_active": true
+  },
+  {
+    "brand_name": "Shure",
+    "brand_code": "SHURE",
+    "description": "Professional audio equipment, microphones, and wireless systems",
+    "website": "https://www.shure.com",
+    "contact_info": {
+      "email": "info@shure.com",
+      "phone": "+1-800-257-4873"
+    },
+    "is_active": true
+  },
+  {
+    "brand_name": "QSC Audio",
+    "brand_code": "QSC",
+    "description": "Professional audio solutions including speakers, amplifiers, and digital mixers",
+    "website": "https://www.qsc.com",
+    "contact_info": {
+      "email": "info@qsc.com",
+      "phone": "+1-800-854-4079"
+    },
+    "is_active": true
+  },
+  {
+    "brand_name": "KitchenAid",
+    "brand_code": "KITCHENAID",
+    "description": "Premium kitchen appliances and equipment for commercial and residential use",
+    "website": "https://www.kitchenaid.com",
+    "contact_info": {
+      "email": "support@kitchenaid.com",
+      "phone": "+1-800-541-6390"
+    },
+    "is_active": true
+  }
+]

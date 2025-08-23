@@ -1,0 +1,19 @@
+[
+  {
+    "company_name": "Premier Rental Solutions",
+    "company_code": "PREMIER",
+    "description": "Full-service equipment rental company serving construction, events, and industrial clients",
+    "address": "1234 Industrial Boulevard",
+    "city": "Springfield",
+    "state": "IL",
+    "postal_code": "62701",
+    "country": "USA",
+    "phone": "+1-217-555-1000",
+    "email": "info@premierrentals.com",
+    "website": "https://www.premierrentals.com",
+    "tax_id": "12-3456789",
+    "business_license": "IL-RENTAL-2024-001",
+    "established_date": "2015-01-15",
+    "is_active": true
+  }
+]

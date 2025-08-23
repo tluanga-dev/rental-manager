@@ -1,0 +1,142 @@
+[
+  {
+    "category_name": "Power Tools",
+    "category_code": "POWER",
+    "description": "Electric and battery-powered tools for construction and maintenance",
+    "parent_category": null,
+    "is_active": true
+  },
+  {
+    "category_name": "Drills",
+    "category_code": "DRILL",
+    "description": "Drilling and driving tools including cordless and corded models",
+    "parent_category": "Power Tools",
+    "is_active": true
+  },
+  {
+    "category_name": "Saws",
+    "category_code": "SAW",
+    "description": "Cutting tools including circular, reciprocating, and miter saws",
+    "parent_category": "Power Tools",
+    "is_active": true
+  },
+  {
+    "category_name": "Sanders",
+    "category_code": "SAND",
+    "description": "Surface finishing tools for wood and metal work",
+    "parent_category": "Power Tools",
+    "is_active": true
+  },
+  {
+    "category_name": "Heavy Equipment",
+    "category_code": "HEAVY",
+    "description": "Large construction and earthmoving machinery",
+    "parent_category": null,
+    "is_active": true
+  },
+  {
+    "category_name": "Excavators",
+    "category_code": "EXCAV",
+    "description": "Tracked and wheeled excavating machines",
+    "parent_category": "Heavy Equipment",
+    "is_active": true
+  },
+  {
+    "category_name": "Bulldozers",
+    "category_code": "DOZER",
+    "description": "Tracked dozers for earthmoving and grading",
+    "parent_category": "Heavy Equipment",
+    "is_active": true
+  },
+  {
+    "category_name": "Loaders",
+    "category_code": "LOAD",
+    "description": "Front-end loaders and skid steers for material handling",
+    "parent_category": "Heavy Equipment",
+    "is_active": true
+  },
+  {
+    "category_name": "Audio Equipment",
+    "category_code": "AUDIO",
+    "description": "Professional sound systems and audio gear",
+    "parent_category": null,
+    "is_active": true
+  },
+  {
+    "category_name": "Microphones",
+    "category_code": "MIC",
+    "description": "Professional microphones and wireless systems",
+    "parent_category": "Audio Equipment",
+    "is_active": true
+  },
+  {
+    "category_name": "Speakers",
+    "category_code": "SPEAK",
+    "description": "PA speakers, monitors, and sound reinforcement systems",
+    "parent_category": "Audio Equipment",
+    "is_active": true
+  },
+  {
+    "category_name": "Mixers",
+    "category_code": "MIX",
+    "description": "Audio mixing consoles and digital mixers",
+    "parent_category": "Audio Equipment",
+    "is_active": true
+  },
+  {
+    "category_name": "Kitchen Equipment",
+    "category_code": "KITCH",
+    "description": "Commercial kitchen appliances and equipment",
+    "parent_category": null,
+    "is_active": true
+  },
+  {
+    "category_name": "Refrigeration",
+    "category_code": "REFRIG",
+    "description": "Commercial refrigerators, freezers, and cooling equipment",
+    "parent_category": "Kitchen Equipment",
+    "is_active": true
+  },
+  {
+    "category_name": "Cooking Equipment",
+    "category_code": "COOK",
+    "description": "Ovens, stoves, grills, and cooking appliances",
+    "parent_category": "Kitchen Equipment",
+    "is_active": true
+  },
+  {
+    "category_name": "Dishwashers",
+    "category_code": "DISH",
+    "description": "Commercial dishwashing systems and accessories",
+    "parent_category": "Kitchen Equipment",
+    "is_active": true
+  },
+  {
+    "category_name": "Lighting",
+    "category_code": "LIGHT",
+    "description": "Professional lighting equipment for events and construction",
+    "parent_category": null,
+    "is_active": true
+  },
+  {
+    "category_name": "LED Lights",
+    "category_code": "LED",
+    "description": "Energy-efficient LED lighting systems",
+    "parent_category": "Lighting",
+    "is_active": true
+  },
+  {
+    "category_name": "Work Lights",
+    "category_code": "WORK",
+    "description": "Portable work lights and flood lights",
+    "parent_category": "Lighting",
+    "is_active": true
+  },
+  {
+    "category_name": "Event Lighting",
+    "category_code": "EVENT",
+    "description": "Stage lighting, spotlights, and decorative lighting",
+    "parent_category": "Lighting",
+    "is_active": true
+  }
+]
