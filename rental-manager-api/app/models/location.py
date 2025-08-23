@@ -174,7 +174,8 @@ class Location(Base):
     transaction_lines = relationship("TransactionLine", back_populates="location", lazy="dynamic")
     stock_movements = relationship("StockMovement", back_populates="location", lazy="dynamic")
     stock_levels = relationship("StockLevel", back_populates="location", lazy="select")
-    inventory_units = relationship("InventoryUnit", back_populates="location", lazy="select")
+    inventory_units = relationship("InventoryUnit", back_populates="location", lazy="select",
+                                   foreign_keys="InventoryUnit.location_id")
     parent_location = relationship(
         "Location", 
         remote_side="Location.id", 

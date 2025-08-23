@@ -28,7 +28,17 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).parent.parent / "rental-manager-api"))
 
 # Import all models first to ensure proper SQLAlchemy initialization
-from app.models import *  # This includes TransactionHeader and all other models
+# Import base models first
+from app.models.base import Base
+from app.models.user import User, UserRole
+
+# Import transaction models explicitly
+from app.models.transaction import (
+    TransactionHeader, TransactionLine, TransactionEvent, TransactionMetadata
+)
+
+# Import all other models
+from app.models import *  # This ensures all models are registered
 
 import typer
 from rich.console import Console

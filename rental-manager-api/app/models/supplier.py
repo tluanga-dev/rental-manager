@@ -140,6 +140,7 @@ class Supplier(RentalManagerBaseModel):
     
     # Relationships
     transactions = relationship("TransactionHeader", back_populates="supplier", lazy="dynamic")
+    inventory_units = relationship("InventoryUnit", back_populates="supplier", lazy="dynamic")
     
     # Indexes and constraints for performance and data integrity
     __table_args__ = (

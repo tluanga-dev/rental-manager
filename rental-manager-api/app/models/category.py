@@ -38,6 +38,7 @@ class Category(RentalManagerBaseModel):
     
     # Relationship to items
     items = relationship("Item", back_populates="category", lazy="select")
+    sku_sequences = relationship("SKUSequence", back_populates="category", lazy="dynamic")
     
     # Indexes for efficient queries
     __table_args__ = (

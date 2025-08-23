@@ -11,7 +11,7 @@ from app.db.base import RentalManagerBaseModel
 # Remove postgres_enums import - we'll use string columns with check constraints
 
 if TYPE_CHECKING:
-    from app.models.transaction import TransactionHeader
+    from app.models.transaction.transaction_header import TransactionHeader
 
 
 class CustomerType(str, Enum):
@@ -109,7 +109,9 @@ class Customer(RentalManagerBaseModel):
     notes = Column(Text, nullable=True)
     
     # Relationships
-    transactions = relationship("TransactionHeader", back_populates="customer", lazy="dynamic")
+    transactions = relationship("TransactionHeader", back_populates="customer", lazy="dynamic", 
+                               foreign_keys="TransactionHeader.customer_id")
+    held_inventory_units = relationship("InventoryUnit", back_populates="current_holder", lazy="dynamic")
     
     # Indexes and constraints for performance and data integrity
     __table_args__ = (
