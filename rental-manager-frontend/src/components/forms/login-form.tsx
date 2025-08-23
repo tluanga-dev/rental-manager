@@ -43,11 +43,11 @@ export function LoginForm() {
       ...loginPayload,
       password: '***HIDDEN***' // Don't log actual password
     });
-    console.log('📤 Sending login request to:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/auth/login`);
+    console.log('📤 Sending login request to:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/v1/auth/login`);
 
     try {
       // Real API call to backend
-      const response = await apiClient.post('/auth/login', loginPayload);
+      const response = await apiClient.post('/v1/auth/login', loginPayload);
 
       const responseData = response.data.data || response.data;
       const { user, access_token, refresh_token } = responseData;
@@ -111,9 +111,9 @@ export function LoginForm() {
     
     try {
       const credentials = {
-        admin: { username: 'admin', password: 'K8mX#9vZ$pL2@nQ7!wR4&dF6^sA1*uE3' },
-        manager: { username: 'manager', password: 'mR9#wE4$xN7!kP2&sL6^fA1*tZ5@gB8' },
-        staff: { username: 'staff', password: 'sT3#qW8$vE1!nM5&rA9^jK2*xL6@pC4' },
+        admin: { username: 'admin', password: 'admin123' },
+        manager: { username: 'manager', password: 'manager123' },
+        staff: { username: 'staff', password: 'staff123' },
       };
 
       const { username, password } = credentials[role];
@@ -124,10 +124,10 @@ export function LoginForm() {
         ...demoPayload,
         password: '***HIDDEN***' // Don't log actual password
       });
-      console.log('📤 Making demo API call to:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/auth/login`);
+      console.log('📤 Making demo API call to:', `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/v1/auth/login`);
       
       // Use real API call
-      const response = await apiClient.post('/auth/login', demoPayload);
+      const response = await apiClient.post('/v1/auth/login', demoPayload);
 
       console.log('✅ Demo API response status:', response.status);
       console.log('📥 Demo API response data:', response.data);

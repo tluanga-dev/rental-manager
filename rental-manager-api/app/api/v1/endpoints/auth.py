@@ -1,7 +1,6 @@
 from datetime import timedelta
 from typing import Any
 from fastapi import APIRouter, Body, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
@@ -62,19 +61,19 @@ async def register(
 
 @router.post("/login", response_model=Token)
 async def login(
+    user_data: UserLogin,
     db: AsyncSession = Depends(get_db),
-    form_data: OAuth2PasswordRequestForm = Depends(),
 ) -> Any:
-    """OAuth2 compatible token login"""
+    """Token login with JSON payload"""
     # Try to authenticate with email or username
     result = await db.execute(
         select(User).where(
-            (User.email == form_data.username) | (User.username == form_data.username)
+            (User.email == user_data.username) | (User.username == user_data.username)
         )
     )
     user = result.scalar_one_or_none()
     
-    if not user or not security_manager.verify_password(form_data.password, user.hashed_password):
+    if not user or not security_manager.verify_password(user_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email/username or password",
@@ -101,6 +100,17 @@ async def login(
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
+        "user": {
+            "id": str(user.id),
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "role": user.role,
+            "is_active": user.is_active,
+            "is_superuser": user.is_superuser,
+            "is_verified": user.is_verified,
+        }
     }
 
 

@@ -208,19 +208,23 @@ export const useAuthStore = create<AuthStore>()(
           const timeoutId = setTimeout(() => controller.abort(), 5000);
           
           // Try multiple endpoints to determine if backend is online
-          const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+          const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+          // Health endpoint is at root level, not under /api
+          // Extract base URL and append /health
+          const baseUrl = apiBaseUrl.replace(/\/api.*$/, '');
+          const healthUrl = `${baseUrl}/health`;
           
           // First try the health endpoint
           let response;
           try {
-            response = await fetch(`${baseUrl}/health`, {
+            response = await fetch(healthUrl, {
               method: 'GET',
               signal: controller.signal,
             });
           } catch (healthError) {
             // If health endpoint fails, try a basic API endpoint that should always exist
             try {
-              response = await fetch(`${baseUrl}/auth/me`, {
+              response = await fetch(`${apiBaseUrl}/auth/me`, {
                 method: 'GET',
                 signal: controller.signal,
                 headers: {

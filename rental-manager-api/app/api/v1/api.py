@@ -1,9 +1,26 @@
 from fastapi import APIRouter
+from typing import Any
 
 from app.api.v1.endpoints import auth, users, customers, suppliers, companies, contact_persons, categories, unit_of_measurement, brands, items, locations
 from app.api.v1.endpoints.inventory import router as inventory_router
+from app.core.config import settings
 
 api_router = APIRouter()
+
+# Health check endpoint under API prefix for consistency
+@api_router.get("/health")
+async def api_health_check() -> dict[str, Any]:
+    """
+    API Health check endpoint.
+    Provides the same information as the root health endpoint.
+    """
+    return {
+        "status": "healthy",
+        "service": settings.PROJECT_NAME,
+        "environment": settings.ENVIRONMENT,
+        "version": "1.0.0",
+        "api": True,
+    }
 
 # Include routers
 api_router.include_router(auth.router, prefix="/auth", tags=["authentication"])
