@@ -1,0 +1,84 @@
+# Dockerfile for Company Test Runner
+# Multi-stage build for efficient test execution
+
+FROM python:3.13-slim as base
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    gnupg \
+    ca-certificates \
+    postgresql-client \
+    chromium \
+    chromium-driver \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libdrm2 \
+    libgtk-3-0 \
+    libgtk-4-1 \
+    libnspr4 \
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    xdg-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js for Puppeteer tests
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
+# Set work directory
+WORKDIR /app
+
+# Install UV for fast Python package management
+RUN pip install uv
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN uv pip install --system -r requirements.txt
+
+# Install additional test dependencies
+RUN uv pip install --system \
+    pytest \
+    pytest-asyncio \
+    pytest-cov \
+    pytest-html \
+    pytest-xdist \
+    aiohttp \
+    asyncpg \
+    psutil
+
+# Install Puppeteer and dependencies
+RUN npm install -g puppeteer@latest
+
+# Set Puppeteer to use system Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
+# Copy application code
+COPY app/ ./app/
+COPY alembic/ ./alembic/
+COPY alembic.ini .
+COPY scripts/ ./scripts/
+
+# Create directories for test results and reports
+RUN mkdir -p /app/test-results /app/test-reports
+
+# Set permissions
+RUN chmod +x /app/scripts/*.sh /app/scripts/*.py
+
+# Create non-root user for security
+RUN groupadd -r testrunner && useradd -r -g testrunner testrunner
+RUN chown -R testrunner:testrunner /app
+USER testrunner
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Default command
+CMD ["sh", "-c", "echo 'Company Test Runner Ready' && tail -f /dev/null"]

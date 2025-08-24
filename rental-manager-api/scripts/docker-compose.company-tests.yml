@@ -1,0 +1,217 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for Testing
+  company-test-db:
+    image: postgres:17
+    container_name: rental-company-test-db
+    environment:
+      POSTGRES_USER: rental_test_user
+      POSTGRES_PASSWORD: rental_test_password
+      POSTGRES_DB: rental_test_db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    ports:
+      - "5433:5432"  # Different port to avoid conflicts
+    volumes:
+      - company_test_db_data:/var/lib/postgresql/data
+      - ./init-test-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - company-test-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rental_test_user -d rental_test_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Redis for Caching (Test Instance)
+  company-test-redis:
+    image: redis:8-alpine
+    container_name: rental-company-test-redis
+    ports:
+      - "6380:6379"  # Different port to avoid conflicts
+    networks:
+      - company-test-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - company_test_redis_data:/data
+
+  # FastAPI Application for Testing
+  company-test-api:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: rental-company-test-api
+    environment:
+      # Database Configuration
+      DATABASE_URL: postgresql+asyncpg://rental_test_user:rental_test_password@company-test-db:5432/rental_test_db
+      REDIS_URL: redis://company-test-redis:6379/0
+      
+      # Application Configuration
+      ENVIRONMENT: testing
+      DEBUG: true
+      SECRET_KEY: test_secret_key_for_company_testing_only
+      
+      # CORS Configuration
+      BACKEND_CORS_ORIGINS: '["http://localhost:3000","http://localhost:3001","https://company-test.local"]'
+      
+      # API Configuration
+      API_V1_STR: /api/v1
+      PROJECT_NAME: Rental Manager API - Company Tests
+      
+      # Authentication Configuration (for RBAC tests)
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      REFRESH_TOKEN_EXPIRE_DAYS: 7
+      
+      # Testing Specific
+      TESTING: true
+      LOG_LEVEL: DEBUG
+      
+    ports:
+      - "8001:8000"  # Different port for testing
+    depends_on:
+      company-test-db:
+        condition: service_healthy
+      company-test-redis:
+        condition: service_healthy
+    networks:
+      - company-test-network
+    volumes:
+      - ../app:/app/app:ro
+      - ../alembic:/app/alembic:ro
+      - ../scripts:/app/scripts:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    command: >
+      sh -c "
+        echo 'Waiting for database to be ready...' &&
+        while ! pg_isready -h company-test-db -p 5432 -U rental_test_user -d rental_test_db; do
+          echo 'Waiting for database...'
+          sleep 2
+        done &&
+        echo 'Database is ready!' &&
+        echo 'Running database migrations...' &&
+        uv run alembic upgrade head &&
+        echo 'Starting API server...' &&
+        uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  # Frontend for UI Testing (Optional)
+  company-test-frontend:
+    build:
+      context: ../../rental-manager-frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: rental-company-test-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8001/api
+      NODE_ENV: development
+    ports:
+      - "3002:3000"  # Different port for testing
+    depends_on:
+      - company-test-api
+    networks:
+      - company-test-network
+    volumes:
+      - ../../rental-manager-frontend/src:/app/src:ro
+      - ../../rental-manager-frontend/public:/app/public:ro
+    restart: unless-stopped
+    profiles:
+      - frontend  # Only start when explicitly requested
+
+  # Test Runner Container
+  company-test-runner:
+    build:
+      context: ..
+      dockerfile: Dockerfile.test
+    container_name: rental-company-test-runner
+    environment:
+      # API Configuration
+      API_BASE_URL: http://company-test-api:8000/api/v1
+      FRONTEND_URL: http://company-test-frontend:3000
+      
+      # Database Configuration (for direct DB tests)
+      DATABASE_URL: postgresql+asyncpg://rental_test_user:rental_test_password@company-test-db:5432/rental_test_db
+      
+      # Test Configuration
+      TEST_TIMEOUT: 300
+      PARALLEL_TESTS: true
+      GENERATE_REPORTS: true
+      
+      # Puppeteer Configuration
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
+      PUPPETEER_ARGS: --no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage
+    depends_on:
+      company-test-api:
+        condition: service_healthy
+    networks:
+      - company-test-network
+    volumes:
+      - ../scripts:/app/scripts:ro
+      - ../tests:/app/tests:ro
+      - ./test-results:/app/test-results
+      - ./test-reports:/app/test-reports
+    working_dir: /app
+    profiles:
+      - test  # Only start when running tests
+    command: >
+      sh -c "
+        echo 'Waiting for API to be ready...' &&
+        while ! curl -f http://company-test-api:8000/health; do
+          echo 'Waiting for API...'
+          sleep 5
+        done &&
+        echo 'API is ready! Starting Company tests...' &&
+        echo '============================================' &&
+        echo '🧪 COMPANY COMPREHENSIVE TEST SUITE' &&
+        echo '============================================' &&
+        
+        echo 'Running API CRUD Tests...' &&
+        chmod +x /app/scripts/test-company-crud.sh &&
+        API_BASE='http://company-test-api:8000/api/v1' /app/scripts/test-company-crud.sh > /app/test-results/company-crud-results.log 2>&1 &&
+        
+        echo 'Running Business Logic Tests...' &&
+        chmod +x /app/scripts/test-company-business-logic.py &&
+        cd /app && python scripts/test-company-business-logic.py > /app/test-results/company-business-logic-results.log 2>&1 &&
+        
+        echo 'Running Security (RBAC & CORS) Tests...' &&
+        chmod +x /app/scripts/test-company-security.sh &&
+        API_BASE='http://company-test-api:8000/api/v1' /app/scripts/test-company-security.sh > /app/test-results/company-security-results.log 2>&1 &&
+        
+        echo 'Running Stress Test (10K Companies)...' &&
+        chmod +x /app/scripts/seed-companies-10k.py &&
+        cd /app && DATABASE_URL='postgresql+asyncpg://rental_test_user:rental_test_password@company-test-db:5432/rental_test_db' python scripts/seed-companies-10k.py > /app/test-results/company-stress-results.log 2>&1 &&
+        
+        echo 'Generating Test Report...' &&
+        python scripts/generate-test-report.py /app/test-results /app/test-reports/company-test-report.html &&
+        
+        echo '============================================' &&
+        echo '🎉 COMPANY TEST SUITE COMPLETED!' &&
+        echo '============================================' &&
+        echo 'Results available in test-results/ directory' &&
+        echo 'Report available in test-reports/company-test-report.html' &&
+        
+        tail -f /dev/null
+      "
+
+volumes:
+  company_test_db_data:
+    driver: local
+  company_test_redis_data:
+    driver: local
+
+networks:
+  company-test-network:
+    driver: bridge
+    name: company-test-network
