@@ -51,6 +51,37 @@ class LocationService:
         self.redis = redis
         self.db = db
     
+    def _convert_to_response(self, location: Location) -> LocationResponse:
+        """Convert Location model to LocationResponse to avoid SQLAlchemy conflicts."""
+        return LocationResponse(
+            id=location.id,
+            location_code=location.location_code,
+            location_name=location.location_name,
+            location_type=location.location_type.value if hasattr(location.location_type, 'value') else str(location.location_type),
+            address=location.address,
+            city=location.city,
+            state=location.state,
+            country=location.country,
+            postal_code=location.postal_code,
+            contact_number=location.contact_number,
+            email=location.email,
+            website=location.website,
+            latitude=location.latitude,
+            longitude=location.longitude,
+            timezone=location.timezone,
+            operating_hours=location.operating_hours,
+            capacity=location.capacity,
+            is_default=location.is_default,
+            is_active=location.is_active,
+            parent_location_id=location.parent_location_id,
+            manager_user_id=getattr(location, 'manager_user_id', None),
+            metadata=getattr(location, 'location_metadata', None),
+            created_at=location.created_at,
+            updated_at=location.updated_at,
+            created_by=location.created_by,
+            updated_by=location.updated_by
+        )
+    
     # ==================== Core Business Operations ====================
     
     async def create_location(
@@ -127,7 +158,7 @@ class LocationService:
                 created_by
             )
             
-            return LocationResponse.model_validate(location)
+            return self._convert_to_response(location)
             
         except Exception as e:
             logger.error(f"Error creating location: {e}")
@@ -165,7 +196,7 @@ class LocationService:
                 resource_id=str(location_id)
             )
         
-        response = LocationResponse.model_validate(location)
+        response = self._convert_to_response(location)
         
         # Cache the result
         if use_cache and self.redis:
@@ -193,7 +224,7 @@ class LocationService:
                 resource_type="location"
             )
         
-        response = LocationResponse.model_validate(location)
+        response = self._convert_to_response(location)
         
         if use_cache and self.redis:
             await self.redis.cache_set(
@@ -269,7 +300,7 @@ class LocationService:
                 updated_by
             )
             
-            return LocationResponse.model_validate(location)
+            return self._convert_to_response(location)
             
         except Exception as e:
             logger.error(f"Error updating location {location_id}: {e}")
@@ -373,7 +404,7 @@ class LocationService:
         
         # Search in database
         locations, total = await self.crud.search(params)
-        location_responses = [LocationResponse.model_validate(loc) for loc in locations]
+        location_responses = [self._convert_to_response(loc) for loc in locations]
         
         # Cache results (shorter TTL for search results)
         if use_cache and self.redis:
@@ -453,7 +484,7 @@ class LocationService:
                     updated_by=row.updated_by
                 )
                 
-                location_response = LocationResponse.model_validate(location)
+                location_response = self._convert_to_response(location)
                 distance = float(row.distance)
                 nearby_locations.append((location_response, distance))
             
@@ -488,7 +519,7 @@ class LocationService:
     async def get_location_path(self, location_id: UUID) -> List[LocationResponse]:
         """Get the full path from root to location."""
         ancestors = await self.crud.get_ancestors(location_id)
-        ancestor_responses = [LocationResponse.model_validate(loc) for loc in reversed(ancestors)]
+        ancestor_responses = [self._convert_to_response(loc) for loc in reversed(ancestors)]
         
         # Add current location
         current_location = await self.get_location(location_id)
@@ -559,7 +590,7 @@ class LocationService:
                 created_by
             )
             
-            return [LocationResponse.model_validate(loc) for loc in created_locations]
+            return [self._convert_to_response(loc) for loc in created_locations]
             
         except Exception as e:
             logger.error(f"Error in bulk create: {e}")

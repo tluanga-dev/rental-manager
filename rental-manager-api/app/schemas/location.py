@@ -331,7 +331,10 @@ class LocationUpdate(BaseModel):
 
 class LocationResponse(BaseModel):
     """Schema for location response."""
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True,
+        ignored_types=(type,),  # Ignore method objects
+    )
     
     id: UUID
     location_code: str

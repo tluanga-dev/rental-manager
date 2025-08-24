@@ -49,7 +49,7 @@ class LocationCRUD:
         # Create location instance
         location = Location(
             **location_data.model_dump(exclude_unset=True),
-            created_by=created_by
+            created_by=str(created_by) if created_by else None
         )
         
         self.db.add(location)
@@ -72,8 +72,7 @@ class LocationCRUD:
             select(Location)
             .options(
                 selectinload(Location.parent_location),
-                selectinload(Location.child_locations),
-                selectinload(Location.manager)
+                selectinload(Location.child_locations)
             )
             .where(
                 Location.id == location_id,
@@ -104,7 +103,7 @@ class LocationCRUD:
         for field, value in update_data.items():
             setattr(location, field, value)
         
-        location.updated_by = updated_by
+        location.updated_by = str(updated_by) if updated_by else None
         
         await self.db.commit()
         await self.db.refresh(location)
@@ -122,7 +121,7 @@ class LocationCRUD:
         
         location.is_active = False
         location.is_default = False
-        location.updated_by = deleted_by
+        location.updated_by = str(deleted_by) if deleted_by else None
         
         await self.db.commit()
         return True
@@ -500,7 +499,7 @@ class LocationCRUD:
         updated_by: Optional[UUID] = None
     ) -> int:
         """Bulk update locations."""
-        update_data['updated_by'] = updated_by
+        update_data['updated_by'] = str(updated_by) if updated_by else None
         
         query = (
             update(Location)
@@ -529,7 +528,7 @@ class LocationCRUD:
                 .values(
                     is_active=False,
                     is_default=False,
-                    updated_by=deleted_by
+                    updated_by=str(deleted_by) if deleted_by else None
                 )
             )
             result = await self.db.execute(query)
@@ -551,7 +550,7 @@ class LocationCRUD:
             return None
         
         location.capacity = capacity_data.capacity
-        location.updated_by = updated_by
+        location.updated_by = str(updated_by) if updated_by else None
         
         # Add to metadata if notes provided
         if capacity_data.notes:
