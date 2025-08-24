@@ -19,7 +19,7 @@ from app.core.errors import (
     NotFoundError, ConflictError, ValidationError, BusinessRuleError
 )
 
-router = APIRouter(prefix="/unit-of-measurement", tags=["Unit of Measurement"])
+router = APIRouter(tags=["Unit of Measurement"])
 
 
 @router.post("/", response_model=UnitOfMeasurementResponse, status_code=status.HTTP_201_CREATED)
