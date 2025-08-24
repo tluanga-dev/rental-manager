@@ -52,6 +52,10 @@ class Brand(RentalManagerBaseModel, NamedModelMixin):
             description: Optional brand description
             **kwargs: Additional BaseModel fields
         """
+        # Ensure is_active defaults to True if not specified
+        if 'is_active' not in kwargs:
+            kwargs['is_active'] = True
+            
         super().__init__(**kwargs)
         self.name = name
         self.code = code

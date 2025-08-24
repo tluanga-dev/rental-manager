@@ -55,6 +55,38 @@ class CreditRating(str, Enum):
 class Customer(RentalManagerBaseModel):
     """Customer model with comprehensive customer information."""
     
+    def __init__(self, **kwargs):
+        # Set defaults for fields that might not be set when creating instances manually
+        if 'status' not in kwargs:
+            kwargs['status'] = CustomerStatus.ACTIVE.value
+        if 'customer_tier' not in kwargs:
+            kwargs['customer_tier'] = CustomerTier.BRONZE.value
+        if 'blacklist_status' not in kwargs:
+            kwargs['blacklist_status'] = BlacklistStatus.CLEAR.value
+        if 'credit_rating' not in kwargs:
+            kwargs['credit_rating'] = CreditRating.GOOD.value
+        if 'customer_type' not in kwargs:
+            kwargs['customer_type'] = CustomerType.INDIVIDUAL.value
+        
+        # Set base model defaults that aren't being applied
+        if 'is_active' not in kwargs:
+            kwargs['is_active'] = True
+        if 'country' not in kwargs:
+            kwargs['country'] = 'India'
+        
+        # Convert enum values to strings if needed
+        for field, enum_class in [
+            ('status', CustomerStatus),
+            ('customer_tier', CustomerTier), 
+            ('blacklist_status', BlacklistStatus),
+            ('credit_rating', CreditRating),
+            ('customer_type', CustomerType)
+        ]:
+            if field in kwargs and hasattr(kwargs[field], 'value'):
+                kwargs[field] = kwargs[field].value
+        
+        super().__init__(**kwargs)
+    
     # Unique customer code
     customer_code = Column(String(50), nullable=False, unique=True, index=True)
     
@@ -145,8 +177,8 @@ class Customer(RentalManagerBaseModel):
     @validates('customer_code')
     def validate_customer_code(self, key, code):
         """Validate customer code format."""
-        if not re.match(r'^[A-Z0-9_-]+$', code):
-            raise ValueError('Customer code must contain only uppercase letters, numbers, underscores, and hyphens')
+        if not re.match(r'^[A-Za-z0-9_-]+$', code):
+            raise ValueError('Customer code must contain only letters, numbers, underscores, and hyphens')
         return code.upper()
     
     @validates('postal_code')
@@ -181,50 +213,50 @@ class Customer(RentalManagerBaseModel):
         address_parts = [self.address_line1]
         if self.address_line2:
             address_parts.append(self.address_line2)
-        address_parts.extend([self.city, self.state, self.postal_code, self.country])
-        return ", ".join(address_parts)
+        address_parts.extend([self.city, self.state, self.postal_code, self.country or ""])
+        return ", ".join(filter(None, address_parts))
     
     @hybrid_property
     def is_blacklisted(self) -> bool:
         """Check if customer is blacklisted."""
-        return self.blacklist_status == BlacklistStatus.BLACKLISTED
+        return self.blacklist_status == BlacklistStatus.BLACKLISTED.value
     
     @hybrid_property
     def can_transact(self) -> bool:
         """Check if customer can perform transactions."""
         return (
-            self.status == CustomerStatus.ACTIVE and 
+            self.status == CustomerStatus.ACTIVE.value and 
             not self.is_blacklisted and 
             self.is_active
         )
     
     def blacklist(self, reason: str, by_user: Optional[str] = None) -> None:
         """Blacklist the customer."""
-        self.blacklist_status = BlacklistStatus.BLACKLISTED
+        self.blacklist_status = BlacklistStatus.BLACKLISTED.value
         self.blacklist_reason = reason
         self.blacklist_date = datetime.utcnow()
-        self.status = CustomerStatus.SUSPENDED
+        self.status = CustomerStatus.SUSPENDED.value
         self.updated_by = by_user
     
     def clear_blacklist(self, by_user: Optional[str] = None) -> None:
         """Clear customer blacklist."""
-        self.blacklist_status = BlacklistStatus.CLEAR
+        self.blacklist_status = BlacklistStatus.CLEAR.value
         self.blacklist_reason = None
         self.blacklist_date = None
-        if self.status == CustomerStatus.SUSPENDED:
-            self.status = CustomerStatus.ACTIVE
+        if self.status == CustomerStatus.SUSPENDED.value:
+            self.status = CustomerStatus.ACTIVE.value
         self.updated_by = by_user
     
     def update_tier(self) -> None:
         """Update customer tier based on lifetime value."""
         if self.lifetime_value >= 100000:
-            self.customer_tier = CustomerTier.PLATINUM
+            self.customer_tier = CustomerTier.PLATINUM.value
         elif self.lifetime_value >= 50000:
-            self.customer_tier = CustomerTier.GOLD
+            self.customer_tier = CustomerTier.GOLD.value
         elif self.lifetime_value >= 20000:
-            self.customer_tier = CustomerTier.SILVER
+            self.customer_tier = CustomerTier.SILVER.value
         else:
-            self.customer_tier = CustomerTier.BRONZE
+            self.customer_tier = CustomerTier.BRONZE.value
     
     def update_statistics(self, rental_amount: Decimal) -> None:
         """Update customer statistics after a transaction."""
