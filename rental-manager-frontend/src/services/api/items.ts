@@ -16,13 +16,13 @@ export const itemsApi = {
     console.log('🚀 Creating new item - Payload being sent to server:');
     console.log(JSON.stringify(data, null, 2));
     
-    const response = await apiClient.post('/master-data/item-master/', data);
+    const response = await apiClient.post('/items/', data);
     return response.data.success ? response.data.data : response.data;
   },
 
   // Get all items with optional filters - Updated for Item Master API
   list: async (params?: ItemSearchParams): Promise<ItemListResponse> => {
-    const response = await apiClient.get('/master-data/item-master/', { params });
+    const response = await apiClient.get('/items/', { params });
     
     // Handle both formats: wrapped response or direct array
     let itemsData;
@@ -97,7 +97,7 @@ export const itemsApi = {
     }>;
     total: number;
   }> => {
-    const response = await apiClient.get('/master-data/item-master/', { params });
+    const response = await apiClient.get('/items/', { params });
     const data = response.data.success ? response.data.data : response.data;
     
     // Handle direct array response
@@ -130,31 +130,31 @@ export const itemsApi = {
 
   // Get item by ID - Updated for Item Master API
   getById: async (id: string): Promise<Item> => {
-    const response = await apiClient.get(`/master-data/item-master/${id}`);
+    const response = await apiClient.get(`/items/${id}`);
     return response.data.success ? response.data.data : response.data;
   },
 
   // Get item by SKU
   getBySku: async (sku: string): Promise<Item> => {
-    const response = await apiClient.get(`/master-data/item-master/sku/${sku}`);
+    const response = await apiClient.get(`/items/sku/${sku}`);
     return response.data.success ? response.data.data : response.data;
   },
 
   // Get item by item code
   getByItemCode: async (itemCode: string): Promise<Item> => {
-    const response = await apiClient.get(`/master-data/item-master/code/${itemCode}`);
+    const response = await apiClient.get(`/items/code/${itemCode}`);
     return response.data.success ? response.data.data : response.data;
   },
 
   // Update item - Updated for Item Master API
   update: async (id: string, data: UpdateItemRequest): Promise<Item> => {
-    const response = await apiClient.put(`/master-data/item-master/${id}`, data);
+    const response = await apiClient.put(`/items/${id}`, data);
     return response.data.success ? response.data.data : response.data;
   },
 
   // Update rental rate for an item - Specific function for dynamic rate entry
   updateRentalRate: async (itemId: string, rentalRatePerPeriod: number): Promise<Item> => {
-    const response = await apiClient.put(`/master-data/item-master/${itemId}`, {
+    const response = await apiClient.put(`/items/${itemId}`, {
       rental_rate_per_period: rentalRatePerPeriod
     });
     return response.data.success ? response.data.data : response.data;
@@ -162,7 +162,7 @@ export const itemsApi = {
 
   // Update sale price for an item - Specific function for dynamic price entry
   updateSalePrice: async (itemId: string, salePrice: number): Promise<Item> => {
-    const response = await apiClient.put(`/master-data/item-master/${itemId}`, {
+    const response = await apiClient.put(`/items/${itemId}`, {
       sale_price: salePrice
     });
     return response.data.success ? response.data.data : response.data;
@@ -170,13 +170,13 @@ export const itemsApi = {
 
   // Update item status (ACTIVE, INACTIVE, DISCONTINUED)
   updateStatus: async (id: string, item_status: 'ACTIVE' | 'INACTIVE' | 'DISCONTINUED'): Promise<Item> => {
-    const response = await apiClient.put(`/master-data/item-master/${id}`, { item_status });
+    const response = await apiClient.put(`/items/${id}`, { item_status });
     return response.data.success ? response.data.data : response.data;
   },
 
   // Delete item (soft delete)
   delete: async (id: string): Promise<void> => {
-    await apiClient.delete(`/master-data/item-master/${id}`);
+    await apiClient.delete(`/items/${id}`);
   },
 
   // Search items by name, code, SKU, or description
@@ -185,7 +185,7 @@ export const itemsApi = {
       search: query,
       limit,
     };
-    const response = await apiClient.get('/master-data/item-master/', { params });
+    const response = await apiClient.get('/items/', { params });
     const data = response.data.success ? response.data.data : response.data;
     
     // Transform the array response to include ID field
@@ -220,39 +220,39 @@ export const itemsApi = {
 
   // Get items by category
   getByCategory: async (categoryId: string): Promise<Item[]> => {
-    const response = await apiClient.get(`/master-data/item-master/category/${categoryId}`);
+    const response = await apiClient.get(`/items/category/${categoryId}`);
     const data = response.data.success ? response.data.data : response.data;
     return data.items || [];
   },
 
   // Get items by brand
   getByBrand: async (brandId: string): Promise<Item[]> => {
-    const response = await apiClient.get(`/master-data/item-master/brand/${brandId}`);
+    const response = await apiClient.get(`/items/brand/${brandId}`);
     const data = response.data.success ? response.data.data : response.data;
     return data.items || [];
   },
 
   // Get only rental items (RENTAL or BOTH)
   getRentalItems: async (params?: ItemSearchParams): Promise<ItemListResponse> => {
-    const response = await apiClient.get('/master-data/item-master/types/rental', { params });
+    const response = await apiClient.get('/items/types/rental', { params });
     return response.data.success ? response.data.data : response.data;
   },
 
   // Get only sale items (SALE or BOTH)  
   getSaleItems: async (params?: ItemSearchParams): Promise<ItemListResponse> => {
-    const response = await apiClient.get('/master-data/item-master/types/sale', { params });
+    const response = await apiClient.get('/items/types/sale', { params });
     return response.data.success ? response.data.data : response.data;
   },
 
   // Get total count with filters
   getCount: async (params?: ItemSearchParams): Promise<{ count: number }> => {
-    const response = await apiClient.get('/master-data/item-master/count/total', { params });
+    const response = await apiClient.get('/items/count/total', { params });
     return response.data.success ? response.data.data : response.data;
   },
 
   // Preview SKU generation without creating item
   generateSku: async (data: SkuGenerationRequest): Promise<SkuGenerationResponse> => {
-    const response = await apiClient.post('/master-data/item-master/skus/generate', data);
+    const response = await apiClient.post('/items/skus/generate', data);
     return response.data.success ? response.data.data : response.data;
   },
 
