@@ -110,15 +110,20 @@ class UnitOfMeasurementResponse(UnitOfMeasurementInDB):
 
 
 class UnitOfMeasurementSummary(BaseModel):
-    """Schema for unit of measurement summary with minimal fields."""
+    """Schema for unit of measurement summary with all fields for table display."""
     
     model_config = ConfigDict(from_attributes=True)
     
     id: UUID = Field(..., description="Unit unique identifier")
     name: str = Field(..., description="Unit name")
     code: Optional[str] = Field(None, description="Unit code/abbreviation")
+    description: Optional[str] = Field(None, description="Unit description")
     is_active: bool = Field(True, description="Unit active status")
     display_name: str = Field(..., description="Unit display name")
+    created_at: datetime = Field(..., description="Creation timestamp")
+    updated_at: Optional[datetime] = Field(None, description="Last update timestamp")
+    created_by: Optional[str] = Field(None, description="User who created the unit")
+    updated_by: Optional[str] = Field(None, description="User who last updated the unit")
     
     @field_validator('display_name', mode='before')
     @classmethod
