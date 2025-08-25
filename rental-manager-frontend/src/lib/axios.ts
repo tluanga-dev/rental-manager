@@ -87,9 +87,44 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config;
 
-    // Handle network errors (backend offline)
+    // Detect CORS errors specifically
+    const isCorsError = (
+      !error.response && 
+      error.message && 
+      (error.message.includes('CORS') || 
+       error.message.includes('Access-Control-Allow-Origin') ||
+       error.message.includes('blocked by CORS policy'))
+    );
+
+    // Handle CORS errors
+    if (isCorsError) {
+      console.error('🚨 CORS Error detected:', error.message);
+      console.warn('💡 This is likely a backend CORS configuration issue');
+      console.warn('💡 The API may be working but CORS headers are missing');
+      
+      const errorData: ApiResponse = {
+        success: false,
+        data: null,
+        message: 'CORS policy error - unable to connect to server. The request may have been blocked by browser security.',
+        errors: { cors: ['CORS policy blocked the request'] }
+      };
+
+      return Promise.reject({
+        ...error,
+        response: {
+          status: 0,
+          statusText: 'CORS Error',
+          headers: {},
+          config: originalRequest,
+          data: errorData
+        }
+      });
+    }
+
+    // Handle network errors (backend offline or unreachable)
     if (!error.response) {
       useAuthStore.getState().setBackendStatus(false);
+      
       const errorData: ApiResponse = {
         success: false,
         data: null,

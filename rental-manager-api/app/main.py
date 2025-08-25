@@ -81,13 +81,52 @@ if cors_origins:
         CORSMiddleware,
         allow_origins=cors_origins,
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         allow_headers=["*"],
+        expose_headers=["*"],
+        max_age=600,  # Cache preflight for 10 minutes
     )
     logger.info(f"CORS configured with origins: {cors_origins}")
+else:
+    logger.warning("No CORS origins configured - CORS middleware not enabled")
 
 
-# Add request ID middleware for tracking
+# Add CORS debugging middleware
+@app.middleware("http")
+async def cors_debug_middleware(request: Request, call_next):
+    """Debug CORS issues and add proper headers"""
+    origin = request.headers.get("origin")
+    method = request.method
+    path = request.url.path
+    
+    # Log CORS-related requests
+    if origin:
+        logger.info(f"CORS request from {origin}: {method} {path}")
+        cors_origins = settings.cors_origins
+        if origin not in cors_origins:
+            logger.warning(f"Origin {origin} not in allowed origins: {cors_origins}")
+    
+    # Handle preflight requests
+    if method == "OPTIONS":
+        logger.info(f"Preflight request for {path} from origin: {origin}")
+    
+    response = await call_next(request)
+    
+    # Ensure CORS headers are present in error responses
+    if origin and origin in settings.cors_origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        
+        # Add CORS headers to error responses
+        if response.status_code >= 400:
+            logger.warning(f"Error response {response.status_code} for CORS request from {origin}")
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    
+    return response
+
+
+# Add request ID middleware for tracking  
 @app.middleware("http")
 async def add_request_id(request: Request, call_next):
     """Add unique request ID to each request for tracking"""

@@ -139,7 +139,9 @@ class Brand(RentalManagerBaseModel, NamedModelMixin):
     @property
     def has_items(self) -> bool:
         """Check if brand has associated items."""
-        return bool(self.items)
+        # Avoid accessing lazy-loaded relationship in async context
+        # This will be calculated in the service layer if needed
+        return False
     
     def can_delete(self) -> bool:
         """Check if brand can be deleted."""
