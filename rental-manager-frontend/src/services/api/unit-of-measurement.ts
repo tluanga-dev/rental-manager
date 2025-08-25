@@ -9,7 +9,7 @@ import type {
 export const unitOfMeasurementApi = {
   // Create a new unit of measurement
   create: async (data: CreateUnitOfMeasurementRequest): Promise<UnitOfMeasurement> => {
-    const response = await apiClient.post('/master-data/units-of-measurement/', data);
+    const response = await apiClient.post('/unit-of-measurement/', data);
     return response.data.data;
   },
 
@@ -29,7 +29,7 @@ export const unitOfMeasurementApi = {
       ...(params.is_active !== undefined && { is_active: params.is_active.toString() }),
       ...(params.include_inactive !== undefined && { include_inactive: params.include_inactive.toString() }),
     } : undefined;
-    const response = await apiClient.get('/master-data/units-of-measurement/', { params: queryParams });
+    const response = await apiClient.get('/unit-of-measurement/', { params: queryParams });
     return response.data.data;
   },
 
@@ -52,7 +52,7 @@ export const unitOfMeasurementApi = {
       page: params?.offset ? Math.floor(params.offset / (params.limit || 100)) + 1 : 1,
     };
 
-    const response = await apiClient.get('/master-data/units-of-measurement/', { params: apiParams });
+    const response = await apiClient.get('/unit-of-measurement/', { params: apiParams });
     const data = response.data.data;
     
     return {
@@ -67,31 +67,31 @@ export const unitOfMeasurementApi = {
 
   // Get unit of measurement by ID
   getById: async (id: string): Promise<UnitOfMeasurement> => {
-    const response = await apiClient.get(`/master-data/units-of-measurement/${id}`);
+    const response = await apiClient.get(`/unit-of-measurement/${id}`);
     return response.data.data;
   },
 
   // Get unit of measurement by name
   getByName: async (name: string): Promise<UnitOfMeasurement> => {
-    const response = await apiClient.get(`/master-data/units-of-measurement/by-name/${name}`);
+    const response = await apiClient.get(`/unit-of-measurement/by-name/${name}`);
     return response.data.data;
   },
 
   // Get unit of measurement by abbreviation
   getByAbbreviation: async (abbreviation: string): Promise<UnitOfMeasurement> => {
-    const response = await apiClient.get(`/master-data/units-of-measurement/by-abbreviation/${abbreviation}`);
+    const response = await apiClient.get(`/unit-of-measurement/by-abbreviation/${abbreviation}`);
     return response.data.data;
   },
 
   // Update unit of measurement
   update: async (id: string, data: UpdateUnitOfMeasurementRequest): Promise<UnitOfMeasurement> => {
-    const response = await apiClient.put(`/master-data/units-of-measurement/${id}`, data);
+    const response = await apiClient.put(`/unit-of-measurement/${id}`, data);
     return response.data.data;
   },
 
   // Delete unit of measurement (soft delete)
   delete: async (id: string): Promise<void> => {
-    await apiClient.delete(`/master-data/units-of-measurement/${id}`);
+    await apiClient.delete(`/unit-of-measurement/${id}`);
   },
 
   // Search units by name
@@ -100,7 +100,7 @@ export const unitOfMeasurementApi = {
       search: name,
       page_size: limit,
     };
-    const response = await apiClient.get('/master-data/units-of-measurement/', { params });
+    const response = await apiClient.get('/unit-of-measurement/', { params });
     const data = response.data.data;
     return data.items;
   },
@@ -110,7 +110,7 @@ export const unitOfMeasurementApi = {
     search?: string;
     limit?: number;
   }): Promise<UnitOfMeasurement[]> => {
-    const response = await apiClient.get('/master-data/units-of-measurement/active/', { params });
+    const response = await apiClient.get('/unit-of-measurement/active/', { params });
     return response.data.data;
   },
 
@@ -120,7 +120,7 @@ export const unitOfMeasurementApi = {
     failure_count: number;
     errors: string[];
   }> => {
-    const response = await apiClient.post('/master-data/units-of-measurement/bulk-operation/', {
+    const response = await apiClient.post('/unit-of-measurement/bulk-operation/', {
       unit_ids: unitIds,
       operation,
     });
@@ -129,12 +129,12 @@ export const unitOfMeasurementApi = {
 
   // Activate unit
   activate: async (id: string): Promise<void> => {
-    await apiClient.post(`/master-data/units-of-measurement/${id}/activate/`);
+    await apiClient.post(`/unit-of-measurement/${id}/activate/`);
   },
 
   // Deactivate unit
   deactivate: async (id: string): Promise<void> => {
-    await apiClient.post(`/master-data/units-of-measurement/${id}/deactivate/`);
+    await apiClient.post(`/unit-of-measurement/${id}/deactivate/`);
   },
 
   // Get statistics
@@ -149,13 +149,13 @@ export const unitOfMeasurementApi = {
       item_count: number;
     }>;
   }> => {
-    const response = await apiClient.get('/master-data/units-of-measurement/stats/');
+    const response = await apiClient.get('/unit-of-measurement/stats/');
     return response.data.data;
   },
 
   // Export units
   export: async (includeInactive: boolean = false): Promise<UnitOfMeasurement[]> => {
-    const response = await apiClient.get('/master-data/units-of-measurement/export/', {
+    const response = await apiClient.get('/unit-of-measurement/export/', {
       params: { include_inactive: includeInactive.toString() },
     });
     return response.data.data;
@@ -169,7 +169,7 @@ export const unitOfMeasurementApi = {
     skipped_imports: number;
     errors: string[];
   }> => {
-    const response = await apiClient.post('/master-data/units-of-measurement/import/', units);
+    const response = await apiClient.post('/unit-of-measurement/import/', units);
     return response.data.data;
   },
 };

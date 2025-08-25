@@ -619,15 +619,7 @@ export function Sidebar() {
     const visibleChildren = item.children?.filter(child => hasItemPermission(child)) || [];
     const hasChildren = visibleChildren.length > 0;
     
-    // Debug logging for rentals menu
-    if (item.id === 'rentals' && process.env.NODE_ENV === 'development') {
-      console.log('Rentals menu debug:', {
-        itemId: item.id,
-        hasChildren,
-        visibleChildrenCount: visibleChildren.length,
-        childrenCount: item.children?.length
-      });
-    }
+    // Removed debug logging for cleaner console output
     const isExpanded = expandedItems.includes(item.id);
     const itemIsActive = isActive(item.path);
 
