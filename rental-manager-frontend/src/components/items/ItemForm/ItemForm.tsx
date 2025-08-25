@@ -86,7 +86,7 @@ export function ItemForm({
       warranty_period_days: initialData?.warranty_period_days ? parseInt(initialData.warranty_period_days.toString()) : 0,
       reorder_point: initialData?.reorder_point || 0,
       is_rentable: initialData?.is_rentable ?? true,
-      is_saleable: initialData?.is_saleable ?? false,
+      is_salable: initialData?.is_salable ?? false,
     },
   });
 
@@ -94,7 +94,7 @@ export function ItemForm({
 
   // Watch form values for real-time validation
   const watchedValues = watch();
-  const { item_name, is_rentable, is_saleable, rental_period, sale_price } = watchedValues;
+  const { item_name, is_rentable, is_salable, rental_period, sale_price } = watchedValues;
 
   // Check if all mandatory fields are filled
   const isFormValid = React.useMemo(() => {
@@ -114,7 +114,7 @@ export function ItemForm({
   }, [item_name, is_rentable, rental_period]);
 
   const isRentable = watch('is_rentable');
-  const isSaleable = watch('is_saleable');
+  const isSalable = watch('is_salable');
 
   // Reset form when initialData changes
   useEffect(() => {
@@ -138,35 +138,30 @@ export function ItemForm({
         warranty_period_days: initialData.warranty_period_days ? parseInt(initialData.warranty_period_days.toString()) : 0,
         reorder_point: initialData.reorder_point || 0,
         is_rentable: initialData.is_rentable ?? true,
-        is_saleable: initialData.is_saleable ?? false,
+        is_salable: initialData.is_salable ?? false,
       });
     }
   }, [initialData, reset]);
 
 
   const handleFormSubmit = (data: ItemFormData) => {
-    // Transform form data to match API payload structure
+    // Transform form data to match backend API schema
     const apiPayload = {
       item_name: data.item_name,
-      item_status: mode === 'create' ? 'ACTIVE' : data.item_status,
-      brand_id: data.brand_id || undefined,
-      category_id: data.category_id || undefined,
-      unit_of_measurement_id: data.unit_of_measurement_id || undefined,
-      rental_rate_per_period: data.rental_rate_per_period && data.rental_rate_per_period > 0 ? data.rental_rate_per_period : undefined,
-      rental_period: Math.floor(data.rental_period),
-      // Send 0 for sale_price instead of undefined to support free items and avoid validation errors
-      sale_price: isNaN(data.sale_price) ? 0 : (data.sale_price || 0),
-      purchase_price: data.purchase_price && data.purchase_price > 0 ? data.purchase_price : undefined,
-      initial_stock_quantity: data.initial_stock_quantity || 0,
-      security_deposit: isNaN(data.security_deposit) ? undefined : (data.security_deposit && data.security_deposit > 0 ? data.security_deposit : undefined),
-      description: data.description || undefined,
-      specifications: data.specifications || undefined,
-      model_number: data.model_number || undefined,
-      serial_number_required: data.serial_number_required || false,
-      warranty_period_days: Math.floor(data.warranty_period_days),
-      reorder_point: data.reorder_point || 0,
+      status: mode === 'create' ? 'ACTIVE' : data.item_status,
+      brand_id: data.brand_id && data.brand_id.trim() !== '' ? data.brand_id : null,
+      category_id: data.category_id && data.category_id.trim() !== '' ? data.category_id : null,
+      unit_of_measurement_id: data.unit_of_measurement_id && data.unit_of_measurement_id.trim() !== '' ? data.unit_of_measurement_id : null,
+      rental_rate_per_day: data.rental_rate_per_period && data.rental_rate_per_period > 0 ? data.rental_rate_per_period : null,
+      sale_price: isNaN(data.sale_price) ? null : (data.sale_price || 0),
+      cost_price: data.purchase_price && data.purchase_price > 0 ? data.purchase_price : null,
+      reorder_level: data.reorder_point || null,
+      security_deposit: isNaN(data.security_deposit) ? null : (data.security_deposit && data.security_deposit > 0 ? data.security_deposit : null),
+      description: data.description && data.description.trim() !== '' ? data.description.trim() : null,
+      notes: data.specifications && data.specifications.trim() !== '' ? data.specifications.trim() : null,
+      requires_serial_number: data.serial_number_required || false,
       is_rentable: data.is_rentable ?? true,
-      is_saleable: data.is_saleable ?? false,
+      is_salable: data.is_salable ?? false,
     };
     
     onSubmit(apiPayload);
@@ -184,6 +179,7 @@ export function ItemForm({
                 <div className="flex-1">
                   <Input
                     id="item_name"
+                    data-testid="item-name-input"
                     {...form.register('item_name')}
                     placeholder="e.g., DeWalt Drill"
                     className={errors.item_name ? 'border-red-500' : ''}
@@ -194,11 +190,12 @@ export function ItemForm({
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="is_rentable"
+                      data-testid="is-rentable-checkbox"
                       checked={watch('is_rentable')}
                       onCheckedChange={(checked) => {
                         if (checked) {
                           form.setValue('is_rentable', true);
-                          form.setValue('is_saleable', false);
+                          form.setValue('is_salable', false);
                           // Clear sale_price when switching to rentable
                           form.setValue('sale_price', undefined);
                         } else {
@@ -220,17 +217,18 @@ export function ItemForm({
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="is_saleable"
-                      checked={watch('is_saleable')}
+                      data-testid="is-salable-checkbox"
+                      checked={watch('is_salable')}
                       onCheckedChange={(checked) => {
                         if (checked) {
-                          form.setValue('is_saleable', true);
+                          form.setValue('is_salable', true);
                           form.setValue('is_rentable', false);
                           // Clear rental fields when switching to saleable
                           form.setValue('rental_rate_per_period', undefined);
                           form.setValue('rental_period', DEFAULT_RENTAL_PERIOD_VALUE);
                           form.setValue('security_deposit', undefined);
                         } else {
-                          form.setValue('is_saleable', false);
+                          form.setValue('is_salable', false);
                           // Clear sale_price when unchecked
                           form.setValue('sale_price', undefined);
                         }
@@ -267,6 +265,7 @@ export function ItemForm({
                 <Label>Category</Label>
                 <div className="h-9">
                   <CategoryDropdown
+                    data-testid="category-dropdown"
                     value={watch('category_id')}
                     onChange={(categoryId) => form.setValue('category_id', categoryId)}
                     error={!!errors.category_id}
@@ -280,6 +279,7 @@ export function ItemForm({
                 <Label>Brand</Label>
                 <div className="h-9">
                   <BrandDropdown
+                    data-testid="brand-dropdown"
                     value={watch('brand_id')}
                     onChange={(brandId) => form.setValue('brand_id', brandId || '')}
                     error={!!errors.brand_id}
@@ -293,6 +293,7 @@ export function ItemForm({
                 <Label>Unit of Measurement *</Label>
                 <div className="h-9">
                   <UnitOfMeasurementDropdown
+                    data-testid="unit-dropdown"
                     value={watch('unit_of_measurement_id')}
                     onChange={(unitId) => form.setValue('unit_of_measurement_id', unitId || '')}
                     error={!!errors.unit_of_measurement_id}

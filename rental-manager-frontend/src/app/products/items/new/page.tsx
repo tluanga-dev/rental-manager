@@ -123,6 +123,7 @@ function NewItemContent() {
               </Button>
               <Button
                 type="submit"
+                data-testid="submit-button"
                 disabled={isSubmitting}
                 className="min-w-[120px]"
                 form="item-form"

@@ -95,7 +95,7 @@ export const itemFormSchema = z.object({
   
   // Item availability flags
   is_rentable: z.boolean().default(true),
-  is_saleable: z.boolean().default(false),
+  is_salable: z.boolean().default(false),
 }).refine((data) => {
   // Validate rental period is required for rentable items
   if (data.is_rentable) {
@@ -136,7 +136,7 @@ export const updateItemFormSchema = z.object({
   warranty_period_days: z.string().optional(),
   reorder_point: z.number().min(0, 'Reorder point cannot be negative').optional(),
   is_rentable: z.boolean().optional(),
-  is_saleable: z.boolean().optional(),
+  is_salable: z.boolean().optional(),
 });
 
 export type UpdateItemFormData = z.infer<typeof updateItemFormSchema>;
