@@ -49,7 +49,7 @@ export interface BrandListParams {
 // Brands API - Updated to match current API
 export const brandsApi = {
   create: async (brandData: BrandCreate): Promise<Brand> => {
-    const response = await apiClient.post('/master-data/brands/', brandData);
+    const response = await apiClient.post('/brands/', brandData);
     return response.data.data;
   },
 
@@ -60,21 +60,21 @@ export const brandsApi = {
       ...(params.is_active !== undefined && { is_active: params.is_active.toString() }),
       ...(params.include_inactive !== undefined && { include_inactive: params.include_inactive.toString() }),
     };
-    const response = await apiClient.get('/master-data/brands/', { params: queryParams });
+    const response = await apiClient.get('/brands/', { params: queryParams });
     return response.data.data;
   },
 
   getById: async (brandId: string): Promise<Brand> => {
-    const response = await apiClient.get(`/master-data/brands/${brandId}`);
+    const response = await apiClient.get(`/brands/${brandId}`);
     return response.data.data;
   },
 
   update: async (brandId: string, brandData: BrandUpdate): Promise<Brand> => {
-    const response = await apiClient.put(`/master-data/brands/${brandId}`, brandData);
+    const response = await apiClient.put(`/brands/${brandId}`, brandData);
     return response.data.data;
   },
 
   delete: async (brandId: string): Promise<void> => {
-    await apiClient.delete(`/master-data/brands/${brandId}`);
+    await apiClient.delete(`/brands/${brandId}`);
   },
 };
