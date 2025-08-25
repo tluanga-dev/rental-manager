@@ -3,7 +3,7 @@ Analytics endpoints for dashboard data.
 Currently provides mock data structure to support frontend development.
 """
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from typing import Any, Optional
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,6 +12,38 @@ from app.api.deps import get_db, get_current_user
 from app.models.user import User
 
 router = APIRouter()
+
+# Mock recent activity data
+MOCK_RECENT_ACTIVITY = [
+    {
+        "id": "activity-001",
+        "type": "rental_created",
+        "title": "New Rental Created",
+        "description": "RNT-2024-001 created for John Doe",
+        "customer_name": "John Doe",
+        "rental_id": "rental-001",
+        "amount": 300.00,
+        "timestamp": (datetime.now() - timedelta(minutes=30)).isoformat(),
+        "metadata": {
+            "transaction_number": "RNT-2024-001",
+            "items_count": 3
+        }
+    },
+    {
+        "id": "activity-002",
+        "type": "payment_received",
+        "title": "Payment Received",
+        "description": "Payment of ₹450 received for RNT-2024-002",
+        "customer_name": "Jane Smith",
+        "rental_id": "rental-002", 
+        "amount": 450.00,
+        "timestamp": (datetime.now() - timedelta(hours=1)).isoformat(),
+        "metadata": {
+            "transaction_number": "RNT-2024-002",
+            "payment_method": "CASH"
+        }
+    }
+]
 
 
 @router.get("/dashboard/overview")
@@ -289,57 +321,62 @@ async def get_dashboard_recent_activity(
     """
     Get recent activity for dashboard
     """
+    activities = [
+        {
+            "id": "act_001",
+            "type": "rental_created",
+            "title": "New Rental Created",
+            "description": "New rental created for MacBook Pro 16\"",
+            "customer": "TechCorp Ltd",
+            "amount": 1200.0,
+            "timestamp": datetime.now().isoformat(),
+            "status": "confirmed"
+        },
+        {
+            "id": "act_002",
+            "type": "rental_returned",
+            "title": "Equipment Returned",
+            "description": "Equipment returned: Gaming Chair",
+            "customer": "Event Solutions",
+            "amount": 300.0,
+            "timestamp": (datetime.now() - timedelta(minutes=15)).isoformat(),
+            "status": "completed"
+        },
+        {
+            "id": "act_003",
+            "type": "payment_received",
+            "title": "Payment Received",
+            "description": "Payment received for rental #R-001234",
+            "customer": "StartupHub",
+            "amount": 850.0,
+            "timestamp": (datetime.now() - timedelta(minutes=30)).isoformat(),
+            "status": "completed"
+        },
+        {
+            "id": "act_004",
+            "type": "rental_created",
+            "title": "Rental Extended",
+            "description": "Rental extended: Power Drill Set",
+            "customer": "ConstructCorp",
+            "amount": 200.0,
+            "timestamp": (datetime.now() - timedelta(hours=1)).isoformat(),
+            "status": "approved"
+        },
+        {
+            "id": "act_005",
+            "type": "rental_created",
+            "title": "Maintenance Scheduled",
+            "description": "Item scheduled for maintenance: Projector XYZ",
+            "customer": None,
+            "amount": 0.0,
+            "timestamp": (datetime.now() - timedelta(hours=2)).isoformat(),
+            "status": "scheduled"
+        }
+    ]
+    
     return {
         "success": True,
-        "data": {
-            "activities": [
-                {
-                    "id": "act_001",
-                    "type": "rental",
-                    "description": "New rental created for MacBook Pro 16\"",
-                    "customer": "TechCorp Ltd",
-                    "amount": 1200.0,
-                    "timestamp": datetime.now().isoformat(),
-                    "status": "confirmed"
-                },
-                {
-                    "id": "act_002",
-                    "type": "return",
-                    "description": "Equipment returned: Gaming Chair",
-                    "customer": "Event Solutions",
-                    "amount": 300.0,
-                    "timestamp": datetime.now().isoformat(),
-                    "status": "completed"
-                },
-                {
-                    "id": "act_003",
-                    "type": "payment",
-                    "description": "Payment received for rental #R-001234",
-                    "customer": "StartupHub",
-                    "amount": 850.0,
-                    "timestamp": datetime.now().isoformat(),
-                    "status": "completed"
-                },
-                {
-                    "id": "act_004",
-                    "type": "extension",
-                    "description": "Rental extended: Power Drill Set",
-                    "customer": "ConstructCorp",
-                    "amount": 200.0,
-                    "timestamp": datetime.now().isoformat(),
-                    "status": "approved"
-                },
-                {
-                    "id": "act_005",
-                    "type": "maintenance",
-                    "description": "Item scheduled for maintenance: Projector XYZ",
-                    "customer": null,
-                    "amount": 0.0,
-                    "timestamp": datetime.now().isoformat(),
-                    "status": "scheduled"
-                }
-            ][:limit]
-        }
+        "data": activities[:limit]
     }
 
 
@@ -381,3 +418,5 @@ async def export_dashboard_data(
             "status": "ready"
         }
     }
+
+

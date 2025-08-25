@@ -53,9 +53,11 @@ export function RecentActivity({
       // Fetch real data from the API
       const response = await dashboardApi.getRecentActivity(limit);
       if (response.success && response.data) {
-        setActivities(response.data);
+        // Ensure response.data is an array before setting
+        const activitiesData = Array.isArray(response.data) ? response.data : [];
+        setActivities(activitiesData);
       } else {
-        console.error('Failed to fetch recent activities: No data returned');
+        console.error('Failed to fetch recent activities: No data returned or invalid response format');
         setActivities([]);
       }
     } catch (error) {
@@ -183,7 +185,7 @@ export function RecentActivity({
 
       {/* Activity List */}
       <div className="space-y-1">
-        {activities.map((activity, index) => (
+        {Array.isArray(activities) && activities.map((activity, index) => (
           <div
             key={activity.id}
             className={cn(
@@ -241,7 +243,7 @@ export function RecentActivity({
       </div>
 
       {/* View All Button */}
-      {showViewAll && activities.length >= limit && (
+      {showViewAll && Array.isArray(activities) && activities.length >= limit && (
         <div className="pt-4 border-t">
           <Button variant="outline" className="w-full" size="sm">
             <span>View All Activity</span>

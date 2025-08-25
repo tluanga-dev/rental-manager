@@ -55,7 +55,7 @@ export interface PaginatedCategories {
 export const categoriesApi = {
   // Create a new category
   create: async (data: CategoryCreate): Promise<CategoryResponse> => {
-    const response = await apiClient.post('/master-data/categories/', data);
+    const response = await apiClient.post('/categories/', data);
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },
@@ -81,7 +81,7 @@ export const categoriesApi = {
       ...(params.is_active !== undefined && { is_active: params.is_active.toString() }),
       ...(params.include_inactive !== undefined && { include_inactive: params.include_inactive.toString() }),
     } : undefined;
-    const response = await apiClient.get('/master-data/categories/', { params: queryParams });
+    const response = await apiClient.get('/categories/', { params: queryParams });
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },
@@ -95,28 +95,28 @@ export const categoriesApi = {
       ...params,
       ...(params.include_inactive !== undefined && { include_inactive: params.include_inactive.toString() }),
     } : undefined;
-    const response = await apiClient.get('/master-data/categories/tree/', { params: queryParams });
+    const response = await apiClient.get('/categories/tree/', { params: queryParams });
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },
 
   // Get category by ID
   getById: async (id: string): Promise<CategoryResponse> => {
-    const response = await apiClient.get(`/master-data/categories/${id}`);
+    const response = await apiClient.get(`/categories/${id}`);
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },
 
   // Update category
   update: async (id: string, data: CategoryUpdate): Promise<CategoryResponse> => {
-    const response = await apiClient.put(`/master-data/categories/${id}`, data);
+    const response = await apiClient.put(`/categories/${id}`, data);
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },
 
   // Delete category (soft delete)
   delete: async (id: string): Promise<void> => {
-    await apiClient.delete(`/master-data/categories/${id}`);
+    await apiClient.delete(`/categories/${id}`);
   },
 
   // Get leaf categories (categories with no children)
@@ -133,7 +133,7 @@ export const categoriesApi = {
       is_leaf: 'true' // Send as string for proper query parameter serialization
     } : { is_leaf: 'true' };
     
-    const response = await apiClient.get('/master-data/categories/', { 
+    const response = await apiClient.get('/categories/', { 
       params: queryParams
     });
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
@@ -149,7 +149,7 @@ export const categoriesApi = {
       ...params,
       ...(params.include_inactive !== undefined && { include_inactive: params.include_inactive.toString() }),
     } : undefined;
-    const response = await apiClient.get('/master-data/categories/parents/', { params: queryParams });
+    const response = await apiClient.get('/categories/parents/', { params: queryParams });
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },
@@ -163,21 +163,21 @@ export const categoriesApi = {
       ...params,
       ...(params.include_inactive !== undefined && { include_inactive: params.include_inactive.toString() }),
     } : undefined;
-    const response = await apiClient.get('/master-data/categories/leaves/', { params: queryParams });
+    const response = await apiClient.get('/categories/leaves/', { params: queryParams });
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },
 
   // Toggle category active status
   toggleActive: async (id: string): Promise<CategoryResponse> => {
-    const response = await apiClient.patch(`/master-data/categories/${id}/toggle-active`);
+    const response = await apiClient.patch(`/categories/${id}/toggle-active`);
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },
 
   // Move category to new parent
   moveCategory: async (id: string, data: CategoryMove): Promise<CategoryResponse> => {
-    const response = await apiClient.patch(`/master-data/categories/${id}/move`, data);
+    const response = await apiClient.patch(`/categories/${id}/move`, data);
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },
@@ -191,7 +191,7 @@ export const categoriesApi = {
       ...(params?.include_inactive !== undefined && { include_inactive: params.include_inactive.toString() }),
       ...(excludeId && { exclude_id: excludeId }),
     };
-    const response = await apiClient.get('/master-data/categories/parents/', { params: queryParams });
+    const response = await apiClient.get('/categories/parents/', { params: queryParams });
     // The axios interceptor wraps responses in {success: true, data: originalResponse}
     return response.data.data;
   },

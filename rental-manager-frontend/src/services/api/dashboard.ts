@@ -434,8 +434,44 @@ export const dashboardApi = {
 
   // Get recent activity
   getRecentActivity: async (limit: number = 10): Promise<{ success: boolean; data: Array<{ id: string; type: string; title: string; description: string; amount?: number; customer?: string; timestamp: string; status?: string; metadata?: Record<string, any>; }> }> => {
-    const response = await apiClient.get('/analytics/dashboard/recent-activity', { params: { limit } });
-    return response.data;
+    try {
+      const response = await apiClient.get('/analytics/dashboard/recent-activity', { params: { limit } });
+      const raw = response.data;
+      
+      // Ensure the response has the expected structure
+      if (raw && raw.success) {
+        // Handle different response formats
+        let activities = [];
+        
+        if (Array.isArray(raw.data)) {
+          // Direct array format: { success: true, data: [...] }
+          activities = raw.data;
+        } else if (raw.data && Array.isArray(raw.data.activities)) {
+          // Nested format: { success: true, data: { activities: [...] } }
+          activities = raw.data.activities;
+        } else {
+          // Fallback to empty array
+          activities = [];
+        }
+        
+        return {
+          success: true,
+          data: activities
+        };
+      } else {
+        console.warn('⚠️ Recent activity API returned unexpected format:', raw);
+        return {
+          success: false,
+          data: []
+        };
+      }
+    } catch (error) {
+      console.error('❌ Failed to fetch recent activity:', error);
+      return {
+        success: false,
+        data: []
+      };
+    }
   },
 
   // Export dashboard data
