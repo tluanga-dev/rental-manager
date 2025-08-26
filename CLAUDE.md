@@ -47,8 +47,8 @@ rental-manager/                    # Root of unified repository
 ```bash
 # Start entire application stack
 docker-compose up -d
-# Backend: http://localhost:8001/api  
-# Frontend: http://localhost:3001
+# Backend: http://localhost:8000/api  
+# Frontend: http://localhost:3000
 # Database: localhost:5432
 # Redis: localhost:6379
 # PgAdmin: http://localhost:5050
@@ -335,7 +335,7 @@ REDIS_URL=redis://localhost:6379/0
 
 # Security  
 SECRET_KEY=your-secret-key-here
-BACKEND_CORS_ORIGINS=["http://localhost:3000","http://localhost:3001"]
+BACKEND_CORS_ORIGINS=["http://localhost:3000"]
 
 # Application
 ENVIRONMENT=development
@@ -345,7 +345,7 @@ DEBUG=true
 ### Frontend Environment Variables
 ```bash
 # API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:8001/api
+NEXT_PUBLIC_API_URL=http://localhost:8000/api
 
 # Development
 NODE_ENV=development
@@ -377,7 +377,7 @@ NODE_ENV=development
 ### Debugging API Issues
 ```bash
 # Backend API docs
-http://localhost:8001/docs       # Swagger UI for testing endpoints
+http://localhost:8000/docs       # Swagger UI for testing endpoints
 
 # Frontend network debugging  
 # Check browser DevTools Network tab
