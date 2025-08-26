@@ -72,7 +72,19 @@ export const locationsApi = {
     const response = await apiClient.get('/locations/', { params });
     const data = response.data.success ? response.data.data : response.data;
     
-    // Handle both direct array response and paginated response
+    // Handle the actual API response structure with 'locations' and 'pagination' properties
+    if (data.locations && data.pagination) {
+      return {
+        items: data.locations,  // Map 'locations' to 'items'
+        total: data.pagination.total_items || data.locations.length,
+        skip: data.pagination.page || params.skip || 0,
+        limit: data.pagination.page_size || params.limit || 100,
+        has_next: data.pagination.has_next || false,
+        has_previous: data.pagination.has_previous || false
+      };
+    }
+    
+    // Handle direct array response
     if (Array.isArray(data)) {
       return {
         items: data,
@@ -84,6 +96,7 @@ export const locationsApi = {
       };
     }
     
+    // Return data as is if it already has the expected structure
     return data;
   },
 

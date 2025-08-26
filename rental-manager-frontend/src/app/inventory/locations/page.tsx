@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/stores/app-store';
+import { useDebounce } from '@/hooks/useDebounce';
 import { LocationList, type LocationFilters } from '@/components/locations/location-list';
 import { locationsApi } from '@/services/api/locations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,15 +16,18 @@ export default function LocationsPage() {
   const { addNotification } = useAppStore();
   const [filters, setFilters] = useState<LocationFilters>({});
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Debounce search query for better performance
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  // Fetch locations
+  // Fetch locations using debounced search
   const { 
     data: locationsData = [], 
     isLoading, 
     error, 
     refetch 
   } = useQuery({
-    queryKey: ['locations', filters, searchQuery],
+    queryKey: ['locations', filters, debouncedSearchQuery],
     queryFn: async () => {
       const params: any = {};
       
@@ -32,11 +36,11 @@ export default function LocationsPage() {
       }
       
       if (filters.is_active !== undefined && filters.is_active !== 'ALL') {
-        params.active_only = filters.is_active;
+        params.is_active = filters.is_active;
       }
       
-      if (searchQuery) {
-        params.search = searchQuery;
+      if (debouncedSearchQuery) {
+        params.search = debouncedSearchQuery;
       }
       
       return locationsApi.list(params);
@@ -44,22 +48,62 @@ export default function LocationsPage() {
   });
 
   // Ensure locations is always an array - handle both direct array and paginated response
-  const locations = Array.isArray(locationsData) 
+  const allLocations = Array.isArray(locationsData) 
     ? locationsData 
     : (locationsData?.items && Array.isArray(locationsData.items)) 
       ? locationsData.items 
       : [];
 
-  // Calculate statistics
+  // Client-side filtering for search and filters
+  const filteredLocations = useMemo(() => {
+    let filtered = allLocations;
+    
+    // Apply immediate search filter (for responsive UI while debouncing server requests)
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(loc => 
+        loc.location_name?.toLowerCase().includes(query) || 
+        loc.location_code?.toLowerCase().includes(query) ||
+        loc.address?.toLowerCase().includes(query) ||
+        loc.city?.toLowerCase().includes(query)
+      );
+    }
+    
+    // Apply type filter
+    if (filters.location_type && filters.location_type !== 'ALL') {
+      filtered = filtered.filter(loc => loc.location_type === filters.location_type);
+    }
+    
+    // Apply active filter
+    if (filters.is_active !== undefined && filters.is_active !== 'ALL') {
+      filtered = filtered.filter(loc => loc.is_active === filters.is_active);
+    }
+    
+    // Apply manager filter
+    if (filters.has_manager !== undefined && filters.has_manager !== 'ALL') {
+      const hasManager = !!filters.has_manager;
+      filtered = filtered.filter(loc => {
+        const locationHasManager = !!loc.manager_user_id;
+        return hasManager ? locationHasManager : !locationHasManager;
+      });
+    }
+    
+    return filtered;
+  }, [allLocations, searchQuery, filters]);
+
+  // Use filtered locations for display
+  const locations = filteredLocations;
+
+  // Calculate statistics using filtered locations
   const stats = useMemo(() => {
-    const total = locations.length;
-    const active = locations.filter(l => l.is_active).length;
-    const withManager = locations.filter(l => l.manager_user_id).length;
+    const total = filteredLocations.length;
+    const active = filteredLocations.filter(l => l.is_active).length;
+    const withManager = filteredLocations.filter(l => l.manager_user_id).length;
     
     // Calculate recent locations (created in last 30 days)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const recentLocations = locations.filter(l => {
+    const recentLocations = filteredLocations.filter(l => {
       if (!l.created_at) return false;
       const createdDate = new Date(l.created_at);
       return createdDate > thirtyDaysAgo;
@@ -71,17 +115,17 @@ export default function LocationsPage() {
       withManager,
       recentLocations
     };
-  }, [locations]);
+  }, [filteredLocations]);
 
-  // Debug logging
-  console.log('📊 LocationsPage render:', {
-    locationsData,
-    locations,
-    locationsLength: locations.length,
-    isLoading,
-    error: error?.message,
-    hasError: !!error
-  });
+  // Debug logging (can be removed in production)
+  // console.log('📊 LocationsPage render:', {
+  //   locationsData,
+  //   locations,
+  //   locationsLength: locations.length,
+  //   isLoading,
+  //   error: error?.message,
+  //   hasError: !!error
+  // });
 
   // Activate location mutation
   const activateMutation = useMutation({
@@ -144,13 +188,14 @@ export default function LocationsPage() {
     },
   });
 
-  const handleSearch = (query: string) => {
+  // Debounced search handler
+  const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
-  };
+  }, []);
 
-  const handleFilter = (newFilters: LocationFilters) => {
+  const handleFilter = useCallback((newFilters: LocationFilters) => {
     setFilters(newFilters);
-  };
+  }, []);
 
   const handleView = (location: Location) => {
     router.push(`/inventory/locations/${location.id}`);
