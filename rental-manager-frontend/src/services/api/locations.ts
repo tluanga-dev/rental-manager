@@ -63,13 +63,13 @@ export const locationsApi = {
     console.log('🔍 location_code:', data.location_code);
     console.log('🔍 location_name:', data.location_name);
     
-    const response = await apiClient.post('/master-data/locations/', data);
+    const response = await apiClient.post('/locations/', data);
     return (response.data.success ? response.data.data : response.data) as LocationModel;
   },
 
   // List locations with pagination and filters - Fixed URL and parameters
   list: async (params: LocationListParams = {}): Promise<LocationListResponse> => {
-    const response = await apiClient.get('/master-data/locations/', { params });
+    const response = await apiClient.get('/locations/', { params });
     const data = response.data.success ? response.data.data : response.data;
     
     // Handle both direct array response and paginated response
@@ -89,19 +89,19 @@ export const locationsApi = {
 
   // Get location by ID - Fixed URL
   getById: async (id: string): Promise<LocationModel> => {
-    const response = await apiClient.get(`/master-data/locations/${id}`);
+    const response = await apiClient.get(`/locations/${id}`);
     return (response.data.success ? response.data.data : response.data) as LocationModel;
   },
 
   // Update an existing location - Fixed URL
   update: async (id: string, data: UpdateLocationData): Promise<LocationModel> => {
-    const response = await apiClient.put(`/master-data/locations/${id}`, data);
+    const response = await apiClient.put(`/locations/${id}`, data);
     return (response.data.success ? response.data.data : response.data) as LocationModel;
   },
 
   // Delete a location (soft delete) - Fixed URL
   delete: async (id: string): Promise<void> => {
-    await apiClient.delete(`/master-data/locations/${id}`);
+    await apiClient.delete(`/locations/${id}`);
   },
 
   // Get active locations only
@@ -118,25 +118,25 @@ export const locationsApi = {
 
   // Activate a location
   activate: async (id: string): Promise<LocationModel> => {
-    const response = await apiClient.post(`/master-data/locations/${id}/activate`);
+    const response = await apiClient.post(`/locations/${id}/activate`);
     return (response.data.success ? response.data.data : response.data) as LocationModel;
   },
 
   // Deactivate a location
   deactivate: async (id: string): Promise<LocationModel> => {
-    const response = await apiClient.post(`/master-data/locations/${id}/deactivate`);
+    const response = await apiClient.post(`/locations/${id}/deactivate`);
     return (response.data.success ? response.data.data : response.data) as LocationModel;
   },
 
   // Assign manager to location
   assignManager: async (id: string, data: AssignManagerData): Promise<LocationModel> => {
-    const response = await apiClient.post(`/master-data/locations/${id}/assign-manager`, data);
+    const response = await apiClient.post(`/locations/${id}/assign-manager`, data);
     return (response.data.success ? response.data.data : response.data) as LocationModel;
   },
 
   // Remove manager from location
   removeManager: async (id: string): Promise<LocationModel> => {
-    const response = await apiClient.post(`/master-data/locations/${id}/remove-manager`);
+    const response = await apiClient.post(`/locations/${id}/remove-manager`);
     return (response.data.success ? response.data.data : response.data) as LocationModel;
   }
 };

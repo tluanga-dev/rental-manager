@@ -202,7 +202,7 @@ class LocationService:
         if use_cache and self.redis:
             await self.redis.cache_set(
                 cache_key,
-                response.model_dump(),
+                response.model_dump(mode='json'),
                 ttl=self.CACHE_TTL_MEDIUM
             )
         
@@ -229,7 +229,7 @@ class LocationService:
         if use_cache and self.redis:
             await self.redis.cache_set(
                 cache_key,
-                response.model_dump(),
+                response.model_dump(mode='json'),
                 ttl=self.CACHE_TTL_MEDIUM
             )
         
@@ -409,7 +409,7 @@ class LocationService:
         # Cache results (shorter TTL for search results)
         if use_cache and self.redis:
             cache_data = {
-                'locations': [loc.model_dump() for loc in location_responses],
+                'locations': [loc.model_dump(mode='json') for loc in location_responses],
                 'total': total
             }
             await self.redis.cache_set(cache_key, cache_data, ttl=self.CACHE_TTL_SHORT)
@@ -615,7 +615,7 @@ class LocationService:
             if use_cache and self.redis:
                 await self.redis.cache_set(
                     cache_key,
-                    stats.model_dump(),
+                    stats.model_dump(mode='json'),
                     ttl=self.CACHE_TTL_LONG
                 )
             

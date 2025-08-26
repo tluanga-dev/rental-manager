@@ -56,10 +56,6 @@ const locationSchema = z.object({
     .refine(
       (val) => !val || val.length <= 20,
       { message: 'Contact phone must be 20 characters or less' }
-    )
-    .refine(
-      (val) => !val || /^\+\d{1,15}$/.test(val),
-      { message: 'Contact phone must be in E.164 format (e.g., +1234567890, max 15 digits)' }
     ),
   email: z.string()
     .optional()
@@ -96,10 +92,6 @@ const locationSchema = z.object({
     .refine(
       (val) => !val || val.length <= 20,
       { message: 'Contact person phone must be 20 characters or less' }
-    )
-    .refine(
-      (val) => !val || /^\+\d{1,15}$/.test(val),
-      { message: 'Contact person phone must be in E.164 format (e.g., +1234567890, max 15 digits)' }
     ),
   contact_person_email: z.string()
     .optional()
@@ -144,9 +136,10 @@ export function LocationForm({
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isValid },
+    formState: { errors, isValid, dirtyFields },
   } = useForm<LocationFormData>({
     resolver: zodResolver(locationSchema),
+    mode: 'onChange',
     defaultValues: location ? {
       location_code: location.location_code || location.code || '',
       location_name: location.location_name || location.name || '',
@@ -189,6 +182,20 @@ export function LocationForm({
   });
 
   const selectedLocationType = watch('location_type');
+
+  // Debug form state (can be removed in production)
+  // console.log('🔍 LocationForm state:', {
+  //   isValid,
+  //   isSubmitting,
+  //   errors: Object.keys(errors),
+  //   dirtyFields: Object.keys(dirtyFields),
+  //   selectedLocationType,
+  //   formValues: {
+  //     location_code: watch('location_code'),
+  //     location_name: watch('location_name'),
+  //     location_type: watch('location_type')
+  //   }
+  // });
 
   const handleLocationCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Auto-uppercase the location code
@@ -286,7 +293,7 @@ export function LocationForm({
               </Label>
               <Select
                 value={selectedLocationType}
-                onValueChange={(value: LocationType) => setValue('location_type', value)}
+                onValueChange={(value: LocationType) => setValue('location_type', value, { shouldValidate: true })}
               >
                 <SelectTrigger className={errors.location_type ? 'border-red-500' : ''}>
                   <SelectValue placeholder="Select location type" />
@@ -524,6 +531,7 @@ export function LocationForm({
             <Button
               type="submit"
               disabled={isSubmitting || !isValid}
+              className={!isValid ? 'opacity-50 cursor-not-allowed' : ''}
             >
               <Save className="h-4 w-4 mr-2" />
               {isSubmitting ? 'Saving...' : isEditing ? 'Update Location' : 'Create Location'}
