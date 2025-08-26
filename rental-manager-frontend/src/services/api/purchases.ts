@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/axios';
+import { apiClientWithCORSRetry, showCORSFixInstructions } from '@/lib/axios-cors-fix';
 
 // Transaction Types - Updated to match API_REFERENCE.md
 export interface TransactionLineItem {
@@ -226,8 +227,18 @@ export const purchasesApi = {
       due_date: data.due_date,
     };
     
-    const response = await apiClient.post('/transactions/purchases', backendPayload);
-    return response.data.success ? response.data.data : response.data;
+    try {
+      // Use CORS-aware client that can handle preflight cache issues
+      const response = await apiClientWithCORSRetry.post('/transactions/purchases', backendPayload);
+      return response.data.success ? response.data.data : response.data;
+    } catch (error: any) {
+      // If still failing, show CORS troubleshooting instructions
+      if (error.code === 'ERR_NETWORK' || error.message?.includes('CORS')) {
+        console.error('🚨 CORS Error - Purchase Recording Failed');
+        showCORSFixInstructions();
+      }
+      throw error;
+    }
   },
 
   // Get all purchases with optional filters
