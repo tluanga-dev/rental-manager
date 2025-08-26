@@ -124,12 +124,16 @@ export interface PurchaseFormData {
 export interface PurchaseItemFormData {
   item_id: string;
   quantity: number;
-  unit_cost: number;
+  unit_cost: number; // Frontend form field name
   tax_rate?: number;
   discount_amount?: number;
-  condition?: ItemCondition;
+  discount_percent?: number;
+  condition?: ItemCondition; // Frontend form field name
   notes?: string;
   serial_numbers?: string[];
+  batch_code?: string;
+  expiry_date?: string;
+  warranty_months?: number;
 }
 
 export interface PurchaseReturnFormData {

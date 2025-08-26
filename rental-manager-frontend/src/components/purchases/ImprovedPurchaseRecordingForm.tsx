@@ -228,23 +228,28 @@ export function ImprovedPurchaseRecordingForm({ onSuccess, onCancel }: ImprovedP
       });
       console.groupEnd();
 
-      // Fix the payload structure to match API specification
-      const formData: PurchaseFormData = {
+      // Transform form data to match backend API specification (PurchaseRecord)
+      const formData = {
         supplier_id: values.supplier_id,
         location_id: values.location_id,
         purchase_date: format(values.purchase_date, 'yyyy-MM-dd'),
         reference_number: values.reference_number,
         notes: values.notes,
-        payment_status: values.payment_status,
+        
+        // Add backend required fields with defaults
+        payment_method: 'BANK_TRANSFER',
+        currency: 'INR',
+        
+        // Transform items to match backend schema
         items: values.items.map(item => ({
           item_id: item.item_id,
           quantity: item.quantity,
-          unit_cost: item.unit_cost,
+          unit_price: item.unit_cost, // Frontend uses unit_cost, backend expects unit_price
+          location_id: values.location_id, // Each item needs the location_id
           tax_rate: item.tax_rate || 0,
           discount_amount: item.discount_amount || 0,
-          condition: item.condition as ItemCondition,
-          notes: item.notes,
-          serial_numbers: item.serial_numbers || undefined,
+          condition_code: item.condition as ('A' | 'B' | 'C' | 'D'), // Backend expects condition_code
+          serial_numbers: item.serial_numbers?.filter(s => s && s.trim()) || [],
         })),
       };
 

@@ -139,30 +139,94 @@ export interface PurchaseReturnListResponse {
   limit: number;
 }
 
-// Purchase creation types
+// Purchase creation types - Aligned with backend schema
 export interface PurchaseLineItem {
   item_id: string;
   quantity: number;
-  unit_cost: number;
+  unit_price: number; // Backend expects unit_price, not unit_cost
+  location_id: string; // Each item needs location_id
   tax_rate?: number;
   discount_amount?: number;
-  condition?: 'A' | 'B' | 'C' | 'D';
-  notes?: string;
+  discount_percent?: number;
+  condition_code?: 'A' | 'B' | 'C' | 'D'; // Backend expects condition_code
+  serial_numbers?: string[];
+  batch_code?: string;
+  expiry_date?: string;
+  warranty_months?: number;
+  warehouse_location?: string;
 }
 
 export interface PurchaseRecord {
   supplier_id: string;
   location_id: string;
-  purchase_date: string;
+  purchase_date?: string; // Optional in backend
   reference_number?: string;
   notes?: string;
+  
+  // Required backend fields
+  payment_method?: string; // Default to 'BANK_TRANSFER'
+  payment_terms?: string; // Default to 'NET30' 
+  payment_reference?: string;
+  currency?: string; // Default to 'INR'
+  shipping_amount?: number;
+  other_charges?: number;
+  
+  // Items
   items: PurchaseLineItem[];
+  
+  // Additional optional fields
+  tags?: string[];
+  delivery_required?: boolean;
+  delivery_address?: string;
+  delivery_date?: string;
+  due_date?: string;
 }
 
 export const purchasesApi = {
   // Create a new purchase
   recordPurchase: async (data: PurchaseRecord): Promise<PurchaseResponse> => {
-    const response = await apiClient.post('/transactions/purchases/new', data);
+    // Transform frontend data to match backend schema
+    const backendPayload = {
+      supplier_id: data.supplier_id,
+      location_id: data.location_id,
+      purchase_date: data.purchase_date,
+      reference_number: data.reference_number,
+      notes: data.notes,
+      
+      // Add required backend fields with defaults
+      payment_method: data.payment_method || 'BANK_TRANSFER',
+      payment_terms: data.payment_terms || 'NET30',
+      payment_reference: data.payment_reference,
+      currency: data.currency || 'INR',
+      shipping_amount: data.shipping_amount || 0,
+      other_charges: data.other_charges || 0,
+      
+      // Transform items array
+      items: data.items.map(item => ({
+        item_id: item.item_id,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        location_id: item.location_id,
+        discount_percent: item.discount_percent || 0,
+        discount_amount: item.discount_amount || 0,
+        tax_rate: item.tax_rate || 0,
+        condition_code: item.condition_code || 'A',
+        serial_numbers: item.serial_numbers || [],
+        batch_code: item.batch_code,
+        expiry_date: item.expiry_date,
+        warranty_months: item.warranty_months,
+        warehouse_location: item.warehouse_location,
+      })),
+      
+      // Additional optional fields
+      tags: data.tags || [],
+      delivery_required: data.delivery_required || false,
+      delivery_address: data.delivery_address,
+      delivery_date: data.delivery_date,
+      due_date: data.due_date,
+    };
+    
+    const response = await apiClient.post('/transactions/purchases', backendPayload);
     return response.data.success ? response.data.data : response.data;
   },
 
