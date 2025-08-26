@@ -163,7 +163,7 @@ export function ImprovedPurchaseRecordingForm({ onSuccess, onCancel }: ImprovedP
     }
 
     const requestTimestamp = new Date().toISOString();
-    const endpoint = 'POST /api/transactions/purchases/new';
+    const endpoint = 'POST /api/transactions/purchases';
     
     try {
       // ==============================
