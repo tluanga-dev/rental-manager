@@ -259,12 +259,9 @@ export const purchasesApi = {
     sort_order?: 'desc' | 'asc';
   }): Promise<PurchaseListResponse> => {
     try {
-      console.log('Fetching purchases with params:', params);
       const response = await apiClient.get('/transactions/purchases/', { params });
-      console.log('API raw response:', response);
 
       const rawData = response.data.success ? response.data.data : response.data;
-      console.log('API raw data:', rawData);
 
       // Handle both paginated and non-paginated responses
       const items = Array.isArray(rawData) ? rawData : rawData.items || [];
@@ -272,23 +269,23 @@ export const purchasesApi = {
       const skip = Array.isArray(rawData) ? 0 : rawData.skip || 0;
       const limit = Array.isArray(rawData) ? items.length : rawData.limit || 20;
 
-      console.log(`Extracted ${items.length} items, total: ${total}`);
-
       const transformedItems = items.map((item: any, index: number) => {
-        console.log(`Transforming item ${index + 1}:`, item);
         const transformed = {
           id: item.id,
           supplier_id: item.supplier?.id || item.supplier_id,
           location_id: item.location?.id || item.location_id,
-          purchase_date: item.purchase_date,
-          transaction_date: item.purchase_date,
+          purchase_date: item.transaction_date,
+          transaction_date: item.transaction_date,
           notes: item.notes || '',
-          reference_number: item.reference_number,
+          reference_number: item.reference_number || '',
           subtotal: parseFloat(item.subtotal || 0),
           tax_amount: parseFloat(item.tax_amount || 0),
           discount_amount: parseFloat(item.discount_amount || 0),
+          shipping_amount: parseFloat(item.shipping_amount || 0),
           total_amount: parseFloat(item.total_amount || 0),
-          total_items: item.items?.reduce((sum: number, lineItem: any) => sum + parseFloat(lineItem.quantity || 0), 0) || 0,
+          paid_amount: parseFloat(item.paid_amount || 0),
+          balance_due: parseFloat(item.balance_due || 0),
+          total_items: parseInt(item.total_items || 0),
           status: item.status,
           payment_status: item.payment_status,
           created_at: item.created_at,
@@ -319,10 +316,10 @@ export const purchasesApi = {
           })),
           supplier: item.supplier ? {
             id: item.supplier.id,
-            name: item.supplier.name,
-            display_name: item.supplier.name,
-            supplier_code: item.supplier.code || '',
-            company_name: item.supplier.name
+            name: item.supplier.name || item.supplier.company_name,
+            display_name: item.supplier.display_name || item.supplier.name || item.supplier.company_name,
+            supplier_code: item.supplier.supplier_code || '',
+            company_name: item.supplier.company_name || item.supplier.name
           } : undefined,
           location: item.location ? {
             id: item.location.id,
@@ -330,7 +327,6 @@ export const purchasesApi = {
             location_code: item.location.code || ''
           } : undefined
         };
-        console.log(`Transformed item ${index + 1}:`, transformed);
         return transformed;
       });
 
@@ -340,7 +336,6 @@ export const purchasesApi = {
         skip,
         limit
       };
-      console.log('Final result:', result);
       return result;
 
     } catch (error: any) {

@@ -109,65 +109,6 @@ async def list_transactions(
     )
 
 
-@router.get("/{transaction_id}", response_model=TransactionHeaderResponse)
-async def get_transaction(
-    *,
-    db: AsyncSession = Depends(deps.get_db),
-    current_user: User = Depends(deps.get_current_active_user),
-    transaction_id: UUID = Path(..., description="Transaction ID"),
-    include_lines: bool = Query(True, description="Include transaction lines"),
-    include_events: bool = Query(False, description="Include transaction events"),
-) -> TransactionHeaderResponse:
-    """
-    Get a specific transaction by ID.
-    
-    Optionally includes transaction lines and event history.
-    """
-    service = TransactionService(db)
-    try:
-        return await service.get_transaction(
-            transaction_id=transaction_id,
-            include_lines=include_lines,
-            include_events=include_events,
-        )
-    except NotFoundError:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Transaction {transaction_id} not found",
-        )
-
-
-@router.get("/{transaction_id}/events", response_model=List[TransactionEventResponse])
-async def get_transaction_events(
-    *,
-    db: AsyncSession = Depends(deps.get_db),
-    current_user: User = Depends(deps.get_current_active_user),
-    transaction_id: UUID = Path(..., description="Transaction ID"),
-    event_category: Optional[str] = Query(None, description="Filter by event category"),
-    skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=1000),
-) -> List[TransactionEventResponse]:
-    """
-    Get event history for a transaction.
-    
-    Returns all events related to a transaction, including status changes,
-    payments, and operational events.
-    """
-    service = TransactionService(db)
-    try:
-        return await service.get_transaction_events(
-            transaction_id=transaction_id,
-            event_category=event_category,
-            skip=skip,
-            limit=limit,
-        )
-    except NotFoundError:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Transaction {transaction_id} not found",
-        )
-
-
 # ============================================================================
 # Purchase Endpoints
 # ============================================================================
@@ -1009,4 +950,67 @@ async def get_purchase_returns_by_purchase(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to fetch purchase returns: {str(e)}",
+        )
+
+
+# ============================================================================
+# Generic Transaction Endpoints (placed at end to avoid route conflicts)
+# ============================================================================
+
+@router.get("/{transaction_id}", response_model=TransactionHeaderResponse)
+async def get_transaction(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_user),
+    transaction_id: UUID = Path(..., description="Transaction ID"),
+    include_lines: bool = Query(True, description="Include transaction lines"),
+    include_events: bool = Query(False, description="Include transaction events"),
+) -> TransactionHeaderResponse:
+    """
+    Get a specific transaction by ID.
+    
+    Optionally includes transaction lines and event history.
+    """
+    service = TransactionService(db)
+    try:
+        return await service.get_transaction(
+            transaction_id=transaction_id,
+            include_lines=include_lines,
+            include_events=include_events,
+        )
+    except NotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Transaction {transaction_id} not found",
+        )
+
+
+@router.get("/{transaction_id}/events", response_model=List[TransactionEventResponse])
+async def get_transaction_events(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_user),
+    transaction_id: UUID = Path(..., description="Transaction ID"),
+    event_category: Optional[str] = Query(None, description="Filter by event category"),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+) -> List[TransactionEventResponse]:
+    """
+    Get event history for a transaction.
+    
+    Returns all events related to a transaction, including status changes,
+    payments, and operational events.
+    """
+    service = TransactionService(db)
+    try:
+        return await service.get_transaction_events(
+            transaction_id=transaction_id,
+            event_category=event_category,
+            skip=skip,
+            limit=limit,
+        )
+    except NotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Transaction {transaction_id} not found",
         )

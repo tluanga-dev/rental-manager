@@ -88,6 +88,18 @@ export function PurchaseHistoryTable({
     }).format(amount);
   };
 
+  const safeFormatDate = (dateString: string | null | undefined, formatStr: string, fallback: string = 'Invalid Date') => {
+    if (!dateString) return fallback;
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return fallback;
+      return format(date, formatStr);
+    } catch (error) {
+      console.warn('Date formatting error for:', dateString, error);
+      return fallback;
+    }
+  };
+
   const getStatusBadge = (status: string, type: 'purchase' | 'payment') => {
     const statusConfig = type === 'purchase' 
       ? PURCHASE_STATUSES.find(s => s.value === status)
@@ -365,10 +377,10 @@ export function PurchaseHistoryTable({
                       <TableCell className="px-4 py-3">
                         <div className="flex flex-col space-y-0.5">
                           <span className="font-semibold text-sm text-foreground">
-                            {format(new Date(purchase.purchase_date), 'MMM dd, yyyy')}
+                            {safeFormatDate(purchase.transaction_date, 'MMM dd, yyyy')}
                           </span>
                           <span className="text-xs text-muted-foreground font-medium">
-                            {format(new Date(purchase.created_at), 'HH:mm')}
+                            {safeFormatDate(purchase.created_at, 'HH:mm', '--:--')}
                           </span>
                         </div>
                       </TableCell>

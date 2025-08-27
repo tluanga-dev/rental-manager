@@ -83,7 +83,11 @@ class TransactionHeaderRepository:
         order_desc: bool = True
     ) -> List[TransactionHeader]:
         """List transactions with filtering and pagination."""
-        query = select(TransactionHeader)
+        query = select(TransactionHeader).options(
+            selectinload(TransactionHeader.supplier),
+            selectinload(TransactionHeader.customer),
+            selectinload(TransactionHeader.location)
+        )
         
         # Apply filters
         conditions = []
