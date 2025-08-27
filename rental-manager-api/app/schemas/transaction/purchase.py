@@ -156,6 +156,7 @@ class PurchaseItemResponse(BaseModel):
     unit_price: Decimal
     line_total: Decimal
     discount_amount: Optional[Decimal] = Decimal("0.00")
+    tax_rate: Optional[Decimal] = Decimal("0.00")
     tax_amount: Optional[Decimal] = Decimal("0.00")
     condition_code: Optional[str] = None
     serial_numbers: List[str] = Field(default_factory=list)
@@ -307,6 +308,7 @@ class PurchaseResponse(BaseModel):
                             'unit_price': line.unit_price,
                             'line_total': line.line_total,
                             'discount_amount': line.discount_amount,
+                            'tax_rate': line.tax_rate,
                             'tax_amount': line.tax_amount,
                             'condition_code': getattr(line, 'condition', 'A'),
                             'serial_numbers': getattr(line, 'serial_numbers', []) or [],

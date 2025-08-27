@@ -354,6 +354,64 @@ export function PurchaseDetailView({
         </Card>
       </div>
 
+      {/* Financial Breakdown - New Section */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="text-lg">Financial Breakdown</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Subtotal</span>
+              <span className="font-medium">{formatCurrency(purchase.subtotal || 0)}</span>
+            </div>
+            
+            {purchase.discount_amount > 0 && (
+              <div className="flex justify-between items-center text-green-600">
+                <span>Discount</span>
+                <span>-{formatCurrency(purchase.discount_amount)}</span>
+              </div>
+            )}
+            
+            {purchase.tax_amount > 0 && (
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Tax</span>
+                <span className="font-medium">{formatCurrency(purchase.tax_amount)}</span>
+              </div>
+            )}
+            
+            {purchase.shipping_amount > 0 && (
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Shipping/Delivery</span>
+                <span className="font-medium">{formatCurrency(purchase.shipping_amount)}</span>
+              </div>
+            )}
+            
+            <Separator />
+            
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-lg">Total Amount</span>
+              <span className="font-bold text-lg text-primary">{formatCurrency(purchase.total_amount)}</span>
+            </div>
+            
+            {purchase.paid_amount > 0 && (
+              <>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Paid Amount</span>
+                  <span className="text-green-600">{formatCurrency(purchase.paid_amount)}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Balance Due</span>
+                  <span className={purchase.balance_due > 0 ? "text-orange-600 font-medium" : "text-green-600"}>
+                    {formatCurrency(purchase.balance_due || 0)}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Purchase Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
@@ -487,7 +545,8 @@ export function PurchaseDetailView({
                     <TableHead>Item Details</TableHead>
                     <TableHead className="text-right">Quantity</TableHead>
                     <TableHead className="text-right">Unit Cost</TableHead>
-                    <TableHead className="text-right">Total Cost</TableHead>
+                    <TableHead className="text-right">Tax</TableHead>
+                    <TableHead className="text-right">Total</TableHead>
                     <TableHead>Condition</TableHead>
                     <TableHead>Location</TableHead>
                     <TableHead>Notes</TableHead>
@@ -511,6 +570,20 @@ export function PurchaseDetailView({
                       </TableCell>
                       <TableCell className="text-right">
                         {formatCurrency(item.unit_cost)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {item.tax_amount ? (
+                          <div className="text-sm">
+                            <div>{formatCurrency(item.tax_amount)}</div>
+                            {item.tax_rate > 0 && (
+                              <div className="text-xs text-muted-foreground">
+                                ({item.tax_rate}%)
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
                       </TableCell>
                       <TableCell className="text-right font-medium">
                         {formatCurrency(item.total_cost)}

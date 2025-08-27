@@ -31,7 +31,10 @@ export interface PurchaseResponse {
   subtotal: number;
   tax_amount: number;
   discount_amount: number;
+  shipping_amount: number;
   total_amount: number;
+  paid_amount: number;
+  balance_due: number;
   total_items: number;
   status: string;
   payment_status: string;
@@ -62,6 +65,9 @@ export interface PurchaseItemResponse {
   quantity: number;
   unit_cost: number;
   total_cost: number;
+  tax_amount?: number;
+  tax_rate?: number;
+  discount_amount?: number;
   condition: string;
   notes: string | null;
   location_id: string | null;
@@ -377,7 +383,10 @@ export const purchasesApi = {
         subtotal: parseFloat(data.subtotal || 0),
         tax_amount: parseFloat(data.tax_amount || 0),
         discount_amount: parseFloat(data.discount_amount || 0),
+        shipping_amount: parseFloat(data.shipping_amount || 0),
         total_amount: parseFloat(data.total_amount || 0),
+        paid_amount: parseFloat(data.paid_amount || 0),
+        balance_due: parseFloat(data.balance_due || 0),
         total_items: data.items?.reduce((sum: number, item: any) => sum + parseFloat(item.quantity || 0), 0) || 0,
         status: data.status,
         payment_status: data.payment_status,
@@ -403,20 +412,27 @@ export const purchasesApi = {
         items: (data.items || []).map((item: any) => ({
           id: item.id,
           item_id: item.item?.id || item.item_id,
-          description: item.item?.name || 'Unknown Item',
+          description: item.item_name || item.description || 'Unknown Item',
           quantity: parseFloat(item.quantity || 0),
-          unit_cost: parseFloat(item.unit_cost || 0),
-          total_cost: parseFloat(item.line_total || 0),
-          condition: item.condition || 'A',
+          unit_cost: parseFloat(item.unit_price || item.unit_cost || 0),
+          total_cost: parseFloat(item.line_total || item.total_cost || 0),
+          condition: item.condition_code || item.condition || 'A',
           notes: item.notes || '',
-          location_id: data.location?.id || data.location_id,
-          sku: item.item ? {
-            id: item.item.id,
-            sku_code: item.item.sku || item.item.id.slice(0, 8),
-            display_name: item.item.name,
-            current_price: parseFloat(item.unit_cost || 0)
+          location_id: item.location_id || data.location?.id || data.location_id,
+          tax_amount: parseFloat(item.tax_amount || 0),
+          tax_rate: parseFloat(item.tax_rate || 0),
+          discount_amount: parseFloat(item.discount_amount || 0),
+          sku: item.item_sku || item.sku ? {
+            id: item.item_id,
+            sku_code: item.item_sku || item.sku || item.item_id.slice(0, 8),
+            display_name: item.item_name || item.description || 'Unknown Item',
+            current_price: parseFloat(item.unit_price || item.unit_cost || 0)
           } : undefined,
-          location: data.location ? {
+          location: item.location_name ? {
+            id: item.location_id || data.location?.id,
+            name: item.location_name,
+            location_code: data.location?.location_code || item.location_id?.slice(0, 8)
+          } : data.location ? {
             id: data.location.id,
             name: data.location.name,
             location_code: data.location.code || data.location.id.slice(0, 8)
