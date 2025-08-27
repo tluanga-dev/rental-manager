@@ -150,15 +150,21 @@ export const suppliersApi = {
       
       // Handle both array response and paginated response
       if (Array.isArray(data)) {
-        // Transform suppliers to include missing fields with defaults
+        // Transform suppliers to include missing fields with defaults and proper field mapping
         const transformedSuppliers = data.map((supplier: any) => ({
           ...supplier,
+          // Handle field name inconsistencies
+          company_name: supplier.company_name || supplier.name,
+          supplier_code: supplier.supplier_code || supplier.code,
+          name: supplier.name || supplier.company_name,
+          code: supplier.code || supplier.supplier_code,
+          // Ensure numeric fields are properly typed
           supplier_tier: supplier.supplier_tier || 'STANDARD',
-          total_spend: supplier.total_spend || 0,
-          total_orders: supplier.total_orders || 0,
-          quality_rating: supplier.quality_rating || 4.0,
-          performance_score: supplier.performance_score || 75,
-          average_delivery_days: supplier.average_delivery_days || 7,
+          total_spend: parseFloat(supplier.total_spend?.toString() || '0') || 0,
+          total_orders: parseInt(supplier.total_orders?.toString() || '0') || 0,
+          quality_rating: parseFloat(supplier.quality_rating?.toString() || '0') || 0,
+          performance_score: parseFloat(supplier.performance_score?.toString() || '75') || 75,
+          average_delivery_days: parseInt(supplier.average_delivery_days?.toString() || '7') || 7,
           last_order_date: supplier.last_order_date || null,
         }));
         
@@ -177,12 +183,18 @@ export const suppliersApi = {
       if (data.items) {
         const transformedSuppliers = data.items.map((supplier: any) => ({
           ...supplier,
+          // Handle field name inconsistencies
+          company_name: supplier.company_name || supplier.name,
+          supplier_code: supplier.supplier_code || supplier.code,
+          name: supplier.name || supplier.company_name,
+          code: supplier.code || supplier.supplier_code,
+          // Ensure numeric fields are properly typed
           supplier_tier: supplier.supplier_tier || 'STANDARD',
-          total_spend: supplier.total_spend || 0,
-          total_orders: supplier.total_orders || 0,
-          quality_rating: supplier.quality_rating || 4.0,
-          performance_score: supplier.performance_score || 75,
-          average_delivery_days: supplier.average_delivery_days || 7,
+          total_spend: parseFloat(supplier.total_spend?.toString() || '0') || 0,
+          total_orders: parseInt(supplier.total_orders?.toString() || '0') || 0,
+          quality_rating: parseFloat(supplier.quality_rating?.toString() || '0') || 0,
+          performance_score: parseFloat(supplier.performance_score?.toString() || '75') || 75,
+          average_delivery_days: parseInt(supplier.average_delivery_days?.toString() || '7') || 7,
           last_order_date: supplier.last_order_date || null,
         }));
         
@@ -270,22 +282,27 @@ export const suppliersApi = {
     // Transform the supplier data to match expected interface
     const transformedSupplier = {
       ...rawData,
+      // Handle field name inconsistencies
+      company_name: rawData.company_name || rawData.name,
+      supplier_code: rawData.supplier_code || rawData.code,
+      name: rawData.name || rawData.company_name,
+      code: rawData.code || rawData.supplier_code,
       // Ensure required fields are present with defaults
       supplier_tier: rawData.supplier_tier || 'STANDARD',
-      total_spend: parseFloat(rawData.total_spend || '0'),
-      total_orders: rawData.total_orders || 0,
-      quality_rating: parseFloat(rawData.quality_rating || '4.0'),
-      performance_score: rawData.performance_score ? parseFloat(rawData.performance_score.toString()) : 75,
-      average_delivery_days: rawData.average_delivery_days || 7,
+      total_spend: parseFloat(rawData.total_spend?.toString() || '0') || 0,
+      total_orders: parseInt(rawData.total_orders?.toString() || '0') || 0,
+      quality_rating: parseFloat(rawData.quality_rating?.toString() || '0') || 0,
+      performance_score: parseFloat(rawData.performance_score?.toString() || '75') || 75,
+      average_delivery_days: parseInt(rawData.average_delivery_days?.toString() || '7') || 7,
       last_order_date: rawData.last_order_date || null,
       // Handle address fields
       address: rawData.address || (rawData.address_line1 ? 
         [rawData.address_line1, rawData.address_line2, rawData.city, rawData.state, rawData.postal_code]
           .filter(Boolean).join(', ') : null),
       // Handle credit limit as number
-      credit_limit: parseFloat(rawData.credit_limit || '0'),
+      credit_limit: parseFloat(rawData.credit_limit?.toString() || '0') || 0,
       // Ensure proper payment terms format
-      payment_terms: rawData.payment_terms || 'NET_30'
+      payment_terms: rawData.payment_terms || 'NET30'
     };
     
     return transformedSupplier;
@@ -354,7 +371,7 @@ export const suppliersApi = {
   },
 
   // Get supplier analytics
-  getAnalytics: async (startDate?: string, endDate?: string): Promise<SupplierAnalytics> => {
+  getAnalytics: async (): Promise<SupplierAnalytics> => {
     try {
       // Use the correct endpoint for supplier statistics
       const response = await apiClient.get('/suppliers/statistics');

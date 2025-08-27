@@ -11,8 +11,6 @@ import {
   Users, 
   Plus, 
   Search,
-  Building2,
-  MapPin,
   Phone,
   Mail,
   Package,
@@ -43,7 +41,7 @@ function SuppliersContent() {
   const loadSuppliers = useCallback(async () => {
     try {
       setLoading(true);
-      const params: any = {};
+      const params: Record<string, string | boolean> = {};
       
       if (filters.search) params.search = filters.search;
       if (filters.supplier_type) params.supplier_type = filters.supplier_type;
@@ -88,8 +86,12 @@ function SuppliersContent() {
 
   const getSupplierTierColor = (tier: string) => {
     const colors = {
-      'PREFERRED': 'bg-green-100 text-green-800',
+      'PREMIUM': 'bg-green-100 text-green-800',
       'STANDARD': 'bg-slate-100 text-slate-800',
+      'BASIC': 'bg-yellow-100 text-yellow-800',
+      'TRIAL': 'bg-red-100 text-red-800',
+      // Legacy support for frontend values
+      'PREFERRED': 'bg-green-100 text-green-800',
       'RESTRICTED': 'bg-red-100 text-red-800'
     };
     return colors[tier as keyof typeof colors] || 'bg-gray-100 text-gray-800';
@@ -103,9 +105,9 @@ function SuppliersContent() {
   };
 
   const activeSuppliers = suppliers.filter(s => s.is_active).length;
-  const totalSpend = suppliers.reduce((sum, s) => sum + s.total_spend, 0);
+  const totalSpend = suppliers.reduce((sum, s) => sum + (parseFloat(s.total_spend?.toString() || '0') || 0), 0);
   const avgQualityRating = suppliers.length > 0 
-    ? suppliers.reduce((sum, s) => sum + s.quality_rating, 0) / suppliers.length 
+    ? suppliers.reduce((sum, s) => sum + (parseFloat(s.quality_rating?.toString() || '0') || 0), 0) / suppliers.length 
     : 0;
 
   return (
@@ -184,7 +186,7 @@ function SuppliersContent() {
           <CardContent>
             <div className="text-2xl font-bold">
               {suppliers.length > 0 
-                ? (suppliers.reduce((sum, s) => sum + s.performance_score, 0) / suppliers.length).toFixed(1)
+                ? (suppliers.reduce((sum, s) => sum + (parseFloat(s.performance_score?.toString() || '75') || 75), 0) / suppliers.length).toFixed(1)
                 : '0'
               }
             </div>
@@ -231,9 +233,10 @@ function SuppliersContent() {
               onChange={(e) => setFilters(prev => ({ ...prev, supplier_tier: e.target.value }))}
             >
               <option value="">All Tiers</option>
-              <option value="PREFERRED">Preferred</option>
+              <option value="PREMIUM">Premium</option>
               <option value="STANDARD">Standard</option>
-              <option value="RESTRICTED">Restricted</option>
+              <option value="BASIC">Basic</option>
+              <option value="TRIAL">Trial</option>
             </select>
 
             <Button onClick={handleFilter}>
@@ -279,14 +282,14 @@ function SuppliersContent() {
                         <div className="flex-1">
                           <div className="flex items-center space-x-2">
                             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                              {supplier.company_name}
+                              {supplier.company_name || supplier.name}
                             </h3>
                             {!supplier.is_active && (
                               <AlertCircle className="h-4 w-4 text-red-500" />
                             )}
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                            {supplier.supplier_code}
+                            {supplier.supplier_code || supplier.code}
                           </p>
                           
                           <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
@@ -323,23 +326,23 @@ function SuppliersContent() {
                         <div className="text-right space-y-1">
                           <div className="text-sm">
                             <span className="text-gray-600">Total Spend:</span>
-                            <div className="font-medium">{formatCurrency(supplier.total_spend)}</div>
+                            <div className="font-medium">{formatCurrency(parseFloat(supplier.total_spend?.toString() || '0') || 0)}</div>
                           </div>
                           <div className="text-sm">
                             <span className="text-gray-600">Orders:</span>
-                            <div className="font-medium">{supplier.total_orders}</div>
+                            <div className="font-medium">{supplier.total_orders || 0}</div>
                           </div>
                           <div className="text-sm">
                             <span className="text-gray-600">Quality:</span>
                             <div className="flex items-center">
                               <Star className="h-3 w-3 text-yellow-500 mr-1" />
-                              <span className="font-medium">{Number(supplier.quality_rating || 0).toFixed(1)}</span>
+                              <span className="font-medium">{(parseFloat(supplier.quality_rating?.toString() || '0') || 0).toFixed(1)}</span>
                             </div>
                           </div>
                           <div className="text-sm">
                             <span className="text-gray-600">Performance:</span>
                             <div className="font-medium text-slate-600">
-                              {Number(supplier.performance_score || 0).toFixed(0)}%
+                              {(parseFloat(supplier.performance_score?.toString() || '75') || 75).toFixed(0)}%
                             </div>
                           </div>
                         </div>

@@ -37,8 +37,11 @@ export const currencyApi = {
 
       return response.json();
     } catch (error) {
-      // Fallback to default currency configuration
-      console.warn('Currency API not available, using default INR configuration');
+      // Silently fallback to default currency configuration
+      // Only log in development mode to avoid console spam in production
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Currency API not available, using default INR configuration');
+      }
       return {
         currency_code: 'INR',
         symbol: '₹',

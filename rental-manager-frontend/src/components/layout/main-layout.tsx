@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useAppStore } from '@/stores/app-store';
 import { Sidebar } from './sidebar';
 import { TopBar } from './top-bar';
+import { DevModeBanner } from './dev-mode-banner';
 import { AuthConnectionGuard } from '@/components/auth/auth-connection-guard';
 import { cn } from '@/lib/utils';
 
@@ -42,21 +43,27 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <AuthConnectionGuard requireAuth={true} showOfflineAlert={true}>
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        {/* Sidebar */}
-        <Sidebar />
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-900 flex-col">
+        {/* Development Mode Banner */}
+        <DevModeBanner />
         
-        {/* Main content area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Top bar */}
-          <TopBar />
-        
-          {/* Page content */}
-          <main className="flex-1 overflow-y-auto">
-            <div className="h-full">
-              {children}
-            </div>
-          </main>
+        {/* Main layout */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Sidebar */}
+          <Sidebar />
+          
+          {/* Main content area */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Top bar */}
+            <TopBar />
+          
+            {/* Page content */}
+            <main className="flex-1 overflow-y-auto">
+              <div className="h-full">
+                {children}
+              </div>
+            </main>
+          </div>
         </div>
       </div>
     </AuthConnectionGuard>

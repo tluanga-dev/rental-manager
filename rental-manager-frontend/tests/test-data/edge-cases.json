@@ -1,0 +1,917 @@
+{
+  "maxQuantityTransaction": {
+    "type": "SALE",
+    "items": [
+      {
+        "itemId": "ITEM00001",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00002",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00003",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00004",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00005",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00006",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00007",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00008",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00009",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00010",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00011",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00012",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00013",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00014",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00015",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00016",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00017",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00018",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00019",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00020",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00021",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00022",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00023",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00024",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00025",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00026",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00027",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00028",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00029",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00030",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00031",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00032",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00033",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00034",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00035",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00036",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00037",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00038",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00039",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00040",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00041",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00042",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00043",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00044",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00045",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00046",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00047",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00048",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00049",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00050",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00051",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00052",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00053",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00054",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00055",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00056",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00057",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00058",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00059",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00060",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00061",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00062",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00063",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00064",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00065",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00066",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00067",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00068",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00069",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00070",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00071",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00072",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00073",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00074",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00075",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00076",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00077",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00078",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00079",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00080",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00081",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00082",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00083",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00084",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00085",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00086",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00087",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00088",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00089",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00090",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00091",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00092",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00093",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00094",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00095",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00096",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00097",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00098",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00099",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      },
+      {
+        "itemId": "ITEM00100",
+        "quantity": 999,
+        "unitPrice": 99999.99
+      }
+    ]
+  },
+  "minValueTransaction": {
+    "type": "RENTAL",
+    "items": [
+      {
+        "itemId": "ITEM00001",
+        "quantity": 1,
+        "rentalRate": 0.01,
+        "duration": 1
+      }
+    ]
+  },
+  "futureDatedTransaction": {
+    "type": "RENTAL",
+    "transactionDate": "2030-12-31T00:00:00.000Z",
+    "dueDate": "2031-01-31T00:00:00.000Z"
+  },
+  "concurrentTransactions": [
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081577
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081578
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081579
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081580
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081581
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081582
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081583
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081584
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081585
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081586
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081587
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081588
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081589
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081590
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081591
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081592
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081593
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081594
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081595
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081596
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081597
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081598
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081599
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081600
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081601
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081602
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081603
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081604
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081605
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081606
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081607
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081608
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081609
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081610
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081611
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081612
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081613
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081614
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081615
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081616
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081617
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081618
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081619
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081620
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081621
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081622
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081623
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081624
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081625
+    },
+    {
+      "type": "RENTAL",
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "transactionDate": "2025-08-26T02:08:01.577Z",
+      "timestamp": 1756174081626
+    }
+  ],
+  "invalidStatusChanges": [
+    {
+      "from": "SOLD",
+      "to": "AVAILABLE"
+    },
+    {
+      "from": "RENTED",
+      "to": "SOLD"
+    },
+    {
+      "from": "DAMAGED",
+      "to": "RENTED"
+    }
+  ],
+  "overlappingRentals": [
+    {
+      "customerId": "CUST00001",
+      "itemId": "ITEM00001",
+      "startDate": "2024-06-01",
+      "endDate": "2024-06-15"
+    },
+    {
+      "customerId": "CUST00002",
+      "itemId": "ITEM00001",
+      "startDate": "2024-06-10",
+      "endDate": "2024-06-20"
+    }
+  ],
+  "zeroValueCases": [
+    {
+      "field": "quantity",
+      "value": 0
+    },
+    {
+      "field": "price",
+      "value": -100
+    },
+    {
+      "field": "discount",
+      "value": 150
+    }
+  ]
+}

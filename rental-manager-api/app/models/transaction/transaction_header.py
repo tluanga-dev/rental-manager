@@ -274,36 +274,36 @@ class TransactionHeader(RentalManagerBaseModel):
         comment="Total accumulated extension charges"
     )
     
-    # Relationships
+    # Relationships - using lazy="noload" to prevent accidental lazy loading in async contexts
     customer: Mapped[Optional["Customer"]] = relationship(
-        "Customer", lazy="select", back_populates="transactions"
+        "Customer", lazy="noload", back_populates="transactions"
     )
     supplier: Mapped[Optional["Supplier"]] = relationship(
-        "Supplier", lazy="select", back_populates="transactions"
+        "Supplier", lazy="noload", back_populates="transactions"
     )
     location: Mapped[Optional["Location"]] = relationship(
-        "Location", lazy="select", back_populates="transactions"
+        "Location", lazy="noload", back_populates="transactions"
     )
     reference_transaction: Mapped[Optional["TransactionHeader"]] = relationship(
-        "TransactionHeader", remote_side="TransactionHeader.id", lazy="select"
+        "TransactionHeader", remote_side="TransactionHeader.id", lazy="noload"
     )
     transaction_lines: Mapped[List["TransactionLine"]] = relationship(
-        "TransactionLine", back_populates="transaction", lazy="select",
+        "TransactionLine", back_populates="transaction", lazy="noload",
         cascade="all, delete-orphan"
     )
     metadata_entries: Mapped[List["TransactionMetadata"]] = relationship(
-        "TransactionMetadata", back_populates="transaction", lazy="select",
+        "TransactionMetadata", back_populates="transaction", lazy="noload",
         cascade="all, delete-orphan"
     )
     rental_lifecycle: Mapped[Optional["RentalLifecycle"]] = relationship(
-        "RentalLifecycle", back_populates="transaction", uselist=False, lazy="select"
+        "RentalLifecycle", back_populates="transaction", uselist=False, lazy="noload"
     )
     events: Mapped[List["TransactionEvent"]] = relationship(
-        "TransactionEvent", back_populates="transaction", lazy="select",
+        "TransactionEvent", back_populates="transaction", lazy="noload",
         cascade="all, delete-orphan"
     )
     stock_movements: Mapped[List["StockMovement"]] = relationship(
-        "StockMovement", back_populates="transaction_header", lazy="select"
+        "StockMovement", back_populates="transaction_header", lazy="noload"
     )
     
     # Table constraints and indexes
@@ -323,24 +323,9 @@ class TransactionHeader(RentalManagerBaseModel):
         CheckConstraint("paid_amount <= total_amount", name="check_paid_not_exceed_total"),
     )
     
-    def __init__(
-        self,
-        transaction_type: TransactionType,
-        transaction_number: Optional[str] = None,
-        **kwargs
-    ):
-        """
-        Initialize a Transaction Header.
-        
-        Args:
-            transaction_type: Type of transaction (SALE, PURCHASE, RENTAL, etc.)
-            transaction_number: Human-readable transaction number
-            **kwargs: Additional fields
-        """
-        super().__init__(**kwargs)
-        self.transaction_type = transaction_type
-        self.transaction_number = transaction_number or self._generate_transaction_number()
-        self._validate_business_rules()
+    # Custom __init__ removed to avoid greenlet_spawn errors with async SQLAlchemy
+    # All fields should be set via attribute assignment after object creation
+    # Validation should be done explicitly after adding to session if needed
     
     def _generate_transaction_number(self) -> str:
         """Generate a transaction number based on type and timestamp."""

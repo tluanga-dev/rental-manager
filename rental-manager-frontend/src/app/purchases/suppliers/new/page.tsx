@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +17,11 @@ import {
   AlertCircle,
   Loader2,
   CheckCircle2,
-  XCircle
+  XCircle,
+  RotateCcw,
+  Edit,
+  Sparkles,
+  Info
 } from 'lucide-react';
 import { suppliersApi, SupplierCreate } from '@/services/api/suppliers';
 
@@ -43,11 +47,30 @@ function CreateSupplierContent() {
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof SupplierCreate, string>>>({});
+  const [codeMode, setCodeMode] = useState<'auto' | 'manual'>('auto');
+  const [isCodeGenerated, setIsCodeGenerated] = useState(false);
+
+  const generateSupplierCode = (): string => {
+    const typePrefix = formData.supplier_type.substring(0, 3).toUpperCase();
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.random().toString(36).substring(2, 4).toUpperCase();
+    return `SUP-${typePrefix}-${timestamp}-${random}`;
+  };
+
+  // Auto-generate supplier code on mount and when supplier type changes
+  useEffect(() => {
+    if (codeMode === 'auto') {
+      const generatedCode = generateSupplierCode();
+      setFormData(prev => ({ ...prev, supplier_code: generatedCode }));
+      setIsCodeGenerated(true);
+    }
+  }, [codeMode, formData.supplier_type]);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof SupplierCreate, string>> = {};
 
-    if (!formData.supplier_code.trim()) {
+    // Only validate supplier code if manual mode and empty
+    if (codeMode === 'manual' && !formData.supplier_code.trim()) {
       newErrors.supplier_code = 'Supplier code is required';
     }
 
@@ -77,6 +100,12 @@ function CreateSupplierContent() {
       ...prev,
       [field]: value
     }));
+    
+    // If manually changing supplier code, switch to manual mode
+    if (field === 'supplier_code' && codeMode === 'auto') {
+      setCodeMode('manual');
+      setIsCodeGenerated(false);
+    }
     
     // Clear error for this field when user starts typing
     if (errors[field]) {
@@ -188,14 +217,75 @@ function CreateSupplierContent() {
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <Label htmlFor="supplier_code">Supplier Code *</Label>
-                <Input
-                  id="supplier_code"
-                  value={formData.supplier_code}
-                  onChange={(e) => handleInputChange('supplier_code', e.target.value)}
-                  placeholder="e.g., SUP-001"
-                  className={errors.supplier_code ? 'border-red-500' : ''}
-                />
+                <div className="flex items-center justify-between mb-2">
+                  <Label htmlFor="supplier_code">
+                    Supplier Code *
+                    {codeMode === 'auto' && (
+                      <Sparkles className="inline ml-1 h-3 w-3 text-blue-500" />
+                    )}
+                  </Label>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setCodeMode(codeMode === 'auto' ? 'manual' : 'auto');
+                        if (codeMode === 'manual') {
+                          const newCode = generateSupplierCode();
+                          handleInputChange('supplier_code', newCode);
+                          setIsCodeGenerated(true);
+                        }
+                      }}
+                      className="h-6 px-2 text-xs"
+                    >
+                      {codeMode === 'auto' ? (
+                        <>
+                          <Edit className="h-3 w-3 mr-1" />
+                          Manual
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="h-3 w-3 mr-1" />
+                          Auto
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    id="supplier_code"
+                    value={formData.supplier_code}
+                    onChange={(e) => codeMode === 'manual' && handleInputChange('supplier_code', e.target.value)}
+                    placeholder={codeMode === 'auto' ? 'Auto-generated' : 'e.g., SUP-DIS-123456-AB'}
+                    readOnly={codeMode === 'auto'}
+                    className={`${errors.supplier_code ? 'border-red-500' : ''} ${
+                      codeMode === 'auto' ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                    }`}
+                  />
+                  {codeMode === 'auto' && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newCode = generateSupplierCode();
+                        handleInputChange('supplier_code', newCode);
+                        setIsCodeGenerated(true);
+                      }}
+                      className="px-3"
+                    >
+                      <RotateCcw className="h-3 w-3" />
+                    </Button>
+                  )}
+                </div>
+                {codeMode === 'auto' && (
+                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 flex items-center">
+                    <Info className="h-3 w-3 mr-1" />
+                    Code auto-generated based on supplier type
+                  </p>
+                )}
                 {errors.supplier_code && (
                   <p className="text-sm text-red-600 mt-1">{errors.supplier_code}</p>
                 )}
@@ -239,9 +329,10 @@ function CreateSupplierContent() {
                   onChange={(e) => handleInputChange('supplier_tier', e.target.value)}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
                 >
+                  <option value="PREMIUM">Premium</option>
                   <option value="STANDARD">Standard</option>
-                  <option value="PREFERRED">Preferred</option>
-                  <option value="RESTRICTED">Restricted</option>
+                  <option value="BASIC">Basic</option>
+                  <option value="TRIAL">Trial</option>
                 </select>
               </div>
             </div>

@@ -9,6 +9,9 @@ import {
   canManageUserType 
 } from '@/types/auth';
 import { tokenManager, type TokenData } from '@/lib/token-manager';
+import { DevAuthLogger } from '@/lib/dev-auth-logger';
+import { getUserPersonaById, getDefaultPersona } from '@/lib/dev-user-personas';
+import { ProductionSafeguards } from '@/lib/production-safeguards';
 
 interface AuthStore extends AuthState {
   setUser: (user: User | null) => void;
@@ -38,6 +41,13 @@ interface AuthStore extends AuthState {
   lastBackendCheck: Date | null;
   setBackendStatus: (isOnline: boolean) => void;
   checkBackendHealth: () => Promise<boolean>;
+  // Development mode authentication bypass
+  isDevelopmentMode: boolean;
+  isAuthDisabled: boolean;
+  initializeDevelopmentMode: () => void;
+  bypassAuthentication: () => void;
+  switchToPersona: (personaId: string) => void;
+  getStoredPersonaId: () => string | null;
 }
 
 export const useAuthStore = create<AuthStore>()(
@@ -54,6 +64,9 @@ export const useAuthStore = create<AuthStore>()(
       // Backend connectivity state - start as unknown, will be checked on first mount
       isBackendOnline: true, // Default to true to avoid showing error on initial load
       lastBackendCheck: null,
+      // Development mode state
+      isDevelopmentMode: process.env.NODE_ENV === 'development',
+      isAuthDisabled: process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true',
 
       setUser: (user) => {
         set({ user, isAuthenticated: !!user });
@@ -120,18 +133,30 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       hasPermission: (permission) => {
-        const { user, permissions } = get();
+        const { user, permissions, isDevelopmentMode, isAuthDisabled } = get();
+        
+        let result = false;
+        let reason = '';
         
         // Superuser has all permissions
         if (user?.isSuperuser || user?.userType === 'SUPERADMIN') {
-          return true;
+          result = true;
+          reason = 'superuser access';
+        } else if (Array.isArray(permission)) {
+          // Require ALL permissions when an array is passed
+          result = permission.every(p => permissions.includes(p));
+          reason = result ? 'all required permissions present' : 'missing some required permissions';
+        } else {
+          result = permissions.includes(permission);
+          reason = result ? 'permission present' : 'permission not found';
         }
         
-        if (Array.isArray(permission)) {
-          // Require ALL permissions when an array is passed
-          return permission.every(p => permissions.includes(p));
+        // Log permission check in development mode
+        if (isDevelopmentMode && isAuthDisabled) {
+          DevAuthLogger.logPermissionCheck(permission, result, reason);
         }
-        return permissions.includes(permission);
+        
+        return result;
       },
 
       hasRole: (roleName) => {
@@ -301,6 +326,152 @@ export const useAuthStore = create<AuthStore>()(
             get().logout();
           }
         });
+      },
+
+      initializeDevelopmentMode: () => {
+        const { isDevelopmentMode, isAuthDisabled } = get();
+        if (isDevelopmentMode && isAuthDisabled) {
+          // Critical security check: Ensure auth bypass is safe before proceeding
+          if (!ProductionSafeguards.isAuthBypassSafe()) {
+            console.error('🚨 SECURITY ALERT: Development mode initialization blocked by production safeguards!');
+            ProductionSafeguards.showEmergencyAlert();
+            return;
+          }
+
+          DevAuthLogger.logBypassEnabled();
+          
+          // Check for stored persona preference
+          const storedPersonaId = get().getStoredPersonaId();
+          if (storedPersonaId) {
+            get().switchToPersona(storedPersonaId);
+          } else {
+            get().bypassAuthentication();
+          }
+        }
+      },
+
+      bypassAuthentication: () => {
+        // Critical security check: Ensure auth bypass is safe
+        if (!ProductionSafeguards.isAuthBypassSafe()) {
+          console.error('🚨 SECURITY ALERT: Authentication bypass blocked by production safeguards!');
+          ProductionSafeguards.showEmergencyAlert();
+          return;
+        }
+
+        const mockUser: User = {
+          id: 'dev-user-1',
+          email: 'dev@example.com',
+          username: 'dev_user',
+          full_name: 'Development User',
+          is_active: true,
+          is_superuser: true,
+          is_verified: true,
+          role: { name: 'ADMIN' },
+          userType: 'SUPERADMIN',
+          isSuperuser: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          effectivePermissions: {
+            all_permissions: [
+              'read:all', 'write:all', 'delete:all', 'admin:all',
+              'manage:users', 'manage:companies', 'manage:customers',
+              'manage:suppliers', 'manage:inventory', 'manage:transactions',
+              'manage:rentals', 'manage:analytics', 'view:dashboard',
+              'export:data', 'SALE_VIEW', 'RENTAL_VIEW', 'DASHBOARD_VIEW',
+              'ANALYTICS_VIEW', 'CUSTOMER_VIEW', 'CUSTOMER_CREATE',
+              'CUSTOMER_UPDATE', 'CUSTOMER_DELETE', 'INVENTORY_VIEW',
+              'INVENTORY_CREATE', 'INVENTORY_UPDATE', 'INVENTORY_DELETE',
+              'SALE_CREATE', 'SALE_UPDATE', 'SALE_DELETE',
+              'RENTAL_CREATE', 'RENTAL_UPDATE', 'RENTAL_DELETE',
+              'REPORT_VIEW', 'REPORT_CREATE', 'USER_VIEW', 'USER_CREATE',
+              'USER_UPDATE', 'USER_DELETE', 'ROLE_VIEW', 'ROLE_CREATE',
+              'ROLE_UPDATE', 'ROLE_DELETE', 'AUDIT_VIEW', 'SYSTEM_CONFIG'
+            ],
+            allPermissions: [
+              'read:all', 'write:all', 'delete:all', 'admin:all',
+              'manage:users', 'manage:companies', 'manage:customers',
+              'manage:suppliers', 'manage:inventory', 'manage:transactions',
+              'manage:rentals', 'manage:analytics', 'view:dashboard',
+              'export:data', 'SALE_VIEW', 'RENTAL_VIEW', 'DASHBOARD_VIEW',
+              'ANALYTICS_VIEW', 'CUSTOMER_VIEW', 'CUSTOMER_CREATE',
+              'CUSTOMER_UPDATE', 'CUSTOMER_DELETE', 'INVENTORY_VIEW',
+              'INVENTORY_CREATE', 'INVENTORY_UPDATE', 'INVENTORY_DELETE',
+              'SALE_CREATE', 'SALE_UPDATE', 'SALE_DELETE',
+              'RENTAL_CREATE', 'RENTAL_UPDATE', 'RENTAL_DELETE',
+              'REPORT_VIEW', 'REPORT_CREATE', 'USER_VIEW', 'USER_CREATE',
+              'USER_UPDATE', 'USER_DELETE', 'ROLE_VIEW', 'ROLE_CREATE',
+              'ROLE_UPDATE', 'ROLE_DELETE', 'AUDIT_VIEW', 'SYSTEM_CONFIG'
+            ]
+          }
+        } as User;
+
+        // Store mock tokens using token manager
+        tokenManager.storeTokens({
+          accessToken: 'dev-access-token',
+          refreshToken: 'dev-refresh-token',
+          expiresAt: Date.now() + (24 * 60 * 60 * 1000), // 24 hours from now
+          tokenType: 'Bearer'
+        });
+
+        set({
+          user: mockUser,
+          accessToken: 'dev-access-token',
+          refreshToken: 'dev-refresh-token',
+          isAuthenticated: true,
+          isLoading: false,
+          permissions: mockUser.effectivePermissions.all_permissions
+        });
+
+        DevAuthLogger.logUserCreated(mockUser);
+        DevAuthLogger.logAuthStateChange('unauthenticated', 'authenticated (development bypass)', {
+          user: mockUser.username,
+          role: mockUser.userType,
+          permissionsCount: mockUser.effectivePermissions.all_permissions.length
+        });
+      },
+
+      switchToPersona: (personaId: string) => {
+        const { isDevelopmentMode, isAuthDisabled } = get();
+        if (!isDevelopmentMode || !isAuthDisabled) return;
+        
+        const persona = getUserPersonaById(personaId);
+        if (!persona) {
+          console.warn('Persona not found:', personaId);
+          return;
+        }
+        
+        const currentUser = get().user;
+        
+        // Update store with new persona
+        set({
+          user: persona.user,
+          accessToken: 'dev-access-token',
+          refreshToken: 'dev-refresh-token',
+          isAuthenticated: true,
+          isLoading: false,
+          permissions: persona.user.effectivePermissions.all_permissions
+        });
+        
+        // Update token manager
+        tokenManager.storeTokens({
+          accessToken: 'dev-access-token',
+          refreshToken: 'dev-refresh-token',
+          expiresAt: Date.now() + (24 * 60 * 60 * 1000),
+          tokenType: 'Bearer'
+        });
+        
+        // Log the switch
+        DevAuthLogger.logUserSwitch(currentUser, persona.user);
+        
+        // Store preference
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('dev-selected-persona', personaId);
+        }
+      },
+
+      getStoredPersonaId: () => {
+        if (typeof window === 'undefined') return null;
+        return localStorage.getItem('dev-selected-persona');
       },
     }),
     {

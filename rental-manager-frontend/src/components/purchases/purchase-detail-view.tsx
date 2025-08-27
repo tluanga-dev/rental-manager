@@ -214,7 +214,17 @@ export function PurchaseDetailView({
               Purchase {purchase.reference_number || `#${purchase.id.slice(0, 8)}`}
             </h1>
             <p className="text-muted-foreground">
-              Recorded on {format(new Date(purchase.purchase_date), 'MMMM dd, yyyy')}
+              Recorded on {(() => {
+                try {
+                  const dateValue = purchase.purchase_date || purchase.transaction_date;
+                  if (!dateValue) return 'Date not available';
+                  const date = new Date(dateValue);
+                  if (isNaN(date.getTime())) return 'Date not available';
+                  return format(date, 'MMMM dd, yyyy');
+                } catch {
+                  return 'Date not available';
+                }
+              })()}
             </p>
           </div>
         </div>
@@ -270,7 +280,17 @@ export function PurchaseDetailView({
           <div className="flex justify-between">
             <div>
               <p className="font-semibold">Purchase Order #: {purchase.reference_number || purchase.id}</p>
-              <p className="text-sm">Date: {format(new Date(purchase.purchase_date), 'MMMM dd, yyyy')}</p>
+              <p className="text-sm">Date: {(() => {
+                try {
+                  const dateValue = purchase.purchase_date || purchase.transaction_date;
+                  if (!dateValue) return 'Date not available';
+                  const date = new Date(dateValue);
+                  if (isNaN(date.getTime())) return 'Date not available';
+                  return format(date, 'MMMM dd, yyyy');
+                } catch {
+                  return 'Date not available';
+                }
+              })()}</p>
             </div>
             <div className="text-right">
               <p className="font-semibold">Status: {purchase.status}</p>
@@ -368,7 +388,17 @@ export function PurchaseDetailView({
               <div>
                 <p className="text-sm font-medium">Purchase Date</p>
                 <p className="text-sm text-muted-foreground">
-                  {format(new Date(purchase.purchase_date), 'MMMM dd, yyyy')}
+                  {(() => {
+                    try {
+                      const dateValue = purchase.purchase_date || purchase.transaction_date;
+                      if (!dateValue) return 'Date not available';
+                      const date = new Date(dateValue);
+                      if (isNaN(date.getTime())) return 'Date not available';
+                      return format(date, 'MMMM dd, yyyy');
+                    } catch {
+                      return 'Date not available';
+                    }
+                  })()}
                 </p>
               </div>
               <div>

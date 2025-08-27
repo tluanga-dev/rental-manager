@@ -238,25 +238,37 @@ async def global_exception_handler(request: Request, exc: Exception):
     request_id = getattr(request.state, "request_id", "unknown")
     logger.error(f"Unhandled exception in request {request_id}: {exc}", exc_info=True)
     
+    # Prepare response content
     if settings.DEBUG:
         # In debug mode, return detailed error
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={
-                "error": "Internal server error",
-                "detail": str(exc),
-                "request_id": request_id,
-            },
-        )
+        content = {
+            "error": "Internal server error",
+            "detail": str(exc),
+            "request_id": request_id,
+        }
     else:
         # In production, return generic error
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={
-                "error": "Internal server error",
-                "request_id": request_id,
-            },
-        )
+        content = {
+            "error": "Internal server error",
+            "request_id": request_id,
+        }
+    
+    # Create response with CORS headers
+    response = JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content=content,
+    )
+    
+    # Add CORS headers for error responses
+    origin = request.headers.get("origin")
+    if origin and origin in settings.cors_origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        logger.info(f"Added CORS headers to error response for origin: {origin}")
+    
+    return response
 
 
 if __name__ == "__main__":

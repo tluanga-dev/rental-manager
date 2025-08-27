@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { generateUUID } from '@/lib/uuid';
 import { tokenManager } from '@/lib/token-manager';
 import { getApiUrl, isDebugMode, isProduction } from '@/lib/env';
+import { DevAuthLogger } from '@/lib/dev-auth-logger';
 
 // API Response wrapper
 interface ApiResponse<T = any> {
@@ -50,10 +51,32 @@ const processQueue = (error: any, token: string | null = null) => {
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
-    // Add auth token using enhanced token manager
-    const authHeader = tokenManager.getAuthHeader();
-    if (authHeader) {
-      config.headers.Authorization = authHeader;
+    const isDevelopmentMode = process.env.NODE_ENV === 'development';
+    const isAuthDisabled = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true';
+    
+    // Development mode bypass - add mock authorization header
+    if (isDevelopmentMode && isAuthDisabled) {
+      config.headers.Authorization = 'Bearer dev-access-token';
+      DevAuthLogger.logAPIRequest(
+        config.method?.toUpperCase() || 'UNKNOWN',
+        config.url || '',
+        true,
+        'Bearer dev-access-token'
+      );
+    } else {
+      // Add auth token using enhanced token manager in production
+      const authHeader = tokenManager.getAuthHeader();
+      if (authHeader) {
+        config.headers.Authorization = authHeader;
+      }
+      if (isDevelopmentMode) {
+        DevAuthLogger.logAPIRequest(
+          config.method?.toUpperCase() || 'UNKNOWN',
+          config.url || '',
+          !!authHeader,
+          authHeader
+        );
+      }
     }
     
     // Add correlation ID for request tracking
@@ -137,6 +160,26 @@ api.interceptors.response.use(
         response: {
           ...error.response,
           data: errorData
+        }
+      });
+    }
+
+    // Development mode bypass for 401 errors
+    if (process.env.NODE_ENV === 'development' && 
+        process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true' &&
+        error.response?.status === 401) {
+      DevAuthLogger.logBypassWarning('Bypassing 401 authentication error', {
+        url: originalRequest?.url,
+        method: originalRequest?.method
+      });
+      // In dev mode, treat 401s as successful responses
+      return Promise.resolve({
+        ...error.response,
+        status: 200,
+        data: { 
+          success: true, 
+          data: 'dev-auth-bypass',
+          message: 'Authentication bypassed in development mode'
         }
       });
     }

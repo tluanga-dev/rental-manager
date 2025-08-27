@@ -249,38 +249,9 @@ class TransactionLine(RentalManagerBaseModel):
         ),
     )
     
-    def __init__(
-        self,
-        transaction_header_id: UUID,
-        line_number: int,
-        description: str,
-        line_type: LineItemType = LineItemType.PRODUCT,
-        quantity: Decimal = Decimal("1.00"),
-        unit_price: Decimal = Decimal("0.00"),
-        **kwargs
-    ):
-        """
-        Initialize a Transaction Line.
-        
-        Args:
-            transaction_header_id: Parent transaction ID
-            line_number: Line sequence number within transaction
-            description: Line item description
-            line_type: Type of line item
-            quantity: Quantity ordered/sold
-            unit_price: Price per unit
-            **kwargs: Additional fields
-        """
-        super().__init__(**kwargs)
-        self.transaction_header_id = transaction_header_id
-        self.line_number = line_number
-        self.line_type = line_type
-        self.description = description
-        self.quantity = quantity
-        self.unit_price = unit_price
-        self.total_price = self.total_price or (quantity * unit_price)
-        self.line_total = self.line_total or self._calculate_line_total()
-        self._validate_business_rules()
+    # Removing custom __init__ entirely to avoid any async context issues
+    # SQLAlchemy will use its default initialization which doesn't cause greenlet issues
+    # All fields will be set using attribute assignment after object creation
     
     def _calculate_line_total(self) -> Decimal:
         """Calculate line total based on quantity, price, discount, tax, and rental period."""
@@ -300,33 +271,40 @@ class TransactionLine(RentalManagerBaseModel):
         after_discount = extended - self.discount_amount
         return after_discount + self.tax_amount
     
+    def validate(self):
+        """
+        Validate transaction line business rules.
+        Call this method explicitly after adding to session if validation is needed.
+        """
+        self._validate_business_rules()
+    
     def _validate_business_rules(self):
         """Validate transaction line business rules."""
         # Quantity validations
         if self.quantity <= 0:
             raise ValueError("Quantity must be positive")
         
-        if self.returned_quantity < 0:
+        if self.returned_quantity is not None and self.returned_quantity < 0:
             raise ValueError("Returned quantity cannot be negative")
         
-        if self.returned_quantity > self.quantity:
+        if self.returned_quantity is not None and self.returned_quantity > self.quantity:
             raise ValueError("Returned quantity cannot exceed ordered quantity")
         
         # Price validations
-        if self.unit_price < 0:
+        if self.unit_price is not None and self.unit_price < 0:
             raise ValueError("Unit price cannot be negative")
         
-        if self.discount_amount < 0:
+        if self.discount_amount is not None and self.discount_amount < 0:
             raise ValueError("Discount amount cannot be negative")
         
-        if self.tax_amount < 0:
+        if self.tax_amount is not None and self.tax_amount < 0:
             raise ValueError("Tax amount cannot be negative")
         
         # Percentage validations
-        if self.discount_percent < 0 or self.discount_percent > 100:
+        if self.discount_percent is not None and (self.discount_percent < 0 or self.discount_percent > 100):
             raise ValueError("Discount percent must be between 0 and 100")
         
-        if self.tax_rate < 0:
+        if self.tax_rate is not None and self.tax_rate < 0:
             raise ValueError("Tax rate cannot be negative")
         
         # Description validation

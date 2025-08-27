@@ -130,6 +130,12 @@ class Settings(BaseSettings):
     ENABLE_OPENTELEMETRY: bool = False
     OTLP_ENDPOINT: Optional[str] = None
 
+    # Development Authentication Control
+    DISABLE_AUTH_IN_DEV: bool = Field(default=True)
+    DEV_MOCK_USER_ID: str = Field(default="dev-user-1")
+    DEV_MOCK_USER_EMAIL: str = Field(default="dev@example.com")
+    DEV_MOCK_USER_ROLE: str = Field(default="ADMIN")
+
     @field_validator("ADMIN_PASSWORD", mode="before")
     @classmethod
     def validate_admin_password(cls, v: str) -> str:
@@ -219,6 +225,11 @@ class Settings(BaseSettings):
         if not self.ALLOWED_ORIGINS:
             return ["http://localhost:3000", "http://localhost:8000"]  # Safe defaults
         return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",") if origin.strip()]
+
+    @property
+    def auth_disabled(self) -> bool:
+        """Check if authentication should be disabled"""
+        return self.is_development and self.DEBUG and self.DISABLE_AUTH_IN_DEV
 
 
 settings = Settings()

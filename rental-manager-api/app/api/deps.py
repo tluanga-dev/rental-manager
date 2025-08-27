@@ -7,21 +7,35 @@ from sqlalchemy import select
 from app.core.database import get_db
 from app.core.redis import get_redis, RedisManager
 from app.core.security import security_manager
+from app.core.dev_auth_bypass import should_bypass_auth, get_mock_user
 from app.models.user import User
 from app.schemas.common import PaginationParams
 
 
-# Security scheme
-security = HTTPBearer()
+# Security scheme - auto_error=False allows optional authentication
+security = HTTPBearer(auto_error=False)
 
 
 async def get_current_user(
-    credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
+    request: Request,
+    credentials: Annotated[Optional[HTTPAuthorizationCredentials], Depends(security)],
     db: Annotated[AsyncSession, Depends(get_db)]
 ) -> User:
     """
-    Get current authenticated user from JWT token
+    Get current authenticated user from JWT token with development bypass
     """
+    # Development bypass check
+    if should_bypass_auth(request):
+        return get_mock_user()
+    
+    # Normal authentication flow
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     token = credentials.credentials
     
     # Verify token and get user_id

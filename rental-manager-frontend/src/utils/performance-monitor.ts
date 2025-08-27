@@ -30,9 +30,15 @@ class PerformanceMonitor {
   startTimer(name: string): void {
     if (!this.options.enabled) return;
     
+    // Create unique timer name to avoid conflicts
+    const timestamp = Date.now();
+    const uniqueName = `${name}-${timestamp}`;
+    
     this.startTimes.set(name, performance.now());
+    this.startTimes.set(`${name}_unique`, uniqueName);
+    
     if (this.options.logToConsole) {
-      console.time(`[Performance] ${name}`);
+      console.time(`[Performance] ${uniqueName}`);
     }
   }
 
@@ -40,18 +46,26 @@ class PerformanceMonitor {
     if (!this.options.enabled) return null;
 
     const startTime = this.startTimes.get(name);
+    const uniqueName = this.startTimes.get(`${name}_unique`) as string;
+    
     if (!startTime) {
-      console.warn(`Performance timer "${name}" was not started`);
+      // Silently handle missing timer - this is common in development with hot reloads
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`Performance timer "${name}" was not started`);
+      }
       return null;
     }
 
     const duration = performance.now() - startTime;
     this.startTimes.delete(name);
+    this.startTimes.delete(`${name}_unique`);
 
     this.recordMetric(name, duration, metadata);
 
     if (this.options.logToConsole) {
-      console.timeEnd(`[Performance] ${name}`);
+      if (uniqueName) {
+        console.timeEnd(`[Performance] ${uniqueName}`);
+      }
       console.log(`[Performance] ${name}: ${duration.toFixed(2)}ms`, metadata || '');
     }
 

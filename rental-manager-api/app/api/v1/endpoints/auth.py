@@ -1,12 +1,13 @@
 from datetime import timedelta
 from typing import Any
-from fastapi import APIRouter, Body, Depends, HTTPException, status
+from fastapi import APIRouter, Body, Depends, HTTPException, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.api.deps import get_db, get_current_user
 from app.core.config import settings
 from app.core.security import security_manager
+from app.core.dev_auth_bypass import should_bypass_auth, create_mock_token_response, get_mock_user
 from app.models.user import User
 from app.schemas.auth import (
     Token,
@@ -219,3 +220,31 @@ async def get_current_user_info(
 ) -> Any:
     """Get current user information"""
     return current_user
+
+
+@router.post("/dev-login", response_model=Token)
+async def dev_login(
+    request: Request,
+    db: AsyncSession = Depends(get_db)
+) -> Any:
+    """Development-only login endpoint"""
+    if not should_bypass_auth(request):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Endpoint not available"
+        )
+    
+    # Return mock tokens for development
+    mock_user = get_mock_user()
+    return create_mock_token_response(mock_user)
+
+
+@router.get("/dev-status")
+async def dev_status(request: Request) -> Any:
+    """Development-only status endpoint"""
+    return {
+        "environment": settings.ENVIRONMENT,
+        "debug": settings.DEBUG,
+        "auth_disabled": settings.auth_disabled,
+        "development_mode": settings.is_development
+    }

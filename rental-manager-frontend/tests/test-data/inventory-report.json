@@ -1,0 +1,6055 @@
+{
+  "timestamp": "2025-08-26T02:08:12.102Z",
+  "summary": {
+    "totalUnits": 14488,
+    "totalItems": 200,
+    "totalTransactions": 815
+  },
+  "stockLevels": {
+    "ITEM00001": {
+      "itemName": "Caterpillar Modern Rubber Bacon",
+      "totalStock": 105,
+      "availableStock": 101,
+      "availabilityRate": "96.19%",
+      "rentedStock": 1,
+      "utilizationRate": "0.95%",
+      "soldStock": 3,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 19,
+          "available": 19,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 18,
+          "available": 15,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 68,
+          "available": 67,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00002": {
+      "itemName": "Caterpillar Ergonomic Aluminum Hat",
+      "totalStock": 70,
+      "availableStock": 67,
+      "availabilityRate": "95.71%",
+      "rentedStock": 2,
+      "utilizationRate": "2.86%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 25,
+          "available": 25,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 25,
+          "available": 23,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 20,
+          "available": 19,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00003": {
+      "itemName": "Honda Licensed Ceramic Table",
+      "totalStock": 115,
+      "availableStock": 110,
+      "availabilityRate": "95.65%",
+      "rentedStock": 3,
+      "utilizationRate": "2.61%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 19,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 37,
+          "available": 36,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 58,
+          "available": 55,
+          "rented": 1,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00004": {
+      "itemName": "DeWalt Fresh Rubber Bike",
+      "totalStock": 79,
+      "availableStock": 73,
+      "availabilityRate": "92.41%",
+      "rentedStock": 4,
+      "utilizationRate": "5.06%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 4,
+          "available": 3,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 50,
+          "available": 47,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 25,
+          "available": 23,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00005": {
+      "itemName": "DeWalt Refined Aluminum Bike",
+      "totalStock": 111,
+      "availableStock": 105,
+      "availabilityRate": "94.59%",
+      "rentedStock": 5,
+      "utilizationRate": "4.50%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 19,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 86,
+          "available": 82,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 5,
+          "available": 4,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00006": {
+      "itemName": "DeWalt Frozen Marble Car",
+      "totalStock": 43,
+      "availableStock": 38,
+      "availabilityRate": "88.37%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 1,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 39,
+          "available": 38,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 2,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 2,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00007": {
+      "itemName": "Samsung Bespoke Granite Ball",
+      "totalStock": 28,
+      "availableStock": 20,
+      "availabilityRate": "71.43%",
+      "rentedStock": 2,
+      "utilizationRate": "7.14%",
+      "soldStock": 6,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 5,
+          "available": 1,
+          "rented": 2,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 15,
+          "available": 14,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 8,
+          "available": 5,
+          "rented": 0,
+          "sold": 3
+        }
+      }
+    },
+    "ITEM00008": {
+      "itemName": "Honda Soft Ceramic Towels",
+      "totalStock": 120,
+      "availableStock": 110,
+      "availabilityRate": "91.67%",
+      "rentedStock": 3,
+      "utilizationRate": "2.50%",
+      "soldStock": 7,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 41,
+          "available": 37,
+          "rented": 0,
+          "sold": 4
+        },
+        "LOC002": {
+          "total": 42,
+          "available": 41,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 37,
+          "available": 32,
+          "rented": 3,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00009": {
+      "itemName": "Makita Fresh Granite Car",
+      "totalStock": 79,
+      "availableStock": 67,
+      "availabilityRate": "84.81%",
+      "rentedStock": 9,
+      "utilizationRate": "11.39%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 53,
+          "available": 51,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 12,
+          "available": 9,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 14,
+          "available": 7,
+          "rented": 6,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00010": {
+      "itemName": "Bosch Recycled Silk Shirt",
+      "totalStock": 110,
+      "availableStock": 100,
+      "availabilityRate": "90.91%",
+      "rentedStock": 6,
+      "utilizationRate": "5.45%",
+      "soldStock": 3,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 38,
+          "available": 35,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 46,
+          "available": 42,
+          "rented": 3,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 26,
+          "available": 23,
+          "rented": 2,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00011": {
+      "itemName": "Caterpillar Practical Ceramic Chair",
+      "totalStock": 90,
+      "availableStock": 84,
+      "availabilityRate": "93.33%",
+      "rentedStock": 2,
+      "utilizationRate": "2.22%",
+      "soldStock": 3,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 39,
+          "available": 37,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 32,
+          "available": 31,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 19,
+          "available": 16,
+          "rented": 0,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00012": {
+      "itemName": "Samsung Electronic Silk Pizza",
+      "totalStock": 17,
+      "availableStock": 15,
+      "availabilityRate": "88.24%",
+      "rentedStock": 1,
+      "utilizationRate": "5.88%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 14,
+          "available": 14,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 1,
+          "available": 0,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 2,
+          "available": 1,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00013": {
+      "itemName": "Bosch Licensed Silk Chicken",
+      "totalStock": 76,
+      "availableStock": 64,
+      "availabilityRate": "84.21%",
+      "rentedStock": 5,
+      "utilizationRate": "6.58%",
+      "soldStock": 4,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 12,
+          "available": 9,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 32,
+          "available": 27,
+          "rented": 2,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 32,
+          "available": 28,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00014": {
+      "itemName": "Honda Unbranded Concrete Computer",
+      "totalStock": 57,
+      "availableStock": 52,
+      "availabilityRate": "91.23%",
+      "rentedStock": 3,
+      "utilizationRate": "5.26%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 43,
+          "available": 43,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 12,
+          "available": 8,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 2,
+          "available": 1,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00015": {
+      "itemName": "Samsung Sleek Bronze Cheese",
+      "totalStock": 64,
+      "availableStock": 58,
+      "availabilityRate": "90.63%",
+      "rentedStock": 2,
+      "utilizationRate": "3.13%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 36,
+          "available": 34,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 9,
+          "available": 8,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 19,
+          "available": 16,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00016": {
+      "itemName": "Caterpillar Rustic Granite Gloves",
+      "totalStock": 110,
+      "availableStock": 97,
+      "availabilityRate": "88.18%",
+      "rentedStock": 10,
+      "utilizationRate": "9.09%",
+      "soldStock": 1,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 24,
+          "available": 21,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 50,
+          "available": 46,
+          "rented": 4,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 36,
+          "available": 30,
+          "rented": 3,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00017": {
+      "itemName": "DeWalt Elegant Silk Hat",
+      "totalStock": 92,
+      "availableStock": 90,
+      "availabilityRate": "97.83%",
+      "rentedStock": 2,
+      "utilizationRate": "2.17%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 20,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 37,
+          "available": 36,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 35,
+          "available": 34,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00018": {
+      "itemName": "Samsung Soft Granite Car",
+      "totalStock": 55,
+      "availableStock": 54,
+      "availabilityRate": "98.18%",
+      "rentedStock": 1,
+      "utilizationRate": "1.82%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 17,
+          "available": 17,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 38,
+          "available": 37,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 0,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00019": {
+      "itemName": "DeWalt Incredible Concrete Chair",
+      "totalStock": 119,
+      "availableStock": 111,
+      "availabilityRate": "93.28%",
+      "rentedStock": 5,
+      "utilizationRate": "4.20%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 27,
+          "available": 24,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 50,
+          "available": 47,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 42,
+          "available": 40,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00020": {
+      "itemName": "Makita Practical Aluminum Soap",
+      "totalStock": 37,
+      "availableStock": 35,
+      "availabilityRate": "94.59%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 13,
+          "available": 13,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 19,
+          "available": 17,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 5,
+          "available": 5,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00021": {
+      "itemName": "Samsung Elegant Bamboo Hat",
+      "totalStock": 67,
+      "availableStock": 61,
+      "availabilityRate": "91.04%",
+      "rentedStock": 2,
+      "utilizationRate": "2.99%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 16,
+          "available": 16,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 44,
+          "available": 41,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 7,
+          "available": 4,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00022": {
+      "itemName": "Samsung Elegant Plastic Keyboard",
+      "totalStock": 55,
+      "availableStock": 49,
+      "availabilityRate": "89.09%",
+      "rentedStock": 2,
+      "utilizationRate": "3.64%",
+      "soldStock": 3,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 18,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 13,
+          "available": 11,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 22,
+          "available": 20,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00023": {
+      "itemName": "Samsung Licensed Bronze Bike",
+      "totalStock": 79,
+      "availableStock": 71,
+      "availabilityRate": "89.87%",
+      "rentedStock": 5,
+      "utilizationRate": "6.33%",
+      "soldStock": 0,
+      "maintenanceStock": 3,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 38,
+          "available": 34,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 25,
+          "available": 23,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 16,
+          "available": 14,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00024": {
+      "itemName": "Caterpillar Refined Rubber Chips",
+      "totalStock": 72,
+      "availableStock": 70,
+      "availabilityRate": "97.22%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 30,
+          "available": 30,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 36,
+          "available": 35,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 6,
+          "available": 5,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00025": {
+      "itemName": "DeWalt Gorgeous Silk Shoes",
+      "totalStock": 35,
+      "availableStock": 27,
+      "availabilityRate": "77.14%",
+      "rentedStock": 4,
+      "utilizationRate": "11.43%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 23,
+          "available": 22,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 8,
+          "available": 3,
+          "rented": 2,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 4,
+          "available": 2,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00026": {
+      "itemName": "Caterpillar Licensed Silk Ball",
+      "totalStock": 56,
+      "availableStock": 48,
+      "availabilityRate": "85.71%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 5,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 5,
+          "available": 3,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 2,
+          "available": 1,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 49,
+          "available": 44,
+          "rented": 0,
+          "sold": 3
+        }
+      }
+    },
+    "ITEM00027": {
+      "itemName": "Samsung Unbranded Cotton Hat",
+      "totalStock": 119,
+      "availableStock": 112,
+      "availabilityRate": "94.12%",
+      "rentedStock": 4,
+      "utilizationRate": "3.36%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 31,
+          "available": 30,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 38,
+          "available": 34,
+          "rented": 3,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 50,
+          "available": 48,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00028": {
+      "itemName": "Caterpillar Rustic Marble Shirt",
+      "totalStock": 51,
+      "availableStock": 49,
+      "availabilityRate": "96.08%",
+      "rentedStock": 1,
+      "utilizationRate": "1.96%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 12,
+          "available": 12,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 21,
+          "available": 21,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 18,
+          "available": 16,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00029": {
+      "itemName": "Honda Sleek Steel Mouse",
+      "totalStock": 65,
+      "availableStock": 48,
+      "availabilityRate": "73.85%",
+      "rentedStock": 12,
+      "utilizationRate": "18.46%",
+      "soldStock": 4,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 6,
+          "available": 0,
+          "rented": 5,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 19,
+          "available": 13,
+          "rented": 3,
+          "sold": 3
+        },
+        "LOC003": {
+          "total": 40,
+          "available": 35,
+          "rented": 4,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00030": {
+      "itemName": "Bosch Soft Silk Sausages",
+      "totalStock": 27,
+      "availableStock": 19,
+      "availabilityRate": "70.37%",
+      "rentedStock": 6,
+      "utilizationRate": "22.22%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 19,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 2,
+          "available": 0,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 5,
+          "available": 0,
+          "rented": 4,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00031": {
+      "itemName": "Bosch Practical Marble Pizza",
+      "totalStock": 80,
+      "availableStock": 72,
+      "availabilityRate": "90.00%",
+      "rentedStock": 4,
+      "utilizationRate": "5.00%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 59,
+          "available": 56,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 11,
+          "available": 10,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 10,
+          "available": 6,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00032": {
+      "itemName": "Honda Fresh Bamboo Bike",
+      "totalStock": 88,
+      "availableStock": 82,
+      "availabilityRate": "93.18%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 4,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 5,
+          "available": 2,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 79,
+          "available": 76,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 4,
+          "available": 4,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00033": {
+      "itemName": "Caterpillar Rustic Marble Chair",
+      "totalStock": 107,
+      "availableStock": 97,
+      "availabilityRate": "90.65%",
+      "rentedStock": 2,
+      "utilizationRate": "1.87%",
+      "soldStock": 7,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 27,
+          "available": 23,
+          "rented": 0,
+          "sold": 3
+        },
+        "LOC002": {
+          "total": 69,
+          "available": 66,
+          "rented": 0,
+          "sold": 3
+        },
+        "LOC003": {
+          "total": 11,
+          "available": 8,
+          "rented": 2,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00034": {
+      "itemName": "Bosch Handmade Gold Sausages",
+      "totalStock": 78,
+      "availableStock": 64,
+      "availabilityRate": "82.05%",
+      "rentedStock": 10,
+      "utilizationRate": "12.82%",
+      "soldStock": 2,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 53,
+          "available": 49,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 12,
+          "available": 7,
+          "rented": 4,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 13,
+          "available": 8,
+          "rented": 4,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00035": {
+      "itemName": "DeWalt Unbranded Bamboo Mouse",
+      "totalStock": 83,
+      "availableStock": 73,
+      "availabilityRate": "87.95%",
+      "rentedStock": 6,
+      "utilizationRate": "7.23%",
+      "soldStock": 3,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 24,
+          "available": 19,
+          "rented": 2,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 38,
+          "available": 36,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 21,
+          "available": 18,
+          "rented": 2,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00036": {
+      "itemName": "Samsung Awesome Steel Hat",
+      "totalStock": 97,
+      "availableStock": 83,
+      "availabilityRate": "85.57%",
+      "rentedStock": 9,
+      "utilizationRate": "9.28%",
+      "soldStock": 2,
+      "maintenanceStock": 3,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 9,
+          "available": 5,
+          "rented": 3,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 47,
+          "available": 41,
+          "rented": 3,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 41,
+          "available": 37,
+          "rented": 3,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00037": {
+      "itemName": "DeWalt Modern Bronze Soap",
+      "totalStock": 114,
+      "availableStock": 95,
+      "availabilityRate": "83.33%",
+      "rentedStock": 15,
+      "utilizationRate": "13.16%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 62,
+          "available": 59,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 9,
+          "available": 0,
+          "rented": 8,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 43,
+          "available": 36,
+          "rented": 5,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00038": {
+      "itemName": "Makita Fresh Bamboo Salad",
+      "totalStock": 66,
+      "availableStock": 57,
+      "availabilityRate": "86.36%",
+      "rentedStock": 4,
+      "utilizationRate": "6.06%",
+      "soldStock": 3,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 4,
+          "available": 1,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 13,
+          "available": 11,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 49,
+          "available": 45,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00039": {
+      "itemName": "DeWalt Fantastic Plastic Cheese",
+      "totalStock": 27,
+      "availableStock": 20,
+      "availabilityRate": "74.07%",
+      "rentedStock": 4,
+      "utilizationRate": "14.81%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 19,
+          "available": 17,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 5,
+          "available": 3,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 3,
+          "available": 0,
+          "rented": 1,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00040": {
+      "itemName": "Bosch Rustic Metal Sausages",
+      "totalStock": 47,
+      "availableStock": 43,
+      "availabilityRate": "91.49%",
+      "rentedStock": 1,
+      "utilizationRate": "2.13%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 3,
+          "available": 2,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 4,
+          "available": 3,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 40,
+          "available": 38,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00041": {
+      "itemName": "Caterpillar Refined Rubber Hat",
+      "totalStock": 46,
+      "availableStock": 43,
+      "availabilityRate": "93.48%",
+      "rentedStock": 3,
+      "utilizationRate": "6.52%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 16,
+          "available": 15,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 2,
+          "available": 0,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 28,
+          "available": 28,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00042": {
+      "itemName": "Caterpillar Frozen Wooden Cheese",
+      "totalStock": 36,
+      "availableStock": 33,
+      "availabilityRate": "91.67%",
+      "rentedStock": 2,
+      "utilizationRate": "5.56%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 21,
+          "available": 20,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 1,
+          "available": 0,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 14,
+          "available": 13,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00043": {
+      "itemName": "Honda Electronic Wooden Chips",
+      "totalStock": 117,
+      "availableStock": 116,
+      "availabilityRate": "99.15%",
+      "rentedStock": 1,
+      "utilizationRate": "0.85%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 70,
+          "available": 69,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 35,
+          "available": 35,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 12,
+          "available": 12,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00044": {
+      "itemName": "Makita Soft Metal Ball",
+      "totalStock": 81,
+      "availableStock": 62,
+      "availabilityRate": "76.54%",
+      "rentedStock": 16,
+      "utilizationRate": "19.75%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 40,
+          "available": 35,
+          "rented": 5,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 31,
+          "available": 27,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 10,
+          "available": 0,
+          "rented": 9,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00045": {
+      "itemName": "Bosch Handmade Concrete Shirt",
+      "totalStock": 77,
+      "availableStock": 63,
+      "availabilityRate": "81.82%",
+      "rentedStock": 14,
+      "utilizationRate": "18.18%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 35,
+          "available": 30,
+          "rented": 5,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 16,
+          "available": 12,
+          "rented": 4,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 26,
+          "available": 21,
+          "rented": 5,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00046": {
+      "itemName": "Honda Luxurious Bronze Computer",
+      "totalStock": 15,
+      "availableStock": 9,
+      "availabilityRate": "60.00%",
+      "rentedStock": 6,
+      "utilizationRate": "40.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 0,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 7,
+          "available": 6,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 8,
+          "available": 3,
+          "rented": 5,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00047": {
+      "itemName": "Bosch Handmade Steel Shirt",
+      "totalStock": 32,
+      "availableStock": 30,
+      "availabilityRate": "93.75%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 4,
+          "available": 4,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 22,
+          "available": 20,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 6,
+          "available": 6,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00048": {
+      "itemName": "Bosch Bespoke Bamboo Tuna",
+      "totalStock": 148,
+      "availableStock": 138,
+      "availabilityRate": "93.24%",
+      "rentedStock": 10,
+      "utilizationRate": "6.76%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 106,
+          "available": 101,
+          "rented": 5,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 2,
+          "available": 0,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 40,
+          "available": 37,
+          "rented": 3,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00049": {
+      "itemName": "Honda Gorgeous Bronze Sausages",
+      "totalStock": 114,
+      "availableStock": 107,
+      "availabilityRate": "93.86%",
+      "rentedStock": 5,
+      "utilizationRate": "4.39%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 48,
+          "available": 46,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 42,
+          "available": 38,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 24,
+          "available": 23,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00050": {
+      "itemName": "Caterpillar Luxurious Wooden Ball",
+      "totalStock": 86,
+      "availableStock": 75,
+      "availabilityRate": "87.21%",
+      "rentedStock": 1,
+      "utilizationRate": "1.16%",
+      "soldStock": 9,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 6,
+          "available": 1,
+          "rented": 0,
+          "sold": 4
+        },
+        "LOC002": {
+          "total": 24,
+          "available": 22,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 56,
+          "available": 52,
+          "rented": 1,
+          "sold": 3
+        }
+      }
+    },
+    "ITEM00051": {
+      "itemName": "Caterpillar Sleek Bronze Hat",
+      "totalStock": 66,
+      "availableStock": 57,
+      "availabilityRate": "86.36%",
+      "rentedStock": 5,
+      "utilizationRate": "7.58%",
+      "soldStock": 3,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 17,
+          "available": 13,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 44,
+          "available": 41,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 5,
+          "available": 3,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00052": {
+      "itemName": "Caterpillar Fresh Aluminum Chair",
+      "totalStock": 41,
+      "availableStock": 41,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 20,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 2,
+          "available": 2,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 19,
+          "available": 19,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00053": {
+      "itemName": "Samsung Bespoke Bamboo Salad",
+      "totalStock": 62,
+      "availableStock": 54,
+      "availabilityRate": "87.10%",
+      "rentedStock": 2,
+      "utilizationRate": "3.23%",
+      "soldStock": 6,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 18,
+          "available": 14,
+          "rented": 1,
+          "sold": 3
+        },
+        "LOC002": {
+          "total": 34,
+          "available": 33,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 10,
+          "available": 7,
+          "rented": 1,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00054": {
+      "itemName": "Honda Bespoke Metal Pants",
+      "totalStock": 79,
+      "availableStock": 77,
+      "availabilityRate": "97.47%",
+      "rentedStock": 1,
+      "utilizationRate": "1.27%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 46,
+          "available": 46,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 20,
+          "available": 19,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 13,
+          "available": 12,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00055": {
+      "itemName": "Honda Licensed Aluminum Soap",
+      "totalStock": 65,
+      "availableStock": 65,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 29,
+          "available": 29,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 5,
+          "available": 5,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 31,
+          "available": 31,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00056": {
+      "itemName": "DeWalt Sleek Granite Car",
+      "totalStock": 71,
+      "availableStock": 68,
+      "availabilityRate": "95.77%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 47,
+          "available": 47,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 23,
+          "available": 21,
+          "rented": 0,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00057": {
+      "itemName": "Makita Tasty Steel Hat",
+      "totalStock": 101,
+      "availableStock": 99,
+      "availabilityRate": "98.02%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 16,
+          "available": 15,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 82,
+          "available": 82,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 3,
+          "available": 2,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00058": {
+      "itemName": "Makita Ergonomic Granite Soap",
+      "totalStock": 78,
+      "availableStock": 74,
+      "availabilityRate": "94.87%",
+      "rentedStock": 3,
+      "utilizationRate": "3.85%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 27,
+          "available": 24,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 47,
+          "available": 47,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 4,
+          "available": 3,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00059": {
+      "itemName": "Bosch Rustic Wooden Gloves",
+      "totalStock": 110,
+      "availableStock": 96,
+      "availabilityRate": "87.27%",
+      "rentedStock": 3,
+      "utilizationRate": "2.73%",
+      "soldStock": 8,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 27,
+          "available": 23,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 49,
+          "available": 46,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 34,
+          "available": 27,
+          "rented": 1,
+          "sold": 4
+        }
+      }
+    },
+    "ITEM00060": {
+      "itemName": "DeWalt Soft Plastic Table",
+      "totalStock": 92,
+      "availableStock": 86,
+      "availabilityRate": "93.48%",
+      "rentedStock": 3,
+      "utilizationRate": "3.26%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 41,
+          "available": 39,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 36,
+          "available": 35,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 15,
+          "available": 12,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00061": {
+      "itemName": "Bosch Gorgeous Ceramic Pizza",
+      "totalStock": 109,
+      "availableStock": 107,
+      "availabilityRate": "98.17%",
+      "rentedStock": 1,
+      "utilizationRate": "0.92%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 77,
+          "available": 77,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 31,
+          "available": 30,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 1,
+          "available": 0,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00062": {
+      "itemName": "Honda Tasty Wooden Shoes",
+      "totalStock": 71,
+      "availableStock": 71,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 31,
+          "available": 31,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 1,
+          "available": 1,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 39,
+          "available": 39,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00063": {
+      "itemName": "Samsung Small Ceramic Sausages",
+      "totalStock": 49,
+      "availableStock": 48,
+      "availabilityRate": "97.96%",
+      "rentedStock": 1,
+      "utilizationRate": "2.04%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 9,
+          "available": 9,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 9,
+          "available": 9,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 31,
+          "available": 30,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00064": {
+      "itemName": "DeWalt Luxurious Steel Shirt",
+      "totalStock": 70,
+      "availableStock": 54,
+      "availabilityRate": "77.14%",
+      "rentedStock": 6,
+      "utilizationRate": "8.57%",
+      "soldStock": 9,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 16,
+          "rented": 2,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 36,
+          "available": 33,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 14,
+          "available": 5,
+          "rented": 2,
+          "sold": 6
+        }
+      }
+    },
+    "ITEM00065": {
+      "itemName": "Bosch Incredible Cotton Car",
+      "totalStock": 129,
+      "availableStock": 117,
+      "availabilityRate": "90.70%",
+      "rentedStock": 5,
+      "utilizationRate": "3.88%",
+      "soldStock": 6,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 37,
+          "available": 30,
+          "rented": 4,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 26,
+          "available": 24,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 66,
+          "available": 63,
+          "rented": 1,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00066": {
+      "itemName": "Bosch Tasty Cotton Mouse",
+      "totalStock": 41,
+      "availableStock": 34,
+      "availabilityRate": "82.93%",
+      "rentedStock": 4,
+      "utilizationRate": "9.76%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 2,
+          "available": 0,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 17,
+          "available": 15,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 22,
+          "available": 19,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00067": {
+      "itemName": "Samsung Incredible Steel Chicken",
+      "totalStock": 66,
+      "availableStock": 64,
+      "availabilityRate": "96.97%",
+      "rentedStock": 1,
+      "utilizationRate": "1.52%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 18,
+          "available": 17,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 11,
+          "available": 11,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 37,
+          "available": 36,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00068": {
+      "itemName": "Makita Incredible Aluminum Cheese",
+      "totalStock": 87,
+      "availableStock": 75,
+      "availabilityRate": "86.21%",
+      "rentedStock": 4,
+      "utilizationRate": "4.60%",
+      "soldStock": 6,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 5,
+          "available": 2,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 18,
+          "available": 14,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 64,
+          "available": 59,
+          "rented": 3,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00069": {
+      "itemName": "DeWalt Fantastic Metal Pizza",
+      "totalStock": 29,
+      "availableStock": 26,
+      "availabilityRate": "89.66%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 3,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 8,
+          "available": 8,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 20,
+          "available": 18,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00070": {
+      "itemName": "Samsung Electronic Rubber Ball",
+      "totalStock": 43,
+      "availableStock": 31,
+      "availabilityRate": "72.09%",
+      "rentedStock": 5,
+      "utilizationRate": "11.63%",
+      "soldStock": 7,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 9,
+          "available": 5,
+          "rented": 1,
+          "sold": 3
+        },
+        "LOC002": {
+          "total": 5,
+          "available": 2,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 29,
+          "available": 24,
+          "rented": 3,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00071": {
+      "itemName": "DeWalt Small Wooden Towels",
+      "totalStock": 49,
+      "availableStock": 47,
+      "availabilityRate": "95.92%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 7,
+          "available": 7,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 41,
+          "available": 40,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00072": {
+      "itemName": "Bosch Intelligent Gold Pants",
+      "totalStock": 18,
+      "availableStock": 17,
+      "availabilityRate": "94.44%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 3,
+          "available": 2,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 15,
+          "available": 15,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 0,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00073": {
+      "itemName": "Caterpillar Tasty Plastic Ball",
+      "totalStock": 73,
+      "availableStock": 67,
+      "availabilityRate": "91.78%",
+      "rentedStock": 1,
+      "utilizationRate": "1.37%",
+      "soldStock": 5,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 21,
+          "available": 20,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 19,
+          "available": 19,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 33,
+          "available": 28,
+          "rented": 1,
+          "sold": 4
+        }
+      }
+    },
+    "ITEM00074": {
+      "itemName": "Samsung Ergonomic Wooden Pants",
+      "totalStock": 51,
+      "availableStock": 44,
+      "availabilityRate": "86.27%",
+      "rentedStock": 4,
+      "utilizationRate": "7.84%",
+      "soldStock": 0,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 9,
+          "available": 6,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 5,
+          "available": 2,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 37,
+          "available": 36,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00075": {
+      "itemName": "Makita Modern Ceramic Hat",
+      "totalStock": 42,
+      "availableStock": 40,
+      "availabilityRate": "95.24%",
+      "rentedStock": 1,
+      "utilizationRate": "2.38%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 19,
+          "available": 19,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 8,
+          "available": 7,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 15,
+          "available": 14,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00076": {
+      "itemName": "Honda Sleek Bamboo Sausages",
+      "totalStock": 157,
+      "availableStock": 146,
+      "availabilityRate": "92.99%",
+      "rentedStock": 2,
+      "utilizationRate": "1.27%",
+      "soldStock": 8,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 79,
+          "available": 76,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 39,
+          "available": 34,
+          "rented": 0,
+          "sold": 4
+        },
+        "LOC003": {
+          "total": 39,
+          "available": 36,
+          "rented": 1,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00077": {
+      "itemName": "Caterpillar Licensed Granite Mouse",
+      "totalStock": 32,
+      "availableStock": 18,
+      "availabilityRate": "56.25%",
+      "rentedStock": 3,
+      "utilizationRate": "9.38%",
+      "soldStock": 9,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 8,
+          "available": 1,
+          "rented": 2,
+          "sold": 3
+        },
+        "LOC002": {
+          "total": 13,
+          "available": 12,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 11,
+          "available": 5,
+          "rented": 1,
+          "sold": 5
+        }
+      }
+    },
+    "ITEM00078": {
+      "itemName": "Honda Generic Bronze Hat",
+      "totalStock": 29,
+      "availableStock": 26,
+      "availabilityRate": "89.66%",
+      "rentedStock": 1,
+      "utilizationRate": "3.45%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 4,
+          "available": 3,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 9,
+          "available": 8,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 16,
+          "available": 15,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00079": {
+      "itemName": "Caterpillar Tasty Silk Chair",
+      "totalStock": 85,
+      "availableStock": 78,
+      "availabilityRate": "91.76%",
+      "rentedStock": 1,
+      "utilizationRate": "1.18%",
+      "soldStock": 5,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 5,
+          "available": 2,
+          "rented": 0,
+          "sold": 3
+        },
+        "LOC002": {
+          "total": 20,
+          "available": 19,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 60,
+          "available": 57,
+          "rented": 1,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00080": {
+      "itemName": "Bosch Handcrafted Granite Pizza",
+      "totalStock": 87,
+      "availableStock": 87,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 43,
+          "available": 43,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 11,
+          "available": 11,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 33,
+          "available": 33,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00081": {
+      "itemName": "Bosch Bespoke Concrete Gloves",
+      "totalStock": 82,
+      "availableStock": 76,
+      "availabilityRate": "92.68%",
+      "rentedStock": 2,
+      "utilizationRate": "2.44%",
+      "soldStock": 3,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 42,
+          "available": 38,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 11,
+          "available": 10,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 29,
+          "available": 28,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00082": {
+      "itemName": "Honda Intelligent Cotton Towels",
+      "totalStock": 84,
+      "availableStock": 76,
+      "availabilityRate": "90.48%",
+      "rentedStock": 2,
+      "utilizationRate": "2.38%",
+      "soldStock": 3,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 41,
+          "available": 40,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 30,
+          "available": 27,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 13,
+          "available": 9,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00083": {
+      "itemName": "Makita Frozen Bronze Computer",
+      "totalStock": 85,
+      "availableStock": 79,
+      "availabilityRate": "92.94%",
+      "rentedStock": 3,
+      "utilizationRate": "3.53%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 14,
+          "available": 14,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 14,
+          "available": 12,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 57,
+          "available": 53,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00084": {
+      "itemName": "Caterpillar Electronic Concrete Fish",
+      "totalStock": 52,
+      "availableStock": 51,
+      "availabilityRate": "98.08%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 10,
+          "available": 9,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 0,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 42,
+          "available": 42,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00085": {
+      "itemName": "Honda Rustic Gold Chips",
+      "totalStock": 73,
+      "availableStock": 71,
+      "availabilityRate": "97.26%",
+      "rentedStock": 1,
+      "utilizationRate": "1.37%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 3,
+          "available": 2,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 49,
+          "available": 49,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 21,
+          "available": 20,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00086": {
+      "itemName": "DeWalt Recycled Plastic Pants",
+      "totalStock": 69,
+      "availableStock": 60,
+      "availabilityRate": "86.96%",
+      "rentedStock": 3,
+      "utilizationRate": "4.35%",
+      "soldStock": 3,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 29,
+          "available": 26,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 35,
+          "available": 32,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 5,
+          "available": 2,
+          "rented": 2,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00087": {
+      "itemName": "Bosch Tasty Plastic Bike",
+      "totalStock": 38,
+      "availableStock": 37,
+      "availabilityRate": "97.37%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 16,
+          "available": 16,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 2,
+          "available": 2,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 20,
+          "available": 19,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00088": {
+      "itemName": "Makita Recycled Ceramic Chips",
+      "totalStock": 69,
+      "availableStock": 60,
+      "availabilityRate": "86.96%",
+      "rentedStock": 6,
+      "utilizationRate": "8.70%",
+      "soldStock": 3,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 27,
+          "available": 24,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 37,
+          "available": 32,
+          "rented": 3,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 5,
+          "available": 4,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00089": {
+      "itemName": "Makita Unbranded Granite Mouse",
+      "totalStock": 39,
+      "availableStock": 28,
+      "availabilityRate": "71.79%",
+      "rentedStock": 1,
+      "utilizationRate": "2.56%",
+      "soldStock": 8,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 13,
+          "available": 10,
+          "rented": 0,
+          "sold": 3
+        },
+        "LOC002": {
+          "total": 18,
+          "available": 14,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 8,
+          "available": 4,
+          "rented": 0,
+          "sold": 3
+        }
+      }
+    },
+    "ITEM00090": {
+      "itemName": "Samsung Intelligent Steel Car",
+      "totalStock": 60,
+      "availableStock": 57,
+      "availabilityRate": "95.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 6,
+          "available": 4,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 15,
+          "available": 15,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 39,
+          "available": 38,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00091": {
+      "itemName": "Bosch Oriental Aluminum Shirt",
+      "totalStock": 81,
+      "availableStock": 78,
+      "availabilityRate": "96.30%",
+      "rentedStock": 3,
+      "utilizationRate": "3.70%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 55,
+          "available": 55,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 22,
+          "available": 21,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 4,
+          "available": 2,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00092": {
+      "itemName": "Caterpillar Handcrafted Plastic Shirt",
+      "totalStock": 115,
+      "availableStock": 109,
+      "availabilityRate": "94.78%",
+      "rentedStock": 2,
+      "utilizationRate": "1.74%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 30,
+          "available": 28,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 37,
+          "available": 34,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 48,
+          "available": 47,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00093": {
+      "itemName": "Caterpillar Handmade Aluminum Ball",
+      "totalStock": 72,
+      "availableStock": 62,
+      "availabilityRate": "86.11%",
+      "rentedStock": 2,
+      "utilizationRate": "2.78%",
+      "soldStock": 5,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 31,
+          "available": 24,
+          "rented": 2,
+          "sold": 4
+        },
+        "LOC002": {
+          "total": 35,
+          "available": 35,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 6,
+          "available": 3,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00094": {
+      "itemName": "Honda Ergonomic Marble Shoes",
+      "totalStock": 58,
+      "availableStock": 54,
+      "availabilityRate": "93.10%",
+      "rentedStock": 3,
+      "utilizationRate": "5.17%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 24,
+          "available": 23,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 25,
+          "available": 25,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 9,
+          "available": 6,
+          "rented": 2,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00095": {
+      "itemName": "Honda Oriental Rubber Mouse",
+      "totalStock": 76,
+      "availableStock": 65,
+      "availabilityRate": "85.53%",
+      "rentedStock": 3,
+      "utilizationRate": "3.95%",
+      "soldStock": 6,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 43,
+          "available": 40,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 30,
+          "available": 23,
+          "rented": 2,
+          "sold": 4
+        },
+        "LOC003": {
+          "total": 3,
+          "available": 2,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00096": {
+      "itemName": "Bosch Modern Silk Mouse",
+      "totalStock": 57,
+      "availableStock": 52,
+      "availabilityRate": "91.23%",
+      "rentedStock": 2,
+      "utilizationRate": "3.51%",
+      "soldStock": 1,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 9,
+          "available": 9,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 21,
+          "available": 17,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 27,
+          "available": 26,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00097": {
+      "itemName": "DeWalt Licensed Aluminum Gloves",
+      "totalStock": 108,
+      "availableStock": 103,
+      "availabilityRate": "95.37%",
+      "rentedStock": 2,
+      "utilizationRate": "1.85%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 35,
+          "available": 34,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 20,
+          "available": 18,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 53,
+          "available": 51,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00098": {
+      "itemName": "Bosch Awesome Steel Bacon",
+      "totalStock": 70,
+      "availableStock": 59,
+      "availabilityRate": "84.29%",
+      "rentedStock": 6,
+      "utilizationRate": "8.57%",
+      "soldStock": 1,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 24,
+          "available": 20,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 3,
+          "available": 1,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 43,
+          "available": 38,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00099": {
+      "itemName": "Samsung Fresh Wooden Cheese",
+      "totalStock": 85,
+      "availableStock": 81,
+      "availabilityRate": "95.29%",
+      "rentedStock": 1,
+      "utilizationRate": "1.18%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 25,
+          "available": 25,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 41,
+          "available": 39,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 19,
+          "available": 17,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00100": {
+      "itemName": "Caterpillar Frozen Cotton Pizza",
+      "totalStock": 46,
+      "availableStock": 37,
+      "availabilityRate": "80.43%",
+      "rentedStock": 5,
+      "utilizationRate": "10.87%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 24,
+          "available": 20,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 16,
+          "available": 13,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 6,
+          "available": 4,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00101": {
+      "itemName": "Makita Gorgeous Granite Mouse",
+      "totalStock": 51,
+      "availableStock": 47,
+      "availabilityRate": "92.16%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 3,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 11,
+          "available": 10,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 39,
+          "available": 37,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00102": {
+      "itemName": "Makita Small Plastic Soap",
+      "totalStock": 76,
+      "availableStock": 69,
+      "availabilityRate": "90.79%",
+      "rentedStock": 4,
+      "utilizationRate": "5.26%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 33,
+          "available": 32,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 35,
+          "available": 34,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 8,
+          "available": 3,
+          "rented": 2,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00103": {
+      "itemName": "Makita Ergonomic Granite Salad",
+      "totalStock": 86,
+      "availableStock": 79,
+      "availabilityRate": "91.86%",
+      "rentedStock": 5,
+      "utilizationRate": "5.81%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 32,
+          "available": 29,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 23,
+          "available": 21,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 31,
+          "available": 29,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00104": {
+      "itemName": "Makita Practical Plastic Sausages",
+      "totalStock": 66,
+      "availableStock": 57,
+      "availabilityRate": "86.36%",
+      "rentedStock": 5,
+      "utilizationRate": "7.58%",
+      "soldStock": 1,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 17,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 25,
+          "available": 24,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 21,
+          "available": 16,
+          "rented": 2,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00105": {
+      "itemName": "Bosch Handcrafted Metal Ball",
+      "totalStock": 77,
+      "availableStock": 75,
+      "availabilityRate": "97.40%",
+      "rentedStock": 1,
+      "utilizationRate": "1.30%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 39,
+          "available": 38,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 32,
+          "available": 31,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 6,
+          "available": 6,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00106": {
+      "itemName": "Bosch Elegant Plastic Salad",
+      "totalStock": 70,
+      "availableStock": 66,
+      "availabilityRate": "94.29%",
+      "rentedStock": 2,
+      "utilizationRate": "2.86%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 14,
+          "available": 12,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 11,
+          "available": 10,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 45,
+          "available": 44,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00107": {
+      "itemName": "DeWalt Rustic Metal Mouse",
+      "totalStock": 70,
+      "availableStock": 66,
+      "availabilityRate": "94.29%",
+      "rentedStock": 1,
+      "utilizationRate": "1.43%",
+      "soldStock": 3,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 10,
+          "available": 7,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 33,
+          "available": 32,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 27,
+          "available": 27,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00108": {
+      "itemName": "Samsung Ergonomic Concrete Chair",
+      "totalStock": 114,
+      "availableStock": 113,
+      "availabilityRate": "99.12%",
+      "rentedStock": 1,
+      "utilizationRate": "0.88%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 40,
+          "available": 40,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 53,
+          "available": 53,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 21,
+          "available": 20,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00109": {
+      "itemName": "Samsung Frozen Cotton Mouse",
+      "totalStock": 88,
+      "availableStock": 82,
+      "availabilityRate": "93.18%",
+      "rentedStock": 1,
+      "utilizationRate": "1.14%",
+      "soldStock": 1,
+      "maintenanceStock": 3,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 25,
+          "available": 23,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 32,
+          "available": 30,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 31,
+          "available": 29,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00110": {
+      "itemName": "Samsung Rustic Plastic Computer",
+      "totalStock": 73,
+      "availableStock": 57,
+      "availabilityRate": "78.08%",
+      "rentedStock": 4,
+      "utilizationRate": "5.48%",
+      "soldStock": 11,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 52,
+          "available": 42,
+          "rented": 1,
+          "sold": 9
+        },
+        "LOC002": {
+          "total": 4,
+          "available": 1,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 17,
+          "available": 14,
+          "rented": 1,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00111": {
+      "itemName": "DeWalt Fresh Metal Chair",
+      "totalStock": 33,
+      "availableStock": 28,
+      "availabilityRate": "84.85%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 5,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 18,
+          "available": 16,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 11,
+          "available": 9,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 4,
+          "available": 3,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00112": {
+      "itemName": "Honda Luxurious Bamboo Pizza",
+      "totalStock": 78,
+      "availableStock": 77,
+      "availabilityRate": "98.72%",
+      "rentedStock": 1,
+      "utilizationRate": "1.28%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 10,
+          "available": 9,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 43,
+          "available": 43,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 25,
+          "available": 25,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00113": {
+      "itemName": "Makita Sleek Plastic Shirt",
+      "totalStock": 46,
+      "availableStock": 37,
+      "availabilityRate": "80.43%",
+      "rentedStock": 2,
+      "utilizationRate": "4.35%",
+      "soldStock": 3,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 15,
+          "available": 12,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 5,
+          "available": 2,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 26,
+          "available": 23,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00114": {
+      "itemName": "DeWalt Fresh Ceramic Chips",
+      "totalStock": 87,
+      "availableStock": 84,
+      "availabilityRate": "96.55%",
+      "rentedStock": 2,
+      "utilizationRate": "2.30%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 38,
+          "available": 37,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 39,
+          "available": 38,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 10,
+          "available": 9,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00115": {
+      "itemName": "Caterpillar Fresh Bamboo Table",
+      "totalStock": 91,
+      "availableStock": 87,
+      "availabilityRate": "95.60%",
+      "rentedStock": 1,
+      "utilizationRate": "1.10%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 26,
+          "available": 24,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 27,
+          "available": 26,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 38,
+          "available": 37,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00116": {
+      "itemName": "Makita Handcrafted Bamboo Car",
+      "totalStock": 59,
+      "availableStock": 59,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 3,
+          "available": 3,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 0,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 56,
+          "available": 56,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00117": {
+      "itemName": "Samsung Incredible Rubber Keyboard",
+      "totalStock": 93,
+      "availableStock": 80,
+      "availabilityRate": "86.02%",
+      "rentedStock": 6,
+      "utilizationRate": "6.45%",
+      "soldStock": 4,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 39,
+          "available": 31,
+          "rented": 4,
+          "sold": 3
+        },
+        "LOC002": {
+          "total": 23,
+          "available": 20,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 31,
+          "available": 29,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00118": {
+      "itemName": "Makita Intelligent Cotton Ball",
+      "totalStock": 46,
+      "availableStock": 40,
+      "availabilityRate": "86.96%",
+      "rentedStock": 3,
+      "utilizationRate": "6.52%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 3,
+          "available": 1,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 21,
+          "available": 19,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 22,
+          "available": 20,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00119": {
+      "itemName": "Caterpillar Soft Ceramic Shirt",
+      "totalStock": 51,
+      "availableStock": 50,
+      "availabilityRate": "98.04%",
+      "rentedStock": 1,
+      "utilizationRate": "1.96%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 29,
+          "available": 29,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 18,
+          "available": 18,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 4,
+          "available": 3,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00120": {
+      "itemName": "Caterpillar Electronic Marble Hat",
+      "totalStock": 128,
+      "availableStock": 128,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 43,
+          "available": 43,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 49,
+          "available": 49,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 36,
+          "available": 36,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00121": {
+      "itemName": "DeWalt Handmade Silk Hat",
+      "totalStock": 30,
+      "availableStock": 25,
+      "availabilityRate": "83.33%",
+      "rentedStock": 3,
+      "utilizationRate": "10.00%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 4,
+          "available": 2,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 14,
+          "available": 14,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 12,
+          "available": 9,
+          "rented": 2,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00122": {
+      "itemName": "DeWalt Practical Bamboo Keyboard",
+      "totalStock": 59,
+      "availableStock": 54,
+      "availabilityRate": "91.53%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 5,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 10,
+          "available": 9,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 47,
+          "available": 43,
+          "rented": 0,
+          "sold": 4
+        },
+        "LOC003": {
+          "total": 2,
+          "available": 2,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00123": {
+      "itemName": "Bosch Small Granite Chips",
+      "totalStock": 49,
+      "availableStock": 45,
+      "availabilityRate": "91.84%",
+      "rentedStock": 2,
+      "utilizationRate": "4.08%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 17,
+          "available": 14,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 1,
+          "available": 1,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 31,
+          "available": 30,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00124": {
+      "itemName": "Samsung Electronic Granite Hat",
+      "totalStock": 63,
+      "availableStock": 59,
+      "availabilityRate": "93.65%",
+      "rentedStock": 1,
+      "utilizationRate": "1.59%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 23,
+          "available": 21,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 26,
+          "available": 26,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 14,
+          "available": 12,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00125": {
+      "itemName": "Samsung Rustic Cotton Shirt",
+      "totalStock": 122,
+      "availableStock": 111,
+      "availabilityRate": "90.98%",
+      "rentedStock": 3,
+      "utilizationRate": "2.46%",
+      "soldStock": 7,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 51,
+          "available": 45,
+          "rented": 3,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 60,
+          "available": 58,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 11,
+          "available": 8,
+          "rented": 0,
+          "sold": 3
+        }
+      }
+    },
+    "ITEM00126": {
+      "itemName": "DeWalt Small Concrete Car",
+      "totalStock": 70,
+      "availableStock": 68,
+      "availabilityRate": "97.14%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 19,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 27,
+          "available": 27,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 23,
+          "available": 22,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00127": {
+      "itemName": "DeWalt Electronic Concrete Soap",
+      "totalStock": 103,
+      "availableStock": 101,
+      "availabilityRate": "98.06%",
+      "rentedStock": 2,
+      "utilizationRate": "1.94%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 23,
+          "available": 22,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 65,
+          "available": 64,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 15,
+          "available": 15,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00128": {
+      "itemName": "Samsung Soft Ceramic Mouse",
+      "totalStock": 88,
+      "availableStock": 84,
+      "availabilityRate": "95.45%",
+      "rentedStock": 3,
+      "utilizationRate": "3.41%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 26,
+          "available": 24,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 12,
+          "available": 10,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 50,
+          "available": 50,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00129": {
+      "itemName": "Honda Luxurious Gold Chair",
+      "totalStock": 76,
+      "availableStock": 73,
+      "availabilityRate": "96.05%",
+      "rentedStock": 2,
+      "utilizationRate": "2.63%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 24,
+          "available": 23,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 21,
+          "available": 21,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 31,
+          "available": 29,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00130": {
+      "itemName": "DeWalt Modern Silk Bacon",
+      "totalStock": 103,
+      "availableStock": 96,
+      "availabilityRate": "93.20%",
+      "rentedStock": 4,
+      "utilizationRate": "3.88%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 55,
+          "available": 54,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 25,
+          "available": 23,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 23,
+          "available": 19,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00131": {
+      "itemName": "Honda Rustic Metal Table",
+      "totalStock": 87,
+      "availableStock": 82,
+      "availabilityRate": "94.25%",
+      "rentedStock": 3,
+      "utilizationRate": "3.45%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 9,
+          "available": 8,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 60,
+          "available": 57,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 18,
+          "available": 17,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00132": {
+      "itemName": "Caterpillar Handcrafted Rubber Shirt",
+      "totalStock": 5,
+      "availableStock": 3,
+      "availabilityRate": "60.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 3,
+          "available": 3,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00133": {
+      "itemName": "Makita Licensed Bronze Ball",
+      "totalStock": 79,
+      "availableStock": 70,
+      "availabilityRate": "88.61%",
+      "rentedStock": 3,
+      "utilizationRate": "3.80%",
+      "soldStock": 5,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 32,
+          "available": 31,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 13,
+          "available": 9,
+          "rented": 1,
+          "sold": 3
+        },
+        "LOC003": {
+          "total": 34,
+          "available": 30,
+          "rented": 2,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00134": {
+      "itemName": "Bosch Ergonomic Wooden Cheese",
+      "totalStock": 67,
+      "availableStock": 66,
+      "availabilityRate": "98.51%",
+      "rentedStock": 1,
+      "utilizationRate": "1.49%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 30,
+          "available": 30,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 24,
+          "available": 23,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 13,
+          "available": 13,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00135": {
+      "itemName": "Caterpillar Fresh Marble Gloves",
+      "totalStock": 89,
+      "availableStock": 83,
+      "availabilityRate": "93.26%",
+      "rentedStock": 4,
+      "utilizationRate": "4.49%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 17,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 55,
+          "available": 52,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 14,
+          "available": 14,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00136": {
+      "itemName": "Bosch Unbranded Ceramic Table",
+      "totalStock": 70,
+      "availableStock": 59,
+      "availabilityRate": "84.29%",
+      "rentedStock": 3,
+      "utilizationRate": "4.29%",
+      "soldStock": 6,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 3,
+          "available": 1,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 32,
+          "available": 28,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 35,
+          "available": 30,
+          "rented": 1,
+          "sold": 3
+        }
+      }
+    },
+    "ITEM00137": {
+      "itemName": "DeWalt Modern Marble Pizza",
+      "totalStock": 79,
+      "availableStock": 77,
+      "availabilityRate": "97.47%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 34,
+          "available": 34,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 27,
+          "available": 27,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 18,
+          "available": 16,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00138": {
+      "itemName": "DeWalt Frozen Marble Pants",
+      "totalStock": 91,
+      "availableStock": 91,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 0,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 32,
+          "available": 32,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 59,
+          "available": 59,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00139": {
+      "itemName": "Makita Refined Rubber Car",
+      "totalStock": 118,
+      "availableStock": 109,
+      "availabilityRate": "92.37%",
+      "rentedStock": 4,
+      "utilizationRate": "3.39%",
+      "soldStock": 5,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 40,
+          "available": 37,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 42,
+          "available": 38,
+          "rented": 2,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 36,
+          "available": 34,
+          "rented": 0,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00140": {
+      "itemName": "DeWalt Unbranded Marble Chair",
+      "totalStock": 41,
+      "availableStock": 39,
+      "availabilityRate": "95.12%",
+      "rentedStock": 2,
+      "utilizationRate": "4.88%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 12,
+          "available": 12,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 6,
+          "available": 6,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 23,
+          "available": 21,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00141": {
+      "itemName": "Honda Ergonomic Wooden Mouse",
+      "totalStock": 25,
+      "availableStock": 15,
+      "availabilityRate": "60.00%",
+      "rentedStock": 3,
+      "utilizationRate": "12.00%",
+      "soldStock": 5,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 19,
+          "available": 15,
+          "rented": 3,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 5,
+          "available": 0,
+          "rented": 0,
+          "sold": 4
+        }
+      }
+    },
+    "ITEM00142": {
+      "itemName": "Bosch Modern Plastic Pizza",
+      "totalStock": 61,
+      "availableStock": 58,
+      "availabilityRate": "95.08%",
+      "rentedStock": 1,
+      "utilizationRate": "1.64%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 2,
+          "available": 0,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 40,
+          "available": 39,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 19,
+          "available": 19,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00143": {
+      "itemName": "DeWalt Gorgeous Concrete Chair",
+      "totalStock": 72,
+      "availableStock": 58,
+      "availabilityRate": "80.56%",
+      "rentedStock": 4,
+      "utilizationRate": "5.56%",
+      "soldStock": 6,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 6,
+          "available": 3,
+          "rented": 0,
+          "sold": 3
+        },
+        "LOC002": {
+          "total": 34,
+          "available": 28,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 32,
+          "available": 27,
+          "rented": 3,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00144": {
+      "itemName": "Bosch Awesome Granite Pants",
+      "totalStock": 66,
+      "availableStock": 65,
+      "availabilityRate": "98.48%",
+      "rentedStock": 1,
+      "utilizationRate": "1.52%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 18,
+          "available": 18,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 20,
+          "available": 20,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 28,
+          "available": 27,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00145": {
+      "itemName": "Bosch Sleek Wooden Sausages",
+      "totalStock": 59,
+      "availableStock": 55,
+      "availabilityRate": "93.22%",
+      "rentedStock": 1,
+      "utilizationRate": "1.69%",
+      "soldStock": 2,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 31,
+          "available": 28,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 4,
+          "available": 3,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 24,
+          "available": 24,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00146": {
+      "itemName": "Makita Frozen Granite Chicken",
+      "totalStock": 94,
+      "availableStock": 89,
+      "availabilityRate": "94.68%",
+      "rentedStock": 2,
+      "utilizationRate": "2.13%",
+      "soldStock": 3,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 44,
+          "available": 43,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 9,
+          "available": 7,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 41,
+          "available": 39,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00147": {
+      "itemName": "Honda Sleek Silk Keyboard",
+      "totalStock": 50,
+      "availableStock": 45,
+      "availabilityRate": "90.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 2,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 16,
+          "available": 13,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 19,
+          "available": 17,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 15,
+          "available": 15,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00148": {
+      "itemName": "Bosch Handcrafted Bronze Pants",
+      "totalStock": 46,
+      "availableStock": 38,
+      "availabilityRate": "82.61%",
+      "rentedStock": 3,
+      "utilizationRate": "6.52%",
+      "soldStock": 4,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 34,
+          "available": 31,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 8,
+          "available": 5,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 4,
+          "available": 2,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00149": {
+      "itemName": "Honda Frozen Aluminum Gloves",
+      "totalStock": 53,
+      "availableStock": 50,
+      "availabilityRate": "94.34%",
+      "rentedStock": 1,
+      "utilizationRate": "1.89%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 12,
+          "available": 11,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 20,
+          "available": 19,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 21,
+          "available": 20,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00150": {
+      "itemName": "Caterpillar Handcrafted Rubber Chips",
+      "totalStock": 60,
+      "availableStock": 56,
+      "availabilityRate": "93.33%",
+      "rentedStock": 1,
+      "utilizationRate": "1.67%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 30,
+          "available": 29,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 24,
+          "available": 23,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 6,
+          "available": 4,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00151": {
+      "itemName": "Honda Intelligent Granite Chicken",
+      "totalStock": 71,
+      "availableStock": 70,
+      "availabilityRate": "98.59%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 39,
+          "available": 38,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 12,
+          "available": 12,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 20,
+          "available": 20,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00152": {
+      "itemName": "DeWalt Tasty Steel Chips",
+      "totalStock": 86,
+      "availableStock": 76,
+      "availabilityRate": "88.37%",
+      "rentedStock": 3,
+      "utilizationRate": "3.49%",
+      "soldStock": 5,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 7,
+          "available": 2,
+          "rented": 2,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 23,
+          "available": 19,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 56,
+          "available": 55,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00153": {
+      "itemName": "Makita Handmade Plastic Table",
+      "totalStock": 100,
+      "availableStock": 98,
+      "availabilityRate": "98.00%",
+      "rentedStock": 1,
+      "utilizationRate": "1.00%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 50,
+          "available": 50,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 23,
+          "available": 23,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 27,
+          "available": 25,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00154": {
+      "itemName": "Caterpillar Soft Concrete Bacon",
+      "totalStock": 52,
+      "availableStock": 52,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 40,
+          "available": 40,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 12,
+          "available": 12,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 0,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00155": {
+      "itemName": "Honda Frozen Granite Sausages",
+      "totalStock": 58,
+      "availableStock": 45,
+      "availabilityRate": "77.59%",
+      "rentedStock": 6,
+      "utilizationRate": "10.34%",
+      "soldStock": 5,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 32,
+          "available": 30,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 6,
+          "available": 0,
+          "rented": 1,
+          "sold": 3
+        },
+        "LOC003": {
+          "total": 20,
+          "available": 15,
+          "rented": 3,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00156": {
+      "itemName": "Makita Practical Metal Salad",
+      "totalStock": 53,
+      "availableStock": 53,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 20,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 12,
+          "available": 12,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 21,
+          "available": 21,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00157": {
+      "itemName": "Samsung Luxurious Aluminum Computer",
+      "totalStock": 83,
+      "availableStock": 81,
+      "availabilityRate": "97.59%",
+      "rentedStock": 1,
+      "utilizationRate": "1.20%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 20,
+          "available": 19,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 59,
+          "available": 58,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 4,
+          "available": 4,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00158": {
+      "itemName": "Makita Electronic Concrete Pizza",
+      "totalStock": 63,
+      "availableStock": 54,
+      "availabilityRate": "85.71%",
+      "rentedStock": 2,
+      "utilizationRate": "3.17%",
+      "soldStock": 4,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 23,
+          "available": 21,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 35,
+          "available": 31,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 5,
+          "available": 2,
+          "rented": 1,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00159": {
+      "itemName": "DeWalt Gorgeous Plastic Tuna",
+      "totalStock": 68,
+      "availableStock": 60,
+      "availabilityRate": "88.24%",
+      "rentedStock": 4,
+      "utilizationRate": "5.88%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 33,
+          "available": 29,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 5,
+          "available": 2,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 30,
+          "available": 29,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00160": {
+      "itemName": "Bosch Incredible Gold Chicken",
+      "totalStock": 108,
+      "availableStock": 104,
+      "availabilityRate": "96.30%",
+      "rentedStock": 2,
+      "utilizationRate": "1.85%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 59,
+          "available": 57,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 36,
+          "available": 34,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 13,
+          "available": 13,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00161": {
+      "itemName": "Samsung Sleek Bronze Sausages",
+      "totalStock": 122,
+      "availableStock": 115,
+      "availabilityRate": "94.26%",
+      "rentedStock": 1,
+      "utilizationRate": "0.82%",
+      "soldStock": 5,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 73,
+          "available": 71,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 27,
+          "available": 24,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 22,
+          "available": 20,
+          "rented": 0,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00162": {
+      "itemName": "DeWalt Gorgeous Cotton Pants",
+      "totalStock": 36,
+      "availableStock": 30,
+      "availabilityRate": "83.33%",
+      "rentedStock": 4,
+      "utilizationRate": "11.11%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 6,
+          "available": 6,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 13,
+          "available": 9,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 17,
+          "available": 15,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00163": {
+      "itemName": "Caterpillar Modern Plastic Towels",
+      "totalStock": 80,
+      "availableStock": 77,
+      "availabilityRate": "96.25%",
+      "rentedStock": 1,
+      "utilizationRate": "1.25%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 9,
+          "available": 8,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 17,
+          "available": 16,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 54,
+          "available": 53,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00164": {
+      "itemName": "DeWalt Small Metal Bike",
+      "totalStock": 104,
+      "availableStock": 95,
+      "availabilityRate": "91.35%",
+      "rentedStock": 5,
+      "utilizationRate": "4.81%",
+      "soldStock": 4,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 70,
+          "available": 66,
+          "rented": 2,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 6,
+          "available": 4,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 28,
+          "available": 25,
+          "rented": 1,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00165": {
+      "itemName": "Honda Soft Marble Bike",
+      "totalStock": 153,
+      "availableStock": 150,
+      "availabilityRate": "98.04%",
+      "rentedStock": 2,
+      "utilizationRate": "1.31%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 37,
+          "available": 37,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 81,
+          "available": 80,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 35,
+          "available": 33,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00166": {
+      "itemName": "Caterpillar Generic Wooden Pants",
+      "totalStock": 26,
+      "availableStock": 23,
+      "availabilityRate": "88.46%",
+      "rentedStock": 1,
+      "utilizationRate": "3.85%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 9,
+          "available": 8,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 2,
+          "available": 0,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 15,
+          "available": 15,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00167": {
+      "itemName": "Honda Practical Bamboo Table",
+      "totalStock": 93,
+      "availableStock": 90,
+      "availabilityRate": "96.77%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 1,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 22,
+          "available": 21,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 34,
+          "available": 33,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 37,
+          "available": 36,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00168": {
+      "itemName": "Caterpillar Incredible Silk Ball",
+      "totalStock": 93,
+      "availableStock": 92,
+      "availabilityRate": "98.92%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 74,
+          "available": 74,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 18,
+          "available": 18,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00169": {
+      "itemName": "Bosch Small Cotton Pants",
+      "totalStock": 81,
+      "availableStock": 80,
+      "availabilityRate": "98.77%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 21,
+          "available": 21,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 42,
+          "available": 41,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 18,
+          "available": 18,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00170": {
+      "itemName": "Bosch Oriental Steel Sausages",
+      "totalStock": 55,
+      "availableStock": 41,
+      "availabilityRate": "74.55%",
+      "rentedStock": 1,
+      "utilizationRate": "1.82%",
+      "soldStock": 9,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 32,
+          "available": 25,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 12,
+          "available": 8,
+          "rented": 0,
+          "sold": 4
+        },
+        "LOC003": {
+          "total": 11,
+          "available": 8,
+          "rented": 0,
+          "sold": 3
+        }
+      }
+    },
+    "ITEM00171": {
+      "itemName": "Makita Tasty Ceramic Bacon",
+      "totalStock": 54,
+      "availableStock": 51,
+      "availabilityRate": "94.44%",
+      "rentedStock": 1,
+      "utilizationRate": "1.85%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 11,
+          "available": 10,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 41,
+          "available": 41,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 2,
+          "available": 0,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00172": {
+      "itemName": "Makita Elegant Silk Gloves",
+      "totalStock": 75,
+      "availableStock": 64,
+      "availabilityRate": "85.33%",
+      "rentedStock": 3,
+      "utilizationRate": "4.00%",
+      "soldStock": 5,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 13,
+          "available": 8,
+          "rented": 1,
+          "sold": 3
+        },
+        "LOC002": {
+          "total": 36,
+          "available": 36,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 26,
+          "available": 20,
+          "rented": 2,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00173": {
+      "itemName": "Honda Handcrafted Rubber Car",
+      "totalStock": 27,
+      "availableStock": 25,
+      "availabilityRate": "92.59%",
+      "rentedStock": 1,
+      "utilizationRate": "3.70%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 18,
+          "available": 17,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 8,
+          "available": 7,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 1,
+          "available": 1,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00174": {
+      "itemName": "Caterpillar Bespoke Cotton Bike",
+      "totalStock": 54,
+      "availableStock": 50,
+      "availabilityRate": "92.59%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 3,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 8,
+          "available": 6,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 15,
+          "available": 13,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 31,
+          "available": 31,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00175": {
+      "itemName": "Makita Handmade Rubber Chips",
+      "totalStock": 123,
+      "availableStock": 119,
+      "availabilityRate": "96.75%",
+      "rentedStock": 3,
+      "utilizationRate": "2.44%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 29,
+          "available": 29,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 31,
+          "available": 30,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 63,
+          "available": 60,
+          "rented": 2,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00176": {
+      "itemName": "DeWalt Soft Steel Salad",
+      "totalStock": 44,
+      "availableStock": 37,
+      "availabilityRate": "84.09%",
+      "rentedStock": 2,
+      "utilizationRate": "4.55%",
+      "soldStock": 5,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 2,
+          "available": 0,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 41,
+          "available": 37,
+          "rented": 1,
+          "sold": 3
+        }
+      }
+    },
+    "ITEM00177": {
+      "itemName": "Bosch Recycled Wooden Table",
+      "totalStock": 82,
+      "availableStock": 72,
+      "availabilityRate": "87.80%",
+      "rentedStock": 1,
+      "utilizationRate": "1.22%",
+      "soldStock": 9,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 30,
+          "available": 27,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 20,
+          "available": 16,
+          "rented": 0,
+          "sold": 4
+        },
+        "LOC003": {
+          "total": 32,
+          "available": 29,
+          "rented": 0,
+          "sold": 3
+        }
+      }
+    },
+    "ITEM00178": {
+      "itemName": "Honda Elegant Silk Towels",
+      "totalStock": 112,
+      "availableStock": 106,
+      "availabilityRate": "94.64%",
+      "rentedStock": 2,
+      "utilizationRate": "1.79%",
+      "soldStock": 4,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 24,
+          "available": 23,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 35,
+          "available": 31,
+          "rented": 2,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 53,
+          "available": 52,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00179": {
+      "itemName": "Samsung Fresh Wooden Chair",
+      "totalStock": 79,
+      "availableStock": 79,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 28,
+          "available": 28,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 34,
+          "available": 34,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 17,
+          "available": 17,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00180": {
+      "itemName": "Caterpillar Bespoke Metal Bacon",
+      "totalStock": 81,
+      "availableStock": 72,
+      "availabilityRate": "88.89%",
+      "rentedStock": 6,
+      "utilizationRate": "7.41%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 34,
+          "available": 31,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 19,
+          "available": 18,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 28,
+          "available": 23,
+          "rented": 4,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00181": {
+      "itemName": "Honda Soft Ceramic Salad",
+      "totalStock": 66,
+      "availableStock": 61,
+      "availabilityRate": "92.42%",
+      "rentedStock": 2,
+      "utilizationRate": "3.03%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 25,
+          "available": 24,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 32,
+          "available": 32,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 9,
+          "available": 5,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00182": {
+      "itemName": "Samsung Frozen Granite Chips",
+      "totalStock": 133,
+      "availableStock": 122,
+      "availabilityRate": "91.73%",
+      "rentedStock": 5,
+      "utilizationRate": "3.76%",
+      "soldStock": 2,
+      "maintenanceStock": 3,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 49,
+          "available": 45,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 59,
+          "available": 56,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 25,
+          "available": 21,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00183": {
+      "itemName": "Bosch Unbranded Concrete Shirt",
+      "totalStock": 57,
+      "availableStock": 53,
+      "availabilityRate": "92.98%",
+      "rentedStock": 1,
+      "utilizationRate": "1.75%",
+      "soldStock": 1,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 15,
+          "available": 13,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 41,
+          "available": 40,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 1,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00184": {
+      "itemName": "Samsung Gorgeous Bamboo Computer",
+      "totalStock": 45,
+      "availableStock": 42,
+      "availabilityRate": "93.33%",
+      "rentedStock": 1,
+      "utilizationRate": "2.22%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 9,
+          "available": 9,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 4,
+          "available": 3,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 32,
+          "available": 30,
+          "rented": 0,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00185": {
+      "itemName": "Samsung Refined Steel Mouse",
+      "totalStock": 72,
+      "availableStock": 71,
+      "availabilityRate": "98.61%",
+      "rentedStock": 1,
+      "utilizationRate": "1.39%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 31,
+          "available": 30,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 41,
+          "available": 41,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 0,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00186": {
+      "itemName": "Samsung Small Aluminum Sausages",
+      "totalStock": 30,
+      "availableStock": 23,
+      "availabilityRate": "76.67%",
+      "rentedStock": 2,
+      "utilizationRate": "6.67%",
+      "soldStock": 4,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 11,
+          "available": 8,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 5,
+          "available": 1,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 14,
+          "available": 14,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00187": {
+      "itemName": "DeWalt Practical Metal Computer",
+      "totalStock": 39,
+      "availableStock": 36,
+      "availabilityRate": "92.31%",
+      "rentedStock": 3,
+      "utilizationRate": "7.69%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 19,
+          "available": 19,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 13,
+          "available": 12,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 7,
+          "available": 5,
+          "rented": 2,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00188": {
+      "itemName": "Honda Elegant Granite Gloves",
+      "totalStock": 173,
+      "availableStock": 169,
+      "availabilityRate": "97.69%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 4,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 84,
+          "available": 83,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 51,
+          "available": 50,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 38,
+          "available": 36,
+          "rented": 0,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00189": {
+      "itemName": "Samsung Oriental Bamboo Towels",
+      "totalStock": 59,
+      "availableStock": 51,
+      "availabilityRate": "86.44%",
+      "rentedStock": 6,
+      "utilizationRate": "10.17%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 4,
+          "available": 1,
+          "rented": 2,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 35,
+          "available": 31,
+          "rented": 3,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 20,
+          "available": 19,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00190": {
+      "itemName": "Bosch Practical Steel Keyboard",
+      "totalStock": 44,
+      "availableStock": 40,
+      "availabilityRate": "90.91%",
+      "rentedStock": 1,
+      "utilizationRate": "2.27%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 6,
+          "available": 5,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 19,
+          "available": 17,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 19,
+          "available": 18,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00191": {
+      "itemName": "Bosch Soft Bamboo Mouse",
+      "totalStock": 111,
+      "availableStock": 100,
+      "availabilityRate": "90.09%",
+      "rentedStock": 4,
+      "utilizationRate": "3.60%",
+      "soldStock": 7,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 33,
+          "available": 30,
+          "rented": 2,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 63,
+          "available": 56,
+          "rented": 2,
+          "sold": 5
+        },
+        "LOC003": {
+          "total": 15,
+          "available": 14,
+          "rented": 0,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00192": {
+      "itemName": "Makita Tasty Ceramic Keyboard",
+      "totalStock": 59,
+      "availableStock": 53,
+      "availabilityRate": "89.83%",
+      "rentedStock": 2,
+      "utilizationRate": "3.39%",
+      "soldStock": 2,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 18,
+          "available": 18,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 20,
+          "available": 17,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC003": {
+          "total": 21,
+          "available": 18,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00193": {
+      "itemName": "Honda Refined Marble Chair",
+      "totalStock": 36,
+      "availableStock": 35,
+      "availabilityRate": "97.22%",
+      "rentedStock": 1,
+      "utilizationRate": "2.78%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 13,
+          "available": 13,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 10,
+          "available": 10,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 13,
+          "available": 12,
+          "rented": 1,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00194": {
+      "itemName": "Samsung Tasty Steel Gloves",
+      "totalStock": 25,
+      "availableStock": 24,
+      "availabilityRate": "96.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 0,
+          "available": 0,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 9,
+          "available": 8,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 16,
+          "available": 16,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00195": {
+      "itemName": "DeWalt Frozen Bronze Table",
+      "totalStock": 52,
+      "availableStock": 49,
+      "availabilityRate": "94.23%",
+      "rentedStock": 1,
+      "utilizationRate": "1.92%",
+      "soldStock": 2,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 24,
+          "available": 21,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 21,
+          "available": 21,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 7,
+          "available": 7,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00196": {
+      "itemName": "Honda Soft Rubber Keyboard",
+      "totalStock": 55,
+      "availableStock": 49,
+      "availabilityRate": "89.09%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 4,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 24,
+          "available": 22,
+          "rented": 0,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 4,
+          "available": 2,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 27,
+          "available": 25,
+          "rented": 0,
+          "sold": 2
+        }
+      }
+    },
+    "ITEM00197": {
+      "itemName": "Caterpillar Bespoke Silk Computer",
+      "totalStock": 46,
+      "availableStock": 39,
+      "availabilityRate": "84.78%",
+      "rentedStock": 1,
+      "utilizationRate": "2.17%",
+      "soldStock": 3,
+      "maintenanceStock": 2,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 31,
+          "available": 26,
+          "rented": 1,
+          "sold": 2
+        },
+        "LOC002": {
+          "total": 8,
+          "available": 6,
+          "rented": 0,
+          "sold": 1
+        },
+        "LOC003": {
+          "total": 7,
+          "available": 7,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00198": {
+      "itemName": "Makita Awesome Ceramic Gloves",
+      "totalStock": 94,
+      "availableStock": 86,
+      "availabilityRate": "91.49%",
+      "rentedStock": 2,
+      "utilizationRate": "2.13%",
+      "soldStock": 1,
+      "maintenanceStock": 3,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 22,
+          "available": 21,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 42,
+          "available": 38,
+          "rented": 1,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 30,
+          "available": 27,
+          "rented": 1,
+          "sold": 1
+        }
+      }
+    },
+    "ITEM00199": {
+      "itemName": "Makita Generic Gold Shirt",
+      "totalStock": 94,
+      "availableStock": 91,
+      "availabilityRate": "96.81%",
+      "rentedStock": 1,
+      "utilizationRate": "1.06%",
+      "soldStock": 1,
+      "maintenanceStock": 1,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 28,
+          "available": 25,
+          "rented": 1,
+          "sold": 1
+        },
+        "LOC002": {
+          "total": 20,
+          "available": 20,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 46,
+          "available": 46,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    },
+    "ITEM00200": {
+      "itemName": "Makita Generic Granite Shirt",
+      "totalStock": 81,
+      "availableStock": 81,
+      "availabilityRate": "100.00%",
+      "rentedStock": 0,
+      "utilizationRate": "0.00%",
+      "soldStock": 0,
+      "maintenanceStock": 0,
+      "locationBreakdown": {
+        "LOC001": {
+          "total": 31,
+          "available": 31,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC002": {
+          "total": 22,
+          "available": 22,
+          "rented": 0,
+          "sold": 0
+        },
+        "LOC003": {
+          "total": 28,
+          "available": 28,
+          "rented": 0,
+          "sold": 0
+        }
+      }
+    }
+  },
+  "utilizationMetrics": {
+    "totalRentalDays": 4620,
+    "totalRentalRevenue": 1195364.3571725325,
+    "totalRentals": 250,
+    "averageRentalDuration": "18.48",
+    "averageRentalValue": "4781.46"
+  },
+  "conditionAnalysis": {
+    "distribution": {
+      "D": 148,
+      "B": 740,
+      "C": 403,
+      "A": 13197
+    },
+    "percentages": {
+      "D": "1.02%",
+      "B": "5.11%",
+      "C": "2.78%",
+      "A": "91.09%"
+    }
+  },
+  "locationAnalysis": {
+    "distribution": {
+      "LOC002": 4938,
+      "LOC003": 4555,
+      "LOC001": 4995
+    },
+    "utilizationByLocation": {
+      "LOC001": {
+        "totalUnits": 4995,
+        "rentedUnits": 150,
+        "utilizationRate": "3.00%"
+      },
+      "LOC002": {
+        "totalUnits": 4938,
+        "rentedUnits": 166,
+        "utilizationRate": "3.36%"
+      },
+      "LOC003": {
+        "totalUnits": 4555,
+        "rentedUnits": 187,
+        "utilizationRate": "4.11%"
+      }
+    }
+  }
+}

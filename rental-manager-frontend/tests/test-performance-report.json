@@ -1,0 +1,189 @@
+{
+  "metadata": {
+    "startTime": "2025-08-26T02:08:26.038Z",
+    "endTime": "2025-08-26T02:08:29.143Z",
+    "totalDuration": 3105,
+    "config": {
+      "memoryCheckInterval": 1000,
+      "memoryThresholdMB": 100,
+      "responseTimeThresholdMs": 1000,
+      "enableDetailedLogging": true
+    }
+  },
+  "summary": {
+    "operations": {
+      "total": 2,
+      "successful": 2,
+      "failed": 0,
+      "slow": 1,
+      "averageDuration": "1001.00",
+      "minDuration": 501,
+      "maxDuration": 1501,
+      "medianDuration": 1001,
+      "p95Duration": 1501,
+      "p99Duration": 1501
+    },
+    "memory": {
+      "startHeapMB": "3.96",
+      "peakHeapMB": "4.14",
+      "endHeapMB": "4.19",
+      "averageHeapMB": "4.11",
+      "maxRssMB": "43.69",
+      "samples": 3
+    },
+    "queries": {
+      "total": 1,
+      "slow": 0,
+      "averageDuration": "250.00",
+      "maxDuration": 250,
+      "totalDuration": 250
+    },
+    "errors": {
+      "total": 2,
+      "types": {
+        "Error": 1,
+        "RESPONSE_TIME_EXCEEDED": 1
+      }
+    },
+    "operationTypes": {
+      "test-operation-1": 1,
+      "test-operation-2": 1
+    }
+  },
+  "details": {
+    "operations": [
+      {
+        "id": "op_1_1756174106140",
+        "name": "test-operation-1",
+        "metadata": {
+          "type": "database"
+        },
+        "startTime": 1756174106140,
+        "startMark": "op_1_1756174106140_start",
+        "endMark": "op_1_1756174106140_end",
+        "measureName": "op_1_1756174106140_duration",
+        "memoryAtStart": 4177664,
+        "endTime": 1756174106641,
+        "duration": 501,
+        "performanceDuration": 501.30800000000005,
+        "memoryAtEnd": 4231464,
+        "memoryDelta": 53800,
+        "memoryDeltaMB": "0.05",
+        "result": {
+          "success": true,
+          "rows": 100
+        },
+        "status": "OK"
+      },
+      {
+        "id": "op_2_1756174106140",
+        "name": "test-operation-2",
+        "metadata": {
+          "type": "api"
+        },
+        "startTime": 1756174106140,
+        "startMark": "op_2_1756174106140_start",
+        "endMark": "op_2_1756174106140_end",
+        "measureName": "op_2_1756174106140_duration",
+        "memoryAtStart": 4187184,
+        "endTime": 1756174107641,
+        "duration": 1501,
+        "performanceDuration": 1501.1415000000002,
+        "memoryAtEnd": 4282136,
+        "memoryDelta": 94952,
+        "memoryDeltaMB": "0.09",
+        "result": {
+          "success": true
+        },
+        "status": "SLOW"
+      }
+    ],
+    "memory": [
+      {
+        "timestamp": 1756174107039,
+        "elapsed": 1001,
+        "heapUsed": 4262296,
+        "heapTotal": 5865472,
+        "external": 1520605,
+        "rss": 45662208,
+        "heapUsedMB": "4.06",
+        "rssMB": "43.55"
+      },
+      {
+        "timestamp": 1756174108041,
+        "elapsed": 2003,
+        "heapUsed": 4338024,
+        "heapTotal": 5865472,
+        "external": 1520605,
+        "rss": 45809664,
+        "heapUsedMB": "4.14",
+        "rssMB": "43.69"
+      },
+      {
+        "timestamp": 1756174109042,
+        "elapsed": 3004,
+        "heapUsed": 4342800,
+        "heapTotal": 5865472,
+        "external": 1520605,
+        "rss": 39878656,
+        "heapUsedMB": "4.14",
+        "rssMB": "38.03"
+      }
+    ],
+    "queries": [
+      {
+        "name": "SELECT * FROM users",
+        "query": "SELECT * FROM users WHERE active = true",
+        "timestamp": 1756174106140,
+        "duration": 250,
+        "rowCount": 50,
+        "status": "OK"
+      }
+    ],
+    "errors": [
+      {
+        "timestamp": 1756174106140,
+        "message": "Test error",
+        "stack": "Error: Test error\n    at Timeout._onTimeout (/Users/tluanga/current_work/rental-manager/rental-manager-frontend/tests/monitors/performance-monitor.js:603:24)\n    at listOnTimeout (node:internal/timers:608:17)\n    at process.processTimers (node:internal/timers:543:7)",
+        "context": {
+          "operation": "test"
+        },
+        "type": "Error"
+      },
+      {
+        "type": "RESPONSE_TIME_EXCEEDED",
+        "operationId": "op_2_1756174106140",
+        "operationName": "test-operation-2",
+        "duration": 1501,
+        "threshold": 1000
+      }
+    ],
+    "checkpoints": [
+      {
+        "name": "midpoint",
+        "timestamp": 1756174106142,
+        "elapsed": 104,
+        "memory": {
+          "rss": 45465600,
+          "heapTotal": 5865472,
+          "heapUsed": 4212896,
+          "external": 1520605,
+          "arrayBuffers": 10515
+        },
+        "data": {}
+      }
+    ]
+  },
+  "analysis": {
+    "status": "WARNING",
+    "issues": [
+      "50.0% of operations exceeded time threshold",
+      "2 errors occurred during execution"
+    ],
+    "recommendations": [
+      "Optimize slow operations or adjust threshold",
+      "Review and fix errors before production"
+    ],
+    "score": 65
+  }
+}

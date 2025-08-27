@@ -69,6 +69,24 @@ class ItemRepository:
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
     
+    async def get_by_ids(
+        self, 
+        item_ids: List[UUID], 
+        include_relations: bool = False
+    ) -> List[Item]:
+        """Get multiple items by their IDs."""
+        query = select(Item).where(Item.id.in_(item_ids))
+        
+        if include_relations:
+            query = query.options(
+                joinedload(Item.brand),
+                joinedload(Item.category),
+                joinedload(Item.unit_of_measurement)
+            )
+        
+        result = await self.session.execute(query)
+        return result.scalars().all()
+    
     async def list(
         self,
         skip: int = 0,

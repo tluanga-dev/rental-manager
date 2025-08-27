@@ -34,7 +34,14 @@ class TransactionHeaderRepository:
             TransactionHeader.id == transaction_id
         )
         
-        # Add eager loading as needed
+        # Always eager load basic relationships to avoid lazy loading issues
+        query = query.options(
+            joinedload(TransactionHeader.customer),
+            joinedload(TransactionHeader.supplier),  
+            joinedload(TransactionHeader.location)
+        )
+        
+        # Add eager loading for collections as needed
         if include_lines:
             query = query.options(selectinload(TransactionHeader.transaction_lines))
         if include_events:

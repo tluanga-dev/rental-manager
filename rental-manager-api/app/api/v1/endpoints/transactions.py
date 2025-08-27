@@ -985,3 +985,28 @@ async def process_payment(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=str(e),
         )
+
+
+# ============================================================================
+# Purchase Returns
+# ============================================================================
+
+@router.get("/purchase-returns/purchase/{purchase_id}", response_model=List[PurchaseReturnResponse])
+async def get_purchase_returns_by_purchase(
+    *,
+    db: AsyncSession = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_active_user),
+    purchase_id: UUID,
+) -> List[PurchaseReturnResponse]:
+    """Get all purchase returns for a specific purchase."""
+    service = PurchaseReturnsService(db)
+    try:
+        return await service.get_returns_by_purchase(purchase_id)
+    except NotFoundError:
+        # If no returns found for this purchase, return empty list instead of 404
+        return []
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch purchase returns: {str(e)}",
+        )

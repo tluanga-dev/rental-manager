@@ -27,9 +27,17 @@ import {
   WifiOff,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PermissionBadge } from '@/components/dev-tools/permission-badge';
 
 export function TopBar() {
-  const { user, logout, isBackendOnline, checkBackendHealth } = useAuthStore();
+  const { 
+    user, 
+    logout, 
+    isBackendOnline, 
+    checkBackendHealth,
+    isDevelopmentMode,
+    isAuthDisabled
+  } = useAuthStore();
   const { 
     unreadCount, 
     notifications, 
@@ -77,6 +85,8 @@ export function TopBar() {
 
         {/* Right side actions */}
         <div className="flex items-center space-x-4">
+          {/* Development Permission Badge */}
+          <PermissionBadge />
           {/* Connection Status */}
           <div className="flex items-center space-x-2">
             <button
@@ -199,17 +209,36 @@ export function TopBar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-slate-500 rounded-full flex items-center justify-center">
+                <div className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center",
+                  isDevelopmentMode && isAuthDisabled 
+                    ? "bg-gradient-to-r from-yellow-500 to-orange-500 ring-2 ring-yellow-300" 
+                    : "bg-slate-500"
+                )}>
                   <span className="text-white text-sm font-medium">
-                    {user?.firstName?.[0]}{user?.lastName?.[0]}
+                    {isDevelopmentMode && isAuthDisabled 
+                      ? "DEV"
+                      : (user?.firstName?.[0] || user?.full_name?.[0] || user?.username?.[0] || "U")
+                    }
                   </span>
                 </div>
                 <div className="hidden md:block text-left">
-                  <div className="text-sm font-medium">
-                    {user?.firstName} {user?.lastName}
+                  <div className="text-sm font-medium flex items-center gap-2">
+                    {isDevelopmentMode && isAuthDisabled ? (
+                      <>
+                        <span>{user?.full_name || user?.username || 'Development User'}</span>
+                        <Badge variant="destructive" className="text-xs">DEV</Badge>
+                      </>
+                    ) : (
+                      <span>{user?.firstName} {user?.lastName}</span>
+                    )}
                   </div>
                   <div className="text-xs text-gray-500">
-                    {user?.role?.name || 'User'}
+                    {isDevelopmentMode && isAuthDisabled ? (
+                      <span className="text-orange-600 font-medium">Mock {user?.userType || user?.role?.name || 'Admin'}</span>
+                    ) : (
+                      <span>{user?.role?.name || 'User'}</span>
+                    )}
                   </div>
                 </div>
               </Button>

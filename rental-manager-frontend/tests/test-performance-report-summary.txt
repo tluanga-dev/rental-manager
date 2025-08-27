@@ -1,0 +1,39 @@
+PERFORMANCE TEST REPORT
+=======================
+
+Test Duration: 3.10 seconds
+Start Time: 2025-08-26T02:08:26.038Z
+End Time: 2025-08-26T02:08:29.143Z
+
+OPERATION STATISTICS
+-------------------
+Total Operations: 2
+Successful: 2
+Failed: 0
+Slow: 1
+Average Duration: 1001.00 ms
+Median Duration: 1001 ms
+95th Percentile: 1501 ms
+99th Percentile: 1501 ms
+
+MEMORY STATISTICS
+----------------
+Start Heap: 3.96 MB
+Peak Heap: 4.14 MB
+End Heap: 4.19 MB
+Average Heap: 4.11 MB
+Max RSS: 43.69 MB
+
+PERFORMANCE ANALYSIS
+-------------------
+Overall Status: WARNING
+Performance Score: 65/100
+
+Issues Detected:
+- 50.0% of operations exceeded time threshold
+- 2 errors occurred during execution
+
+Recommendations:
+- Optimize slow operations or adjust threshold
+- Review and fix errors before production
+

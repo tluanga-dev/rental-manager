@@ -120,6 +120,22 @@ class PurchaseCreate(BaseModel):
         return self
 
 
+class PurchaseUpdate(BaseModel):
+    """Schema for updating a purchase."""
+    status: Optional[str] = None
+    payment_status: Optional[str] = None
+    notes: Optional[str] = None
+    
+    model_config = ConfigDict(from_attributes=True)
+
+
+class PurchaseBulkCreate(BaseModel):
+    """Schema for bulk purchase creation."""
+    purchases: List["PurchaseCreate"]
+    
+    model_config = ConfigDict(from_attributes=True)
+
+
 class PurchaseValidationError(BaseModel):
     """Schema for purchase validation errors."""
     field: str
@@ -219,18 +235,30 @@ class PurchaseResponse(BaseModel):
             'updated_by': transaction.updated_by,
         }
         
-        # Add relationship data if available
-        if hasattr(transaction, 'supplier') and transaction.supplier:
-            data['supplier_name'] = transaction.supplier.company_name
-            data['supplier_code'] = transaction.supplier.supplier_code
+        # Add relationship data if available and loaded
+        try:
+            if hasattr(transaction, 'supplier') and transaction.supplier:
+                data['supplier_name'] = getattr(transaction.supplier, 'company_name', None)
+                data['supplier_code'] = getattr(transaction.supplier, 'supplier_code', None)
+        except:
+            # Relationship not loaded or accessible
+            pass
         
-        if hasattr(transaction, 'location') and transaction.location:
-            data['location_name'] = transaction.location.location_name
+        try:
+            if hasattr(transaction, 'location') and transaction.location:
+                data['location_name'] = getattr(transaction.location, 'location_name', None)
+        except:
+            # Relationship not loaded or accessible
+            pass
         
         # Add items summary if lines are loaded
-        if hasattr(transaction, 'transaction_lines') and transaction.transaction_lines:
-            data['total_items'] = len(transaction.transaction_lines)
-            data['total_quantity'] = sum(line.quantity for line in transaction.transaction_lines)
+        try:
+            if hasattr(transaction, 'transaction_lines') and transaction.transaction_lines:
+                data['total_items'] = len(transaction.transaction_lines)
+                data['total_quantity'] = sum(getattr(line, 'quantity', 0) for line in transaction.transaction_lines)
+        except:
+            # Transaction lines not loaded or accessible
+            pass
         
         return cls(**data)
 

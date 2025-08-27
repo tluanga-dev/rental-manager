@@ -3,12 +3,17 @@ export interface Supplier {
   id: string;
   code: string;
   name: string;
+  supplier_code?: string; // Legacy field mapping
+  company_name?: string; // Legacy field mapping
   supplier_type: 'MANUFACTURER' | 'DISTRIBUTOR' | 'WHOLESALER' | 'RETAILER' | 'INVENTORY' | 'SERVICE' | 'DIRECT';
+  supplier_tier?: 'PREMIUM' | 'STANDARD' | 'BASIC' | 'TRIAL';
   contact_person?: string | null;
   email?: string | null;
   phone?: string | null;
   mobile?: string | null;
   address?: string | null;
+  address_line1?: string | null;
+  address_line2?: string | null;
   city?: string | null;
   state?: string | null;
   country?: string | null;
@@ -18,6 +23,13 @@ export interface Supplier {
   payment_terms?: string | null;
   credit_limit?: number | null;
   rating?: number | null;
+  quality_rating?: number | null;
+  delivery_rating?: number | null;
+  performance_score?: number | null;
+  total_orders?: number | null;
+  total_spend?: number | null;
+  average_delivery_days?: number | null;
+  last_order_date?: string | null;
   notes?: string | null;
   is_active: boolean;
   created_at: string;

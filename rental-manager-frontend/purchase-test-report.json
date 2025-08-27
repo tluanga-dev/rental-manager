@@ -1,0 +1,40 @@
+{
+  "timestamp": "2025-08-27T01:39:54.346Z",
+  "testResults": {
+    "pageLoad": true,
+    "formElements": true,
+    "apiErrorHandling": true,
+    "performanceMonitoring": true,
+    "successDialog": true,
+    "userInteractions": false,
+    "navigation": false,
+    "accessibility": false
+  },
+  "performance": [
+    {
+      "domContentLoaded": 0,
+      "loadComplete": 0,
+      "totalTime": 6296
+    }
+  ],
+  "console": {
+    "total": 61,
+    "errors": 28,
+    "warnings": 4,
+    "currencyApiHandled": true,
+    "performanceClean": true
+  },
+  "network": {
+    "totalRequests": 44,
+    "successful": 40,
+    "clientErrors": 4,
+    "serverErrors": 0,
+    "currencyApiCalls": 1
+  },
+  "summary": {
+    "totalTests": 8,
+    "passedTests": 5,
+    "failedTests": 3,
+    "successRate": 63
+  }
+}

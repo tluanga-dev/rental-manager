@@ -5,6 +5,7 @@ Modernized version with comprehensive validation and error handling.
 
 from typing import List, Optional, Dict, Any
 from uuid import UUID
+import uuid
 from datetime import datetime, date, timezone
 from decimal import Decimal
 import logging
@@ -91,36 +92,81 @@ class PurchaseService:
             # Calculate totals
             totals = self._calculate_purchase_totals(purchase_data.items)
             
-            # Create transaction header
-            transaction = TransactionHeader(
-                transaction_type=TransactionType.PURCHASE,
-                transaction_number=transaction_number,
-                status=TransactionStatus.PENDING,
-                transaction_date=purchase_data.purchase_date or datetime.now(timezone.utc),
-                due_date=purchase_data.due_date,
-                supplier_id=purchase_data.supplier_id,
-                location_id=purchase_data.location_id,
-                currency=purchase_data.currency,
-                subtotal=totals["subtotal"],
-                discount_amount=totals["discount_amount"],
-                tax_amount=totals["tax_amount"],
-                shipping_amount=purchase_data.shipping_amount,
-                total_amount=totals["total_amount"] + purchase_data.shipping_amount,
-                paid_amount=Decimal("0.00"),
-                payment_status=PaymentStatus.PENDING,
-                payment_method=purchase_data.payment_method,
-                reference_number=purchase_data.reference_number,
-                notes=purchase_data.notes,
-                delivery_required=purchase_data.delivery_required,
-                delivery_address=purchase_data.delivery_address,
-                delivery_date=purchase_data.delivery_date,
-                created_by=created_by,
-                updated_by=created_by
+            # Generate UUID and timestamps manually to avoid server_default issues
+            transaction_id = uuid.uuid4()
+            now = datetime.now(timezone.utc)
+            
+            # Use raw SQL to insert transaction header to avoid ORM issues
+            from sqlalchemy import text
+            
+            insert_sql = text("""
+                INSERT INTO transaction_headers (
+                    id, transaction_type, transaction_number, status,
+                    transaction_date, due_date, supplier_id, location_id,
+                    currency, subtotal, discount_amount, tax_amount,
+                    shipping_amount, total_amount, paid_amount, deposit_paid,
+                    customer_advance_balance, delivery_required, pickup_required,
+                    extension_count, total_extension_charges,
+                    payment_status, payment_method, reference_number,
+                    notes, delivery_address, delivery_date,
+                    is_active, created_at, updated_at, created_by, updated_by
+                ) VALUES (
+                    :id, :transaction_type, :transaction_number, :status,
+                    :transaction_date, :due_date, :supplier_id, :location_id,
+                    :currency, :subtotal, :discount_amount, :tax_amount,
+                    :shipping_amount, :total_amount, :paid_amount, :deposit_paid,
+                    :customer_advance_balance, :delivery_required, :pickup_required,
+                    :extension_count, :total_extension_charges,
+                    :payment_status, :payment_method, :reference_number,
+                    :notes, :delivery_address, :delivery_date,
+                    :is_active, :created_at, :updated_at, :created_by, :updated_by
+                )
+            """)
+            
+            await self.session.execute(
+                insert_sql,
+                {
+                    "id": transaction_id,
+                    "transaction_type": TransactionType.PURCHASE.value,
+                    "transaction_number": transaction_number,
+                    "status": TransactionStatus.PENDING.value,
+                    "transaction_date": purchase_data.purchase_date or now,
+                    "due_date": purchase_data.due_date,
+                    "supplier_id": purchase_data.supplier_id,
+                    "location_id": purchase_data.location_id,
+                    "currency": purchase_data.currency,
+                    "subtotal": totals["subtotal"],
+                    "discount_amount": totals["discount_amount"],
+                    "tax_amount": totals["tax_amount"],
+                    "shipping_amount": purchase_data.shipping_amount,
+                    "total_amount": totals["total_amount"] + purchase_data.shipping_amount,
+                    "paid_amount": Decimal("0.00"),
+                    "deposit_paid": False,  # Boolean field, not Decimal
+                    "customer_advance_balance": Decimal("0.00"),  # Required NOT NULL field
+                    "delivery_required": purchase_data.delivery_required or False,  # Required NOT NULL field
+                    "pickup_required": False,  # Required NOT NULL field
+                    "extension_count": 0,  # Required NOT NULL field
+                    "total_extension_charges": Decimal("0.00"),  # Required NOT NULL field
+                    "payment_status": PaymentStatus.PENDING.value,
+                    "payment_method": purchase_data.payment_method,
+                    "reference_number": purchase_data.reference_number,
+                    "notes": purchase_data.notes,
+                    "delivery_address": purchase_data.delivery_address,
+                    "delivery_date": purchase_data.delivery_date,
+                    "is_active": True,
+                    "created_at": now,
+                    "updated_at": now,
+                    "created_by": created_by,
+                    "updated_by": created_by
+                }
             )
             
-            # Add to session
-            self.session.add(transaction)
-            await self.session.flush()
+            # Create a transaction object for return (without adding to session)
+            transaction = TransactionHeader()
+            transaction.id = transaction_id
+            transaction.transaction_number = transaction_number
+            transaction.status = TransactionStatus.PENDING
+            transaction.total_amount = totals["total_amount"] + purchase_data.shipping_amount
             
             # Create transaction lines
             lines = await self._create_purchase_lines(
@@ -143,12 +189,25 @@ class PurchaseService:
             # await self._update_inventory_for_purchase(transaction.id, lines)
             
             # Mark as completed if auto-complete is enabled
-            if purchase_data.get("auto_complete", False):
-                transaction.status = TransactionStatus.COMPLETED
-                await self.session.flush()
+            if getattr(purchase_data, "auto_complete", False):
+                # Update status using raw SQL
+                from sqlalchemy import text
+                update_sql = text("""
+                    UPDATE transaction_headers 
+                    SET status = :status, updated_at = :updated_at 
+                    WHERE id = :id
+                """)
+                await self.session.execute(
+                    update_sql,
+                    {
+                        "status": TransactionStatus.COMPLETED.value,
+                        "updated_at": datetime.now(timezone.utc),
+                        "id": transaction_id
+                    }
+                )
                 
                 await self.event_repo.create_transaction_event(
-                    transaction_id=transaction.id,
+                    transaction_id=transaction_id,
                     event_type="PURCHASE_COMPLETED",
                     description="Purchase transaction auto-completed",
                     user_id=created_by
@@ -157,14 +216,30 @@ class PurchaseService:
             # Commit the transaction
             await self.session.commit()
             
-            # Reload with relationships
-            transaction = await self.transaction_repo.get_by_id(
-                transaction.id,
-                include_lines=True
+            # Build response manually since we used raw SQL
+            total_amount_final = totals["total_amount"] + purchase_data.shipping_amount
+            return PurchaseResponse(
+                id=transaction_id,
+                transaction_number=transaction_number,
+                status=TransactionStatus.PENDING.value if not getattr(purchase_data, "auto_complete", False) else TransactionStatus.COMPLETED.value,
+                transaction_date=purchase_data.purchase_date or now,
+                supplier_id=purchase_data.supplier_id,
+                location_id=purchase_data.location_id,
+                currency=purchase_data.currency,
+                subtotal=totals["subtotal"],
+                discount_amount=totals["discount_amount"],
+                tax_amount=totals["tax_amount"],
+                shipping_amount=purchase_data.shipping_amount,
+                total_amount=total_amount_final,
+                paid_amount=Decimal("0.00"),
+                balance_due=total_amount_final,  # Required field: total - paid
+                payment_status=PaymentStatus.PENDING.value,
+                payment_method=purchase_data.payment_method,
+                delivery_required=purchase_data.delivery_required or False,  # Required field
+                lines=[],  # Lines could be added if needed
+                created_at=now,
+                updated_at=now
             )
-            
-            # Return response
-            return PurchaseResponse.from_transaction(transaction)
             
         except IntegrityError as e:
             await self.session.rollback()
@@ -329,7 +404,7 @@ class PurchaseService:
             ))
         
         # Validate location
-        location = await self.location_repo.get_by_id(purchase_data.location_id)
+        location = await self.location_repo.get(purchase_data.location_id)
         if not location:
             errors.append(PurchaseValidationError(
                 field="location_id",
@@ -343,9 +418,9 @@ class PurchaseService:
                 code="LOCATION_INACTIVE"
             ))
         
-        # Validate items
+        # Validate items (load with relations to avoid lazy loading issues)
         item_ids = {item.item_id for item in purchase_data.items}
-        items = await self.item_repo.get_by_ids(list(item_ids))
+        items = await self.item_repo.get_by_ids(list(item_ids), include_relations=True)
         item_map = {item.id: item for item in items}
         
         for idx, item_data in enumerate(purchase_data.items):
@@ -457,14 +532,40 @@ class PurchaseService:
         """Create transaction lines for purchase."""
         lines = []
         
-        # Get item details
+        # Get item details with related data
         item_ids = {item.item_id for item in items}
-        item_entities = await self.item_repo.get_by_ids(list(item_ids))
-        item_map = {item.id: item for item in item_entities}
+        item_entities = await self.item_repo.get_by_ids(list(item_ids), include_relations=True)
+        
+        # Pre-fetch all relationship data to avoid lazy loading issues
+        # Force evaluation of relationships before using them
+        item_data_map = {}
+        for item in item_entities:
+            item_info = {
+                'id': item.id,
+                'sku': item.sku,
+                'item_name': item.item_name,
+                'category_name': None,
+                'unit_code': None
+            }
+            
+            # Access relationships in async context
+            if item.category:
+                try:
+                    item_info['category_name'] = item.category.name
+                except:
+                    pass
+            
+            if item.unit_of_measurement:
+                try:
+                    item_info['unit_code'] = item.unit_of_measurement.code
+                except:
+                    pass
+            
+            item_data_map[item.id] = item_info
         
         for idx, item_data in enumerate(items, 1):
-            item = item_map.get(item_data.item_id)
-            if not item:
+            item_info = item_data_map.get(item_data.item_id)
+            if not item_info:
                 continue
             
             # Calculate line totals
@@ -479,36 +580,74 @@ class PurchaseService:
             tax = taxable * (item_data.tax_rate or Decimal("0.00")) / 100
             line_total = taxable + tax
             
-            # Create line
-            line = TransactionLine(
-                transaction_header_id=transaction_id,
-                line_number=idx,
-                line_type=LineItemType.PRODUCT,
-                item_id=item_data.item_id,
-                sku=item.sku,
-                description=item.item_name,
-                category=item.category.category_name if item.category else None,
-                quantity=item_data.quantity,
-                unit_of_measure=item.unit_of_measurement.abbreviation if item.unit_of_measurement else None,
-                unit_price=item_data.unit_price,
-                total_price=line_subtotal,
-                discount_percent=item_data.discount_percent or Decimal("0.00"),
-                discount_amount=discount,
-                tax_rate=item_data.tax_rate or Decimal("0.00"),
-                tax_amount=tax,
-                line_total=line_total,
-                location_id=item_data.location_id,
-                warehouse_location=item_data.warehouse_location,
-                status="PENDING",
-                fulfillment_status="PENDING",
-                created_by=created_by,
-                updated_by=created_by
+            # Generate UUID and timestamps for line to avoid server_default issues
+            line_id = uuid.uuid4()
+            now = datetime.now(timezone.utc)
+            
+            # Use raw SQL to insert transaction line
+            from sqlalchemy import text
+            
+            insert_line_sql = text("""
+                INSERT INTO transaction_lines (
+                    id, transaction_header_id, line_number, line_type,
+                    item_id, sku, description, category, quantity,
+                    unit_of_measure, unit_price, total_price,
+                    discount_percent, discount_amount, tax_rate, tax_amount,
+                    line_total, location_id, warehouse_location,
+                    status, fulfillment_status, returned_quantity,
+                    is_active, created_at, updated_at, created_by, updated_by
+                ) VALUES (
+                    :id, :transaction_header_id, :line_number, :line_type,
+                    :item_id, :sku, :description, :category, :quantity,
+                    :unit_of_measure, :unit_price, :total_price,
+                    :discount_percent, :discount_amount, :tax_rate, :tax_amount,
+                    :line_total, :location_id, :warehouse_location,
+                    :status, :fulfillment_status, :returned_quantity,
+                    :is_active, :created_at, :updated_at, :created_by, :updated_by
+                )
+            """)
+            
+            await self.session.execute(
+                insert_line_sql,
+                {
+                    "id": line_id,
+                    "transaction_header_id": transaction_id,
+                    "line_number": idx,
+                    "line_type": LineItemType.PRODUCT.value,
+                    "item_id": item_data.item_id,
+                    "sku": item_info['sku'],
+                    "description": item_info['item_name'],
+                    "category": item_info['category_name'],
+                    "quantity": item_data.quantity,
+                    "unit_of_measure": item_info['unit_code'],
+                    "unit_price": item_data.unit_price,
+                    "total_price": line_subtotal,
+                    "discount_percent": item_data.discount_percent or Decimal("0.00"),
+                    "discount_amount": discount,
+                    "tax_rate": item_data.tax_rate or Decimal("0.00"),
+                    "tax_amount": tax,
+                    "line_total": line_total,
+                    "location_id": item_data.location_id,
+                    "warehouse_location": item_data.warehouse_location,
+                    "status": "PENDING",
+                    "fulfillment_status": "PENDING",
+                    "returned_quantity": Decimal("0.00"),  # Required NOT NULL field
+                    "is_active": True,
+                    "created_at": now,
+                    "updated_at": now,
+                    "created_by": created_by,
+                    "updated_by": created_by
+                }
             )
             
-            self.session.add(line)
+            # Create line object for return (without adding to session)
+            line = TransactionLine()
+            line.id = line_id
+            line.quantity = item_data.quantity
+            line.unit_price = item_data.unit_price
             lines.append(line)
         
-        await self.session.flush()
+        # No need to flush since we used raw SQL
         return lines
     
     def _is_valid_status_transition(

@@ -987,3 +987,43 @@ class PurchaseReturnsService:
                 return reason
         
         return "OTHER"
+    
+    async def get_returns_by_purchase(
+        self,
+        purchase_id: UUID
+    ) -> List[PurchaseReturnResponse]:
+        """
+        Get all purchase returns for a specific purchase transaction.
+        
+        Args:
+            purchase_id: The original purchase transaction ID
+            
+        Returns:
+            List of purchase return transactions for this purchase
+        """
+        try:
+            # Query for return transactions that reference the original purchase
+            query = select(TransactionHeader).where(
+                and_(
+                    TransactionHeader.transaction_type == TransactionType.RETURN,
+                    TransactionHeader.reference_transaction_id == purchase_id,
+                    TransactionHeader.is_active == True
+                )
+            ).options(
+                selectinload(TransactionHeader.transaction_lines),
+                selectinload(TransactionHeader.supplier),
+                selectinload(TransactionHeader.location)
+            ).order_by(TransactionHeader.created_at.desc())
+            
+            result = await self.session.execute(query)
+            return_transactions = result.scalars().all()
+            
+            # Convert to response models
+            return [
+                PurchaseReturnResponse.from_transaction(transaction)
+                for transaction in return_transactions
+            ]
+            
+        except Exception as e:
+            logger.error(f"Failed to fetch purchase returns for purchase {purchase_id}: {e}")
+            raise

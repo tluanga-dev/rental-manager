@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -19,6 +19,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ErrorDialog } from '@/components/dialogs/error-dialog';
+import { PurchaseSuccessDialog } from '@/components/dialogs/PurchaseSuccessDialog';
 
 import { SupplierDropdown } from '@/components/suppliers/SupplierDropdown/SupplierDropdown';
 import { PurchaseItemsTable } from '@/components/purchases/PurchaseItemsTable';
@@ -92,6 +93,12 @@ export function ImprovedPurchaseRecordingForm({ onSuccess, onCancel }: ImprovedP
     endpoint: ''
   });
   
+  // State for success dialog
+  const [successDialog, setSuccessDialog] = useState({
+    open: false,
+    purchase: null as any
+  });
+  
   const [selectedSupplier, setSelectedSupplier] = useState<any>();
 
   const form = useForm<PurchaseFormValues>({
@@ -111,6 +118,39 @@ export function ImprovedPurchaseRecordingForm({ onSuccess, onCancel }: ImprovedP
     control: form.control,
     name: 'items',
   });
+
+  // Success dialog handlers
+  const handleCreateAnother = useCallback(() => {
+    // Reset form to initial state
+    form.reset({
+      supplier_id: '',
+      location_id: '',
+      purchase_date: new Date(),
+      notes: '',
+      reference_number: '',
+      payment_status: 'PAID',
+      items: [],
+    });
+    
+    // Reset other states
+    setSelectedSupplier(undefined);
+    setFormValidation({ isValid: true, errors: [], warnings: [] });
+    setEditingItemIndex(null);
+    setIsItemFormOpen(false);
+    setFormResetTrigger(prev => !prev);
+    
+    // Close success dialog
+    setSuccessDialog({ open: false, purchase: null });
+  }, [form]);
+
+  const handleViewHistory = useCallback(() => {
+    const purchaseId = successDialog.purchase?.id;
+    if (purchaseId) {
+      router.push(`/purchases/history/${purchaseId}`);
+    } else {
+      router.push('/purchases/history');
+    }
+  }, [router, successDialog.purchase]);
 
   // Calculation functions for purchase totals
   const calculateTotalTaxAmount = () => {
@@ -292,10 +332,20 @@ export function ImprovedPurchaseRecordingForm({ onSuccess, onCancel }: ImprovedP
       }
       console.groupEnd();
       
+      // Show success dialog instead of immediate redirect
+      setSuccessDialog({
+        open: true,
+        purchase: {
+          ...result,
+          items_count: formData.items.length,
+          supplier_name: selectedSupplier?.name || selectedSupplier?.supplier_name,
+          location_name: locations.find(l => l.id === values.location_id)?.name || locations.find(l => l.id === values.location_id)?.location_name
+        }
+      });
+      
+      // Call onSuccess callback if provided (but don't navigate yet)
       if (onSuccess) {
         onSuccess(result);
-      } else {
-        router.push(`/purchases/history/${result.id}`);
       }
     } catch (error: any) {
       // ==============================
@@ -857,6 +907,15 @@ export function ImprovedPurchaseRecordingForm({ onSuccess, onCancel }: ImprovedP
         endpoint={errorDialog.endpoint}
         retryAction={handleRetrySubmission}
         onClose={handleErrorDialogClose}
+      />
+
+      {/* Success Dialog */}
+      <PurchaseSuccessDialog
+        open={successDialog.open}
+        onOpenChange={(open) => setSuccessDialog(prev => ({ ...prev, open }))}
+        purchase={successDialog.purchase}
+        onCreateAnother={handleCreateAnother}
+        onViewHistory={handleViewHistory}
       />
     </div>
   );
