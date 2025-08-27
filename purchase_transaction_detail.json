@@ -1,0 +1,510 @@
+{
+  "purchase_transaction_detail": {
+    "description": "Comprehensive purchase transaction detail structure for the Rental Management System",
+    "version": "1.0",
+    "last_updated": "2025-01-25",
+    "schema_type": "purchase_transaction_detail",
+    
+    "transaction_header": {
+      "id": "abc12345-e89b-12d3-a456-426614174004",
+      "transaction_number": "PUR-2025-01-000001",
+      "transaction_type": "PURCHASE",
+      "status": "COMPLETED",
+      "payment_status": "PENDING",
+      
+      "dates": {
+        "transaction_date": "2025-01-25T10:30:00Z",
+        "purchase_date": "2025-01-25",
+        "due_date": "2025-02-24",
+        "delivery_date": "2025-01-27",
+        "expected_delivery_date": "2025-01-26",
+        "created_at": "2025-01-25T10:30:00Z",
+        "updated_at": "2025-01-25T10:30:00Z"
+      },
+      
+      "parties": {
+        "supplier": {
+          "id": "123e4567-e89b-12d3-a456-426614174000",
+          "company_name": "Premium Equipment Suppliers Ltd",
+          "supplier_code": "SUP-001",
+          "contact_person": "John Smith",
+          "email": "john.smith@premiumequip.com",
+          "phone": "+91-9876543210",
+          "address": {
+            "street": "123 Industrial Area",
+            "city": "Mumbai",
+            "state": "Maharashtra",
+            "postal_code": "400001",
+            "country": "India"
+          },
+          "tax_id": "27AABCS1234C1Z5",
+          "supplier_tier": "PREFERRED",
+          "credit_limit": 500000.00,
+          "payment_terms": "NET30"
+        },
+        "location": {
+          "id": "456e7890-e89b-12d3-a456-426614174001",
+          "location_name": "Main Warehouse",
+          "location_code": "WH-001",
+          "address": {
+            "street": "456 Storage Complex",
+            "city": "Mumbai",
+            "state": "Maharashtra",
+            "postal_code": "400002",
+            "country": "India"
+          },
+          "manager": "Priya Sharma",
+          "phone": "+91-9876543211"
+        }
+      },
+      
+      "financial_summary": {
+        "currency": "INR",
+        "subtotal": 125000.00,
+        "discount_amount": 2500.00,
+        "tax_amount": 10412.50,
+        "shipping_amount": 1500.00,
+        "other_charges": 500.00,
+        "total_amount": 134912.50,
+        "paid_amount": 0.00,
+        "balance_due": 134912.50,
+        "rounding_adjustment": 0.00
+      },
+      
+      "payment_details": {
+        "payment_method": "BANK_TRANSFER",
+        "payment_terms": "NET30",
+        "payment_reference": "PO-2025-001",
+        "bank_details": {
+          "account_name": "Premium Equipment Suppliers Ltd",
+          "account_number": "1234567890",
+          "bank_name": "HDFC Bank",
+          "ifsc_code": "HDFC0001234",
+          "branch": "Mumbai Main"
+        }
+      },
+      
+      "delivery_details": {
+        "delivery_required": true,
+        "delivery_address": "456 Storage Complex, Mumbai, Maharashtra 400002",
+        "delivery_method": "TRUCK",
+        "delivery_status": "SCHEDULED",
+        "tracking_number": "TRK-2025-001",
+        "carrier": "Blue Dart Express",
+        "delivery_instructions": "Handle with care - fragile equipment"
+      },
+      
+      "references": {
+        "reference_number": "PO-2025-001",
+        "supplier_invoice": "INV-SUP-2025-001",
+        "purchase_order": "PO-2025-001",
+        "quotation_reference": "QUO-2025-001"
+      },
+      
+      "audit_trail": {
+        "created_by": "admin@company.com",
+        "updated_by": "admin@company.com",
+        "approved_by": "manager@company.com",
+        "approval_date": "2025-01-25T09:00:00Z",
+        "workflow_status": "APPROVED",
+        "revision_number": 1
+      }
+    },
+    
+    "transaction_lines": [
+      {
+        "id": "def45678-e89b-12d3-a456-426614174005",
+        "line_number": 1,
+        "item_details": {
+          "item_id": "789e0123-e89b-12d3-a456-426614174002",
+          "sku": "ELEC-00001",
+          "item_name": "Professional Power Drill Set",
+          "category": "Power Tools",
+          "brand": "Bosch",
+          "model": "GSB 550 RE",
+          "description": "Professional grade power drill with accessories",
+          "barcode": "1234567890123",
+          "hsn_code": "8467"
+        },
+        
+        "quantity_details": {
+          "quantity": 25,
+          "unit_of_measure": "PCS",
+          "received_quantity": 0,
+          "pending_quantity": 25,
+          "damaged_quantity": 0
+        },
+        
+        "pricing": {
+          "unit_price": 2500.00,
+          "list_price": 2800.00,
+          "discount_percent": 10.00,
+          "discount_amount": 250.00,
+          "net_unit_price": 2250.00,
+          "line_subtotal": 56250.00,
+          "tax_rate": 18.00,
+          "tax_amount": 10125.00,
+          "line_total": 66375.00
+        },
+        
+        "inventory_details": {
+          "condition_code": "A",
+          "condition_description": "New - Excellent",
+          "warranty_months": 24,
+          "expiry_date": null,
+          "batch_code": "BATCH-20250125-001",
+          "serial_numbers": [
+            "BSH001-2025-001",
+            "BSH001-2025-002",
+            "BSH001-2025-003",
+            "BSH001-2025-004",
+            "BSH001-2025-005"
+          ],
+          "location_details": {
+            "warehouse_location": "A-01-001",
+            "bin_location": "BIN-A001",
+            "shelf": "SHELF-01",
+            "zone": "ZONE-A"
+          }
+        },
+        
+        "quality_control": {
+          "inspection_required": true,
+          "inspection_status": "PENDING",
+          "quality_grade": "A",
+          "defect_notes": null,
+          "inspector": null,
+          "inspection_date": null
+        },
+        
+        "line_notes": "Premium quality power tools for rental inventory",
+        "created_at": "2025-01-25T10:30:00Z",
+        "updated_at": "2025-01-25T10:30:00Z"
+      },
+      
+      {
+        "id": "ghi78901-e89b-12d3-a456-426614174006",
+        "line_number": 2,
+        "item_details": {
+          "item_id": "012e3456-e89b-12d3-a456-426614174003",
+          "sku": "ELEC-00002",
+          "item_name": "Industrial Angle Grinder",
+          "category": "Power Tools",
+          "brand": "Makita",
+          "model": "GA9020",
+          "description": "Heavy duty angle grinder for industrial use",
+          "barcode": "2345678901234",
+          "hsn_code": "8467"
+        },
+        
+        "quantity_details": {
+          "quantity": 15,
+          "unit_of_measure": "PCS",
+          "received_quantity": 0,
+          "pending_quantity": 15,
+          "damaged_quantity": 0
+        },
+        
+        "pricing": {
+          "unit_price": 4500.00,
+          "list_price": 5000.00,
+          "discount_percent": 5.00,
+          "discount_amount": 225.00,
+          "net_unit_price": 4275.00,
+          "line_subtotal": 64125.00,
+          "tax_rate": 18.00,
+          "tax_amount": 11542.50,
+          "line_total": 75667.50
+        },
+        
+        "inventory_details": {
+          "condition_code": "A",
+          "condition_description": "New - Excellent",
+          "warranty_months": 36,
+          "expiry_date": null,
+          "batch_code": "BATCH-20250125-002",
+          "serial_numbers": [
+            "MKT002-2025-001",
+            "MKT002-2025-002",
+            "MKT002-2025-003"
+          ],
+          "location_details": {
+            "warehouse_location": "A-01-002",
+            "bin_location": "BIN-A002",
+            "shelf": "SHELF-02",
+            "zone": "ZONE-A"
+          }
+        },
+        
+        "quality_control": {
+          "inspection_required": true,
+          "inspection_status": "PENDING",
+          "quality_grade": "A",
+          "defect_notes": null,
+          "inspector": null,
+          "inspection_date": null
+        },
+        
+        "line_notes": "Heavy duty equipment for construction rentals",
+        "created_at": "2025-01-25T10:30:00Z",
+        "updated_at": "2025-01-25T10:30:00Z"
+      },
+      
+      {
+        "id": "jkl23456-e89b-12d3-a456-426614174007",
+        "line_number": 3,
+        "item_details": {
+          "item_id": "345e6789-e89b-12d3-a456-426614174004",
+          "sku": "SAFE-00001",
+          "item_name": "Safety Helmet Set",
+          "category": "Safety Equipment",
+          "brand": "3M",
+          "model": "H-700",
+          "description": "Industrial safety helmets with adjustable straps",
+          "barcode": "3456789012345",
+          "hsn_code": "6506"
+        },
+        
+        "quantity_details": {
+          "quantity": 50,
+          "unit_of_measure": "PCS",
+          "received_quantity": 0,
+          "pending_quantity": 50,
+          "damaged_quantity": 0
+        },
+        
+        "pricing": {
+          "unit_price": 850.00,
+          "list_price": 900.00,
+          "discount_percent": 0.00,
+          "discount_amount": 0.00,
+          "net_unit_price": 850.00,
+          "line_subtotal": 42500.00,
+          "tax_rate": 12.00,
+          "tax_amount": 5100.00,
+          "line_total": 47600.00
+        },
+        
+        "inventory_details": {
+          "condition_code": "A",
+          "condition_description": "New - Excellent",
+          "warranty_months": 12,
+          "expiry_date": "2030-01-25",
+          "batch_code": "BATCH-20250125-003",
+          "serial_numbers": [],
+          "location_details": {
+            "warehouse_location": "B-02-001",
+            "bin_location": "BIN-B001",
+            "shelf": "SHELF-01",
+            "zone": "ZONE-B"
+          }
+        },
+        
+        "quality_control": {
+          "inspection_required": false,
+          "inspection_status": "NOT_REQUIRED",
+          "quality_grade": "A",
+          "defect_notes": null,
+          "inspector": null,
+          "inspection_date": null
+        },
+        
+        "line_notes": "Safety equipment for construction site rentals",
+        "created_at": "2025-01-25T10:30:00Z",
+        "updated_at": "2025-01-25T10:30:00Z"
+      }
+    ],
+    
+    "tax_breakdown": [
+      {
+        "tax_type": "CGST",
+        "tax_rate": 9.00,
+        "taxable_amount": 120625.00,
+        "tax_amount": 10856.25,
+        "description": "Central Goods and Services Tax"
+      },
+      {
+        "tax_type": "SGST",
+        "tax_rate": 9.00,
+        "taxable_amount": 120625.00,
+        "tax_amount": 10856.25,
+        "description": "State Goods and Services Tax"
+      },
+      {
+        "tax_type": "IGST",
+        "tax_rate": 0.00,
+        "taxable_amount": 0.00,
+        "tax_amount": 0.00,
+        "description": "Integrated Goods and Services Tax"
+      }
+    ],
+    
+    "attachments": [
+      {
+        "id": "att-001",
+        "filename": "purchase_order_PO-2025-001.pdf",
+        "file_type": "application/pdf",
+        "file_size": 245760,
+        "upload_date": "2025-01-25T10:00:00Z",
+        "uploaded_by": "admin@company.com",
+        "description": "Original purchase order document"
+      },
+      {
+        "id": "att-002",
+        "filename": "supplier_quotation.pdf",
+        "file_type": "application/pdf",
+        "file_size": 189440,
+        "upload_date": "2025-01-25T09:30:00Z",
+        "uploaded_by": "admin@company.com",
+        "description": "Supplier quotation and price list"
+      }
+    ],
+    
+    "workflow_history": [
+      {
+        "id": "wf-001",
+        "action": "CREATED",
+        "performed_by": "admin@company.com",
+        "performed_at": "2025-01-25T10:30:00Z",
+        "comments": "Purchase transaction created",
+        "status_from": null,
+        "status_to": "DRAFT"
+      },
+      {
+        "id": "wf-002",
+        "action": "SUBMITTED",
+        "performed_by": "admin@company.com",
+        "performed_at": "2025-01-25T10:35:00Z",
+        "comments": "Submitted for approval",
+        "status_from": "DRAFT",
+        "status_to": "PENDING_APPROVAL"
+      },
+      {
+        "id": "wf-003",
+        "action": "APPROVED",
+        "performed_by": "manager@company.com",
+        "performed_at": "2025-01-25T11:00:00Z",
+        "comments": "Approved for processing",
+        "status_from": "PENDING_APPROVAL",
+        "status_to": "APPROVED"
+      },
+      {
+        "id": "wf-004",
+        "action": "COMPLETED",
+        "performed_by": "system",
+        "performed_at": "2025-01-25T11:05:00Z",
+        "comments": "Transaction completed successfully",
+        "status_from": "APPROVED",
+        "status_to": "COMPLETED"
+      }
+    ],
+    
+    "business_rules_applied": {
+      "validation_rules": [
+        {
+          "rule": "SUPPLIER_ACTIVE_CHECK",
+          "status": "PASSED",
+          "message": "Supplier is active and in good standing"
+        },
+        {
+          "rule": "CREDIT_LIMIT_CHECK",
+          "status": "PASSED",
+          "message": "Purchase amount within supplier credit limit"
+        },
+        {
+          "rule": "SERIAL_NUMBER_UNIQUENESS",
+          "status": "PASSED",
+          "message": "All serial numbers are unique in the system"
+        },
+        {
+          "rule": "QUANTITY_VALIDATION",
+          "status": "PASSED",
+          "message": "All quantities are within acceptable ranges"
+        }
+      ],
+      
+      "pricing_rules": [
+        {
+          "rule": "BULK_DISCOUNT",
+          "applied": true,
+          "description": "5% bulk discount applied for quantities > 20"
+        },
+        {
+          "rule": "PREFERRED_SUPPLIER_DISCOUNT",
+          "applied": true,
+          "description": "Additional 2% discount for preferred supplier"
+        }
+      ],
+      
+      "tax_rules": [
+        {
+          "rule": "GST_CALCULATION",
+          "applied": true,
+          "description": "GST calculated based on HSN codes and location"
+        },
+        {
+          "rule": "INTERSTATE_TAX",
+          "applied": false,
+          "description": "Intrastate transaction - CGST/SGST applied"
+        }
+      ]
+    },
+    
+    "integration_data": {
+      "erp_sync": {
+        "synced": true,
+        "sync_date": "2025-01-25T11:10:00Z",
+        "erp_transaction_id": "ERP-PUR-2025-001",
+        "sync_status": "SUCCESS"
+      },
+      
+      "accounting_sync": {
+        "synced": true,
+        "sync_date": "2025-01-25T11:15:00Z",
+        "journal_entry_id": "JE-2025-001",
+        "sync_status": "SUCCESS"
+      },
+      
+      "inventory_sync": {
+        "synced": true,
+        "sync_date": "2025-01-25T11:20:00Z",
+        "stock_movement_ids": ["SM-2025-001", "SM-2025-002", "SM-2025-003"],
+        "sync_status": "SUCCESS"
+      }
+    },
+    
+    "compliance_data": {
+      "regulatory_compliance": {
+        "gst_compliance": true,
+        "import_compliance": false,
+        "environmental_compliance": true,
+        "safety_compliance": true
+      },
+      
+      "audit_requirements": {
+        "retention_period_years": 7,
+        "archive_date": "2032-01-25",
+        "audit_trail_complete": true,
+        "document_integrity": "VERIFIED"
+      }
+    },
+    
+    "performance_metrics": {
+      "processing_time_ms": 1250,
+      "validation_time_ms": 150,
+      "database_operations": 12,
+      "api_calls": 3,
+      "memory_usage_mb": 45.2
+    }
+  },
+  
+  "metadata": {
+    "schema_version": "1.0",
+    "generated_by": "Rental Management System",
+    "generated_at": "2025-01-25T10:30:00Z",
+    "environment": "production",
+    "system_version": "5.0.0",
+    "api_version": "v1",
+    "documentation_url": "https://docs.rentalmanager.com/api/purchase-transactions"
+  }
+}

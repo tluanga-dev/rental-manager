@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload, joinedload
 
 from app.models.transaction import (
-    TransactionHeader, TransactionType, TransactionStatus,
+    TransactionHeader, TransactionLine, TransactionType, TransactionStatus,
     PaymentStatus, RentalStatus
 )
 
@@ -43,7 +43,11 @@ class TransactionHeaderRepository:
         
         # Add eager loading for collections as needed
         if include_lines:
-            query = query.options(selectinload(TransactionHeader.transaction_lines))
+            # Include item details for each transaction line
+            query = query.options(
+                selectinload(TransactionHeader.transaction_lines).selectinload(TransactionLine.item),
+                selectinload(TransactionHeader.transaction_lines).selectinload(TransactionLine.location)
+            )
         if include_events:
             query = query.options(selectinload(TransactionHeader.events))
         if include_metadata:

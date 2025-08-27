@@ -146,6 +146,28 @@ class PurchaseValidationError(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class PurchaseItemResponse(BaseModel):
+    """Schema for purchase item in response."""
+    id: UUID
+    item_id: UUID
+    item_name: Optional[str] = None
+    item_sku: Optional[str] = None
+    quantity: Decimal
+    unit_price: Decimal
+    line_total: Decimal
+    discount_amount: Optional[Decimal] = Decimal("0.00")
+    tax_amount: Optional[Decimal] = Decimal("0.00")
+    condition_code: Optional[str] = None
+    serial_numbers: List[str] = Field(default_factory=list)
+    batch_code: Optional[str] = None
+    location_id: Optional[UUID] = None
+    location_name: Optional[str] = None
+    warehouse_location: Optional[str] = None
+    notes: Optional[str] = None
+    
+    model_config = ConfigDict(from_attributes=True)
+
+
 class PurchaseResponse(BaseModel):
     """Schema for purchase transaction response."""
     id: UUID
@@ -165,6 +187,10 @@ class PurchaseResponse(BaseModel):
     supplier_code: Optional[str] = None
     location_id: UUID
     location_name: Optional[str] = None
+    
+    # Supplier object (for frontend compatibility)
+    supplier: Optional[Dict[str, Any]] = None
+    location: Optional[Dict[str, Any]] = None
     
     # Financial
     currency: str
@@ -188,6 +214,9 @@ class PurchaseResponse(BaseModel):
     # Items summary
     total_items: int = 0
     total_quantity: Decimal = Decimal("0.00")
+    
+    # Items detail
+    items: List[PurchaseItemResponse] = Field(default_factory=list)
     
     # Delivery
     delivery_required: bool
@@ -240,6 +269,14 @@ class PurchaseResponse(BaseModel):
             if hasattr(transaction, 'supplier') and transaction.supplier:
                 data['supplier_name'] = getattr(transaction.supplier, 'company_name', None)
                 data['supplier_code'] = getattr(transaction.supplier, 'supplier_code', None)
+                # Add supplier object for frontend compatibility
+                data['supplier'] = {
+                    'id': str(transaction.supplier_id),
+                    'name': getattr(transaction.supplier, 'company_name', None),
+                    'company_name': getattr(transaction.supplier, 'company_name', None),
+                    'supplier_code': getattr(transaction.supplier, 'supplier_code', None),
+                    'display_name': getattr(transaction.supplier, 'company_name', None)
+                }
         except:
             # Relationship not loaded or accessible
             pass
@@ -247,18 +284,65 @@ class PurchaseResponse(BaseModel):
         try:
             if hasattr(transaction, 'location') and transaction.location:
                 data['location_name'] = getattr(transaction.location, 'location_name', None)
+                # Add location object for frontend compatibility
+                data['location'] = {
+                    'id': str(transaction.location_id),
+                    'name': getattr(transaction.location, 'location_name', None),
+                    'location_code': getattr(transaction.location, 'location_code', None) if hasattr(transaction.location, 'location_code') else None
+                }
         except:
             # Relationship not loaded or accessible
             pass
         
-        # Add items summary if lines are loaded
-        try:
-            if hasattr(transaction, 'transaction_lines') and transaction.transaction_lines:
-                data['total_items'] = len(transaction.transaction_lines)
-                data['total_quantity'] = sum(getattr(line, 'quantity', 0) for line in transaction.transaction_lines)
-        except:
-            # Transaction lines not loaded or accessible
-            pass
+        # Add items detail if lines are loaded and include_details is True
+        if include_details:
+            try:
+                if hasattr(transaction, 'transaction_lines') and transaction.transaction_lines:
+                    items = []
+                    for line in transaction.transaction_lines:
+                        item_data = {
+                            'id': line.id,
+                            'item_id': line.item_id,
+                            'quantity': line.quantity,
+                            'unit_price': line.unit_price,
+                            'line_total': line.line_total,
+                            'discount_amount': line.discount_amount,
+                            'tax_amount': line.tax_amount,
+                            'condition_code': getattr(line, 'condition', 'A'),
+                            'serial_numbers': getattr(line, 'serial_numbers', []) or [],
+                            'batch_code': getattr(line, 'batch_code', None),
+                            'location_id': line.location_id,
+                            'warehouse_location': getattr(line, 'warehouse_location', None),
+                            'notes': getattr(line, 'notes', None)
+                        }
+                        
+                        # Add item details if relationship is loaded
+                        if hasattr(line, 'item') and line.item:
+                            item_data['item_name'] = getattr(line.item, 'item_name', None)
+                            item_data['item_sku'] = getattr(line.item, 'sku', None)
+                        
+                        # Add location name if relationship is loaded
+                        if hasattr(line, 'location') and line.location:
+                            item_data['location_name'] = getattr(line.location, 'location_name', None)
+                        
+                        items.append(PurchaseItemResponse(**item_data))
+                    
+                    data['items'] = items
+                    data['total_items'] = len(items)
+                    data['total_quantity'] = sum(item.quantity for item in items)
+            except Exception as e:
+                # Transaction lines not loaded or accessible
+                print(f"Error loading transaction lines: {e}")
+                pass
+        else:
+            # Add items summary if lines are loaded
+            try:
+                if hasattr(transaction, 'transaction_lines') and transaction.transaction_lines:
+                    data['total_items'] = len(transaction.transaction_lines)
+                    data['total_quantity'] = sum(getattr(line, 'quantity', 0) for line in transaction.transaction_lines)
+            except:
+                # Transaction lines not loaded or accessible
+                pass
         
         return cls(**data)
 
