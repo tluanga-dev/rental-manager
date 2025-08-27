@@ -39,6 +39,7 @@ from app.schemas.transaction.purchase import (
 )
 
 from app.core.errors import NotFoundError, ValidationError, ConflictError
+from app.services.inventory.inventory_service import inventory_service
 
 logger = logging.getLogger(__name__)
 
@@ -129,7 +130,7 @@ class PurchaseService:
                     "id": transaction_id,
                     "transaction_type": TransactionType.PURCHASE.value,
                     "transaction_number": transaction_number,
-                    "status": TransactionStatus.PENDING.value,
+                    "status": TransactionStatus.COMPLETED.value if purchase_data.auto_complete else TransactionStatus.PENDING.value,
                     "transaction_date": purchase_data.purchase_date or now,
                     "due_date": purchase_data.due_date,
                     "supplier_id": purchase_data.supplier_id,
@@ -165,7 +166,7 @@ class PurchaseService:
             transaction = TransactionHeader()
             transaction.id = transaction_id
             transaction.transaction_number = transaction_number
-            transaction.status = TransactionStatus.PENDING
+            transaction.status = TransactionStatus.COMPLETED if purchase_data.auto_complete else TransactionStatus.PENDING
             transaction.total_amount = totals["total_amount"] + purchase_data.shipping_amount
             
             # Create transaction lines
@@ -185,31 +186,21 @@ class PurchaseService:
                 duration_ms=int((datetime.now(timezone.utc) - start_time).total_seconds() * 1000)
             )
             
-            # Update inventory (would be implemented when inventory module is ready)
-            # await self._update_inventory_for_purchase(transaction.id, lines)
-            
-            # Mark as completed if auto-complete is enabled
-            if getattr(purchase_data, "auto_complete", False):
-                # Update status using raw SQL
-                from sqlalchemy import text
-                update_sql = text("""
-                    UPDATE transaction_headers 
-                    SET status = :status, updated_at = :updated_at 
-                    WHERE id = :id
-                """)
-                await self.session.execute(
-                    update_sql,
-                    {
-                        "status": TransactionStatus.COMPLETED.value,
-                        "updated_at": datetime.now(timezone.utc),
-                        "id": transaction_id
-                    }
+            # Update inventory - create inventory units for completed purchase
+            if purchase_data.auto_complete:
+                await self._update_inventory_for_purchase(
+                    transaction_id=transaction.id,
+                    purchase_data=purchase_data,
+                    lines=lines,
+                    created_by=created_by
                 )
-                
+            
+            # Create completion event if auto-complete is enabled
+            if purchase_data.auto_complete:
                 await self.event_repo.create_transaction_event(
                     transaction_id=transaction_id,
                     event_type="PURCHASE_COMPLETED",
-                    description="Purchase transaction auto-completed",
+                    description="Purchase transaction auto-completed with inventory updates",
                     user_id=created_by
                 )
             
@@ -221,7 +212,7 @@ class PurchaseService:
             return PurchaseResponse(
                 id=transaction_id,
                 transaction_number=transaction_number,
-                status=TransactionStatus.PENDING.value if not getattr(purchase_data, "auto_complete", False) else TransactionStatus.COMPLETED.value,
+                status=TransactionStatus.COMPLETED.value if purchase_data.auto_complete else TransactionStatus.PENDING.value,
                 transaction_date=purchase_data.purchase_date or now,
                 supplier_id=purchase_data.supplier_id,
                 location_id=purchase_data.location_id,
@@ -676,3 +667,169 @@ class PurchaseService:
         }
         
         return new in valid_transitions.get(current, [])
+    
+    async def _update_inventory_for_purchase(
+        self,
+        transaction_id: UUID,
+        purchase_data,
+        lines: List[TransactionLine],
+        created_by: UUID
+    ) -> None:
+        """
+        Create inventory units and update stock levels for completed purchases.
+        
+        Args:
+            transaction_id: Purchase transaction ID
+            purchase_data: Purchase creation data
+            lines: Transaction lines with item details
+            created_by: User who created the purchase
+        """
+        try:
+            logger.info(f"Updating inventory for purchase transaction {transaction_id}")
+            
+            # Process each line item
+            for line in lines:
+                if line.item_id and line.quantity > 0:
+                    # Get item details
+                    item_query = select(Item).where(Item.id == line.item_id)
+                    item_result = await self.session.execute(item_query)
+                    item = item_result.scalar_one_or_none()
+                    
+                    if not item:
+                        logger.warning(f"Item {line.item_id} not found, skipping inventory creation")
+                        continue
+                    
+                    # Determine if items should be tracked as units
+                    # For now, create units for all purchased items
+                    # TODO: This could be configurable per item or category
+                    
+                    quantity_to_create = int(line.quantity)  # Convert to int for unit creation
+                    
+                    # Generate serial numbers or use batch tracking
+                    serial_numbers = None
+                    batch_code = None
+                    
+                    # Check if item should have serial numbers (optional enhancement)
+                    # For now, use batch tracking for all items
+                    if quantity_to_create == 1:
+                        # Single item - could use serial number if configured
+                        serial_numbers = []  # Will be auto-generated if needed
+                    else:
+                        # Multiple items - use batch code
+                        batch_code = f"PO-{purchase_data.purchase_order_number or transaction_id.hex[:8]}-{datetime.now().strftime('%Y%m%d')}"
+                    
+                    # Create inventory units and update stock levels
+                    units, stock, movement = await inventory_service.create_inventory_units(
+                        self.session,
+                        item_id=line.item_id,
+                        location_id=purchase_data.location_id,
+                        quantity=quantity_to_create,
+                        unit_cost=line.unit_price,
+                        serial_numbers=serial_numbers,
+                        batch_code=batch_code,
+                        supplier_id=purchase_data.supplier_id,
+                        purchase_order_number=purchase_data.purchase_order_number,
+                        created_by=created_by
+                    )
+                    
+                    # Update movement with transaction linkage
+                    if movement:
+                        movement.transaction_header_id = transaction_id
+                        movement.transaction_line_id = line.id
+                        movement.reference_number = purchase_data.purchase_order_number
+                        movement.movement_type = "STOCK_MOVEMENT_PURCHASE"
+                    
+                    logger.info(
+                        f"Created {len(units)} inventory units for item {line.item_id}, "
+                        f"updated stock level {stock.id}"
+                    )
+            
+            # Flush changes to ensure they're persisted
+            await self.session.flush()
+            
+            logger.info(f"Successfully updated inventory for purchase {transaction_id}")
+            
+        except Exception as e:
+            logger.error(f"Failed to update inventory for purchase {transaction_id}: {str(e)}")
+            # Don't raise the exception - inventory creation failure shouldn't fail the purchase
+            # But log it for investigation
+            logger.exception("Detailed inventory update error:")
+    
+    async def complete_purchase_and_update_inventory(
+        self,
+        purchase_id: UUID,
+        completed_by: UUID
+    ) -> bool:
+        """
+        Complete a pending purchase and update inventory.
+        
+        Args:
+            purchase_id: Purchase transaction ID
+            completed_by: User completing the purchase
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            # Get the purchase transaction
+            transaction_query = (
+                select(TransactionHeader)
+                .options(selectinload(TransactionHeader.transaction_lines))
+                .where(TransactionHeader.id == purchase_id)
+            )
+            result = await self.session.execute(transaction_query)
+            transaction = result.scalar_one_or_none()
+            
+            if not transaction:
+                logger.error(f"Purchase transaction {purchase_id} not found")
+                return False
+            
+            # Check if already completed
+            if transaction.status == TransactionStatus.COMPLETED.value:
+                logger.info(f"Purchase {purchase_id} already completed")
+                return True
+            
+            # Check if can be completed
+            if transaction.status not in [TransactionStatus.PENDING.value, TransactionStatus.PROCESSING.value]:
+                logger.error(f"Purchase {purchase_id} cannot be completed from status {transaction.status}")
+                return False
+            
+            # Create pseudo purchase data for inventory update
+            class PseudoPurchaseData:
+                def __init__(self, transaction):
+                    self.supplier_id = transaction.supplier_id
+                    self.location_id = transaction.location_id
+                    self.purchase_order_number = transaction.reference_number
+            
+            purchase_data = PseudoPurchaseData(transaction)
+            
+            # Update inventory
+            await self._update_inventory_for_purchase(
+                transaction_id=purchase_id,
+                purchase_data=purchase_data,
+                lines=transaction.transaction_lines,
+                created_by=completed_by
+            )
+            
+            # Update transaction status
+            transaction.status = TransactionStatus.COMPLETED.value
+            transaction.updated_at = datetime.now(timezone.utc)
+            transaction.updated_by = completed_by
+            
+            # Create completion event
+            await self.event_repo.create_transaction_event(
+                transaction_id=purchase_id,
+                event_type="PURCHASE_COMPLETED",
+                description="Purchase completed and inventory updated",
+                user_id=completed_by
+            )
+            
+            await self.session.commit()
+            
+            logger.info(f"Successfully completed purchase {purchase_id} and updated inventory")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to complete purchase {purchase_id}: {str(e)}")
+            await self.session.rollback()
+            return False

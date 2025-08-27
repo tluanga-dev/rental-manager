@@ -11,6 +11,8 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import select, func, and_, or_, desc
+from sqlalchemy.orm import selectinload, joinedload
 
 from app.crud.inventory import (
     stock_movement,
@@ -653,6 +655,413 @@ class InventoryService:
             })
         
         return alerts
+    
+    async def get_inventory_stocks(
+        self,
+        db: AsyncSession,
+        *,
+        search: Optional[str] = None,
+        category_id: Optional[UUID] = None,
+        brand_id: Optional[UUID] = None,
+        location_id: Optional[UUID] = None,
+        stock_status: Optional[str] = None,
+        is_rentable: Optional[bool] = None,
+        is_saleable: Optional[bool] = None,
+        sort_by: str = "item_name",
+        sort_order: str = "asc",
+        skip: int = 0,
+        limit: int = 100
+    ) -> List[Dict[str, Any]]:
+        """
+        Get inventory stocks - all items that have inventory units.
+        
+        Args:
+            db: Database session
+            search: Search term for item name, SKU
+            category_id: Filter by category
+            brand_id: Filter by brand
+            location_id: Filter by location
+            stock_status: Filter by stock status
+            is_rentable: Filter rentable items
+            is_saleable: Filter saleable items
+            sort_by: Sort field
+            sort_order: Sort order
+            skip: Skip records
+            limit: Limit records
+            
+        Returns:
+            List of inventory stock summaries
+        """
+        from app.models.item import Item
+        from app.models.inventory.inventory_unit import InventoryUnit
+        from app.models.inventory.stock_level import StockLevel
+        from app.models.brand import Brand
+        from app.models.category import Category
+        from app.models.location import Location
+        
+        # Build base query for items that have inventory units
+        query = (
+            select(Item)
+            .options(
+                selectinload(Item.brand),
+                selectinload(Item.category),
+                selectinload(Item.unit_of_measurement),
+                selectinload(Item.stock_levels).selectinload(StockLevel.location),
+                selectinload(Item.inventory_units)
+            )
+            .join(InventoryUnit, Item.id == InventoryUnit.item_id)
+            .distinct()
+        )
+        
+        # Apply filters
+        filters = []
+        
+        if search:
+            search_term = f"%{search}%"
+            filters.append(
+                or_(
+                    Item.item_name.ilike(search_term),
+                    Item.sku.ilike(search_term),
+                    Item.description.ilike(search_term)
+                )
+            )
+        
+        if category_id:
+            filters.append(Item.category_id == category_id)
+        
+        if brand_id:
+            filters.append(Item.brand_id == brand_id)
+        
+        if is_rentable is not None:
+            filters.append(Item.is_rentable == is_rentable)
+        
+        if is_saleable is not None:
+            filters.append(Item.is_saleable == is_saleable)
+        
+        # Apply location filter if specified
+        if location_id:
+            query = query.join(
+                StockLevel, 
+                and_(
+                    Item.id == StockLevel.item_id,
+                    StockLevel.location_id == location_id
+                )
+            )
+        
+        # Apply all filters
+        if filters:
+            query = query.where(and_(*filters))
+        
+        # Apply sorting
+        sort_column = getattr(Item, sort_by, Item.item_name)
+        if sort_order == "desc":
+            query = query.order_by(desc(sort_column))
+        else:
+            query = query.order_by(sort_column)
+        
+        # Apply pagination
+        query = query.offset(skip).limit(limit)
+        
+        # Execute query
+        result = await db.execute(query)
+        items = result.scalars().unique().all()
+        
+        # Build response data
+        inventory_stocks = []
+        
+        for item in items:
+            # Calculate stock totals across all locations
+            stock_levels = item.stock_levels
+            
+            # Filter by location if specified
+            if location_id:
+                stock_levels = [sl for sl in stock_levels if sl.location_id == location_id]
+            
+            # Calculate aggregated quantities
+            total_quantity = sum(sl.quantity_on_hand for sl in stock_levels)
+            available_quantity = sum(sl.quantity_available for sl in stock_levels)
+            reserved_quantity = sum(sl.quantity_reserved for sl in stock_levels)
+            on_rent_quantity = sum(sl.quantity_on_rent for sl in stock_levels)
+            damaged_quantity = sum(sl.quantity_damaged for sl in stock_levels)
+            under_repair_quantity = sum(sl.quantity_under_repair for sl in stock_levels)
+            
+            # Count inventory units
+            total_units = len(item.inventory_units)
+            
+            # Determine overall stock status
+            if available_quantity == 0:
+                overall_status = "OUT_OF_STOCK"
+            elif any(sl.is_low_stock() for sl in stock_levels):
+                overall_status = "LOW_STOCK"
+            else:
+                overall_status = "IN_STOCK"
+            
+            # Apply stock status filter
+            if stock_status and overall_status != stock_status:
+                continue
+            
+            # Build location breakdown
+            location_breakdown = []
+            for sl in stock_levels:
+                location_breakdown.append({
+                    "location_id": str(sl.location_id),
+                    "location_name": sl.location.name if sl.location else "Unknown",
+                    "quantity_on_hand": float(sl.quantity_on_hand),
+                    "quantity_available": float(sl.quantity_available),
+                    "quantity_reserved": float(sl.quantity_reserved),
+                    "quantity_on_rent": float(sl.quantity_on_rent),
+                    "quantity_damaged": float(sl.quantity_damaged)
+                })
+            
+            inventory_stock = {
+                "item_id": str(item.id),
+                "item_name": item.item_name,
+                "sku": item.sku,
+                "description": item.description,
+                "category": {
+                    "id": str(item.category.id) if item.category else None,
+                    "name": item.category.name if item.category else None,
+                    "code": item.category.code if item.category else None
+                } if item.category else None,
+                "brand": {
+                    "id": str(item.brand.id) if item.brand else None,
+                    "name": item.brand.name if item.brand else None
+                } if item.brand else None,
+                "unit_of_measurement": {
+                    "id": str(item.unit_of_measurement.id) if item.unit_of_measurement else None,
+                    "name": item.unit_of_measurement.name if item.unit_of_measurement else None,
+                    "abbreviation": item.unit_of_measurement.abbreviation if item.unit_of_measurement else None
+                } if item.unit_of_measurement else None,
+                "total_units": total_units,
+                "total_quantity": float(total_quantity),
+                "available_quantity": float(available_quantity),
+                "reserved_quantity": float(reserved_quantity),
+                "on_rent_quantity": float(on_rent_quantity),
+                "damaged_quantity": float(damaged_quantity),
+                "under_repair_quantity": float(under_repair_quantity),
+                "stock_status": overall_status,
+                "rental_rate": float(item.rental_rate_per_period) if item.rental_rate_per_period else None,
+                "sale_price": float(item.sale_price) if item.sale_price else None,
+                "security_deposit": float(item.security_deposit) if item.security_deposit else None,
+                "is_rentable": item.is_rentable,
+                "is_saleable": item.is_saleable,
+                "is_active": item.is_active,
+                "location_breakdown": location_breakdown,
+                "created_at": item.created_at.isoformat(),
+                "updated_at": item.updated_at.isoformat()
+            }
+            
+            inventory_stocks.append(inventory_stock)
+        
+        return inventory_stocks
+    
+    async def get_inventory_item_detail(
+        self,
+        db: AsyncSession,
+        *,
+        item_id: UUID
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Get detailed inventory information for a specific item.
+        
+        Args:
+            db: Database session
+            item_id: Item ID
+            
+        Returns:
+            Detailed inventory item information
+        """
+        from app.models.item import Item
+        from app.models.inventory.inventory_unit import InventoryUnit
+        from app.models.inventory.stock_level import StockLevel
+        from app.models.inventory.stock_movement import StockMovement
+        
+        # Get item with all related data
+        query = (
+            select(Item)
+            .options(
+                selectinload(Item.brand),
+                selectinload(Item.category),
+                selectinload(Item.unit_of_measurement),
+                selectinload(Item.stock_levels).selectinload(StockLevel.location),
+                selectinload(Item.inventory_units).selectinload(InventoryUnit.location),
+                selectinload(Item.inventory_units).selectinload(InventoryUnit.supplier),
+                selectinload(Item.stock_movements).selectinload(StockMovement.location)
+            )
+            .where(Item.id == item_id)
+        )
+        
+        result = await db.execute(query)
+        item = result.scalar_one_or_none()
+        
+        if not item:
+            return None
+        
+        # Build inventory units details
+        inventory_units = []
+        for unit in item.inventory_units:
+            inventory_units.append({
+                "id": str(unit.id),
+                "sku": unit.sku,
+                "serial_number": unit.serial_number,
+                "batch_code": unit.batch_code,
+                "barcode": unit.barcode,
+                "status": unit.status,
+                "status_display": unit.status_display,
+                "condition": unit.condition,
+                "condition_display": unit.condition_display,
+                "quantity": float(unit.quantity),
+                "location": {
+                    "id": str(unit.location.id) if unit.location else None,
+                    "name": unit.location.name if unit.location else None
+                } if unit.location else None,
+                "supplier": {
+                    "id": str(unit.supplier.id) if unit.supplier else None,
+                    "name": unit.supplier.supplier_name if unit.supplier else None
+                } if unit.supplier else None,
+                "purchase_date": unit.purchase_date.isoformat() if unit.purchase_date else None,
+                "purchase_price": float(unit.purchase_price),
+                "sale_price": float(unit.sale_price) if unit.sale_price else None,
+                "rental_rate_per_period": float(unit.rental_rate_per_period) if unit.rental_rate_per_period else None,
+                "security_deposit": float(unit.security_deposit),
+                "warranty_expiry": unit.warranty_expiry.isoformat() if unit.warranty_expiry else None,
+                "next_maintenance_date": unit.next_maintenance_date.isoformat() if unit.next_maintenance_date else None,
+                "is_rental_blocked": unit.is_rental_blocked,
+                "rental_block_reason": unit.rental_block_reason,
+                "can_be_rented": unit.can_be_rented(),
+                "is_available": unit.is_available(),
+                "notes": unit.notes,
+                "created_at": unit.created_at.isoformat(),
+                "updated_at": unit.updated_at.isoformat()
+            })
+        
+        # Build stock level summary
+        stock_levels = []
+        total_on_hand = Decimal("0")
+        total_available = Decimal("0")
+        total_reserved = Decimal("0")
+        total_on_rent = Decimal("0")
+        total_damaged = Decimal("0")
+        
+        for sl in item.stock_levels:
+            stock_levels.append({
+                "id": str(sl.id),
+                "location": {
+                    "id": str(sl.location.id) if sl.location else None,
+                    "name": sl.location.name if sl.location else None
+                } if sl.location else None,
+                "quantity_on_hand": float(sl.quantity_on_hand),
+                "quantity_available": float(sl.quantity_available),
+                "quantity_reserved": float(sl.quantity_reserved),
+                "quantity_on_rent": float(sl.quantity_on_rent),
+                "quantity_damaged": float(sl.quantity_damaged),
+                "quantity_under_repair": float(sl.quantity_under_repair),
+                "quantity_beyond_repair": float(sl.quantity_beyond_repair),
+                "stock_status": sl.stock_status,
+                "reorder_point": float(sl.reorder_point) if sl.reorder_point else None,
+                "maximum_stock": float(sl.maximum_stock) if sl.maximum_stock else None,
+                "average_cost": float(sl.average_cost) if sl.average_cost else None,
+                "total_value": float(sl.total_value) if sl.total_value else None,
+                "last_movement_date": sl.last_movement_date.isoformat() if sl.last_movement_date else None,
+                "utilization_rate": float(sl.get_utilization_rate()),
+                "availability_rate": float(sl.get_availability_rate()),
+                "is_low_stock": sl.is_low_stock(),
+                "updated_at": sl.updated_at.isoformat()
+            })
+            
+            # Add to totals
+            total_on_hand += sl.quantity_on_hand
+            total_available += sl.quantity_available
+            total_reserved += sl.quantity_reserved
+            total_on_rent += sl.quantity_on_rent
+            total_damaged += sl.quantity_damaged
+        
+        # Get recent stock movements (last 20)
+        movements_query = (
+            select(StockMovement)
+            .options(
+                selectinload(StockMovement.location),
+                selectinload(StockMovement.performed_by)
+            )
+            .where(StockMovement.item_id == item_id)
+            .order_by(desc(StockMovement.movement_date))
+            .limit(20)
+        )
+        
+        movements_result = await db.execute(movements_query)
+        movements = movements_result.scalars().all()
+        
+        recent_movements = []
+        for movement in movements:
+            recent_movements.append({
+                "id": str(movement.id),
+                "movement_type": movement.movement_type.value,
+                "quantity_change": float(movement.quantity_change),
+                "quantity_before": float(movement.quantity_before),
+                "quantity_after": float(movement.quantity_after),
+                "location": {
+                    "id": str(movement.location.id) if movement.location else None,
+                    "name": movement.location.name if movement.location else None
+                } if movement.location else None,
+                "performed_by": {
+                    "id": str(movement.performed_by.id) if movement.performed_by else None,
+                    "name": movement.performed_by.full_name if movement.performed_by else None
+                } if movement.performed_by else None,
+                "reason": movement.reason,
+                "notes": movement.notes,
+                "unit_cost": float(movement.unit_cost) if movement.unit_cost else None,
+                "total_cost": float(movement.total_cost) if movement.total_cost else None,
+                "movement_date": movement.movement_date.isoformat(),
+                "created_at": movement.created_at.isoformat()
+            })
+        
+        # Build complete response
+        return {
+            "item": {
+                "id": str(item.id),
+                "item_name": item.item_name,
+                "sku": item.sku,
+                "description": item.description,
+                "image_url": item.image_url,
+                "category": {
+                    "id": str(item.category.id) if item.category else None,
+                    "name": item.category.name if item.category else None,
+                    "code": item.category.code if item.category else None
+                } if item.category else None,
+                "brand": {
+                    "id": str(item.brand.id) if item.brand else None,
+                    "name": item.brand.name if item.brand else None
+                } if item.brand else None,
+                "unit_of_measurement": {
+                    "id": str(item.unit_of_measurement.id) if item.unit_of_measurement else None,
+                    "name": item.unit_of_measurement.name if item.unit_of_measurement else None,
+                    "abbreviation": item.unit_of_measurement.abbreviation if item.unit_of_measurement else None
+                } if item.unit_of_measurement else None,
+                "rental_rate_per_period": float(item.rental_rate_per_period) if item.rental_rate_per_period else None,
+                "rental_period": item.rental_period,
+                "sale_price": float(item.sale_price) if item.sale_price else None,
+                "security_deposit": float(item.security_deposit) if item.security_deposit else None,
+                "is_rentable": item.is_rentable,
+                "is_saleable": item.is_saleable,
+                "is_active": item.is_active,
+                "created_at": item.created_at.isoformat(),
+                "updated_at": item.updated_at.isoformat()
+            },
+            "inventory_units": inventory_units,
+            "stock_levels": stock_levels,
+            "stock_summary": {
+                "total_units": len(inventory_units),
+                "total_on_hand": float(total_on_hand),
+                "total_available": float(total_available),
+                "total_reserved": float(total_reserved),
+                "total_on_rent": float(total_on_rent),
+                "total_damaged": float(total_damaged),
+                "locations_count": len(stock_levels),
+                "overall_utilization_rate": float(total_on_rent / total_on_hand * 100) if total_on_hand > 0 else 0,
+                "overall_availability_rate": float(total_available / total_on_hand * 100) if total_on_hand > 0 else 0
+            },
+            "recent_movements": recent_movements
+        }
 
 
 # Create service instance

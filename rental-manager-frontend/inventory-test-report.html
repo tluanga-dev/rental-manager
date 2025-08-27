@@ -1,0 +1,236 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inventory Feature Test Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+            .container { max-width: 1400px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+            .header { background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); color: white; padding: 20px; margin: -20px -20px 20px -20px; border-radius: 8px 8px 0 0; }
+            .success { color: #27ae60; font-weight: bold; }
+            .fail { color: #e74c3c; font-weight: bold; }
+            .metric { background: #f8f9fa; padding: 15px; margin: 5px 0; border-left: 4px solid #2196F3; border-radius: 4px; }
+            .test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin: 20px 0; }
+            .test-card { background: #ffffff; border: 1px solid #e0e0e0; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+            .pass { border-left: 5px solid #27ae60; }
+            .fail { border-left: 5px solid #e74c3c; }
+            .summary { background: #f8f9fa; padding: 25px; border-radius: 8px; margin: 20px 0; }
+            pre { background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; font-size: 12px; }
+            .progress { width: 100%; background-color: #e0e0e0; border-radius: 8px; overflow: hidden; }
+            .progress-bar { height: 25px; background: linear-gradient(45deg, #4CAF50, #66BB6A); color: white; text-align: center; line-height: 25px; font-weight: bold; }
+            .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+            .stat-card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .stat-number { font-size: 2em; font-weight: bold; color: #2196F3; }
+            .inventory-icon { font-size: 2em; margin-bottom: 10px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📦 Inventory Feature Comprehensive Test Report</h1>
+                <p>Generated on 27/8/2025, 4:57:53 pm</p>
+                <p>Full-stack inventory feature testing with extensive input variations</p>
+            </div>
+            
+            <div class="summary">
+                <h2>📊 Test Summary</h2>
+                <div class="metric">
+                    <strong>Overall Success Rate:</strong> 
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 17%">
+                            17%
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="inventory-icon">✅</div>
+                        <div class="stat-number">2</div>
+                        <div>Tests Passed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="inventory-icon">❌</div>
+                        <div class="stat-number">10</div>
+                        <div>Tests Failed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="inventory-icon">🔍</div>
+                        <div class="stat-number">52</div>
+                        <div>Search Variations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="inventory-icon">🎛️</div>
+                        <div class="stat-number">22</div>
+                        <div>Filter Combinations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="inventory-icon">🛡️</div>
+                        <div class="stat-number">5</div>
+                        <div>Security Tests</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="inventory-icon">📸</div>
+                        <div class="stat-number">12</div>
+                        <div>Screenshots</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>🧪 Individual Test Results</h2>
+            <div class="test-grid">
+                
+                    <div class="test-card fail">
+                        <h3>❌ Authentication</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Core functionality test
+                        </small>
+                    </div>
+                
+                    <div class="test-card pass">
+                        <h3>✅ Navigation</h3>
+                        <p class="success">PASSED</p>
+                        <small>
+                            Core functionality test
+                        </small>
+                    </div>
+                
+                    <div class="test-card fail">
+                        <h3>❌ Stock Overview</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Core functionality test
+                        </small>
+                    </div>
+                
+                    <div class="test-card fail">
+                        <h3>❌ Stock Filtering</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Tested 52 search variations
+                        </small>
+                    </div>
+                
+                    <div class="test-card fail">
+                        <h3>❌ Stock Sorting</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Core functionality test
+                        </small>
+                    </div>
+                
+                    <div class="test-card fail">
+                        <h3>❌ Item Details</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Core functionality test
+                        </small>
+                    </div>
+                
+                    <div class="test-card fail">
+                        <h3>❌ Item Sub Pages</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Core functionality test
+                        </small>
+                    </div>
+                
+                    <div class="test-card fail">
+                        <h3>❌ Data Input Variations</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Core functionality test
+                        </small>
+                    </div>
+                
+                    <div class="test-card pass">
+                        <h3>✅ Performance</h3>
+                        <p class="success">PASSED</p>
+                        <small>
+                            Recorded 3 metrics
+                        </small>
+                    </div>
+                
+                    <div class="test-card fail">
+                        <h3>❌ Security</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Tested 5 security scenarios
+                        </small>
+                    </div>
+                
+                    <div class="test-card fail">
+                        <h3>❌ Error Handling</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Tested 5 error scenarios
+                        </small>
+                    </div>
+                
+                    <div class="test-card fail">
+                        <h3>❌ Integration</h3>
+                        <p class="fail">FAILED</p>
+                        <small>
+                            Core functionality test
+                        </small>
+                    </div>
+                
+            </div>
+
+            <h2>⚡ Performance Metrics</h2>
+            <div class="metric">
+                <strong>Performance Data:</strong>
+                <pre>[
+  {
+    "test": "page_load",
+    "time": 1152,
+    "iteration": 1
+  },
+  {
+    "test": "page_load",
+    "time": 1129,
+    "iteration": 2
+  },
+  {
+    "test": "page_load",
+    "time": 1320,
+    "iteration": 3
+  }
+]</pre>
+            </div>
+
+            <h2>📡 Network Analysis</h2>
+            <div class="metric">
+                <strong>Total Requests:</strong> 236<br>
+                <strong>Total Responses:</strong> 166
+            </div>
+
+            <h2>💬 Console Analysis</h2>
+            <div class="metric">
+                <strong>Total Messages:</strong> 850<br>
+                <strong>Errors:</strong> 96<br>
+                <strong>Warnings:</strong> 22
+            </div>
+
+            <h2>📋 Test Coverage Details</h2>
+            <div class="metric">
+                <ul>
+                    <li><strong>Search Input Variations:</strong> 52 different inputs tested</li>
+                    <li><strong>Filter Combinations:</strong> 22 different filter scenarios</li>
+                    <li><strong>Pagination Scenarios:</strong> 10 pagination tests</li>
+                    <li><strong>Security Tests:</strong> 5 injection and XSS tests</li>
+                    <li><strong>Error Handling:</strong> 5 error scenarios tested</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 40px; text-align: center; color: #666;">
+                <p>📦 Comprehensive Inventory Feature Testing Complete</p>
+                <p>Report generated by Puppeteer Test Suite</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    

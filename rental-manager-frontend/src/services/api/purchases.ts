@@ -187,6 +187,9 @@ export interface PurchaseRecord {
   delivery_address?: string;
   delivery_date?: string;
   due_date?: string;
+  
+  // Auto-completion setting (defaults to true for immediate inventory updates)
+  auto_complete?: boolean;
 }
 
 export const purchasesApi = {
@@ -231,6 +234,9 @@ export const purchasesApi = {
       delivery_address: data.delivery_address,
       delivery_date: data.delivery_date,
       due_date: data.due_date,
+      
+      // Auto-completion (default to true for immediate inventory updates)
+      auto_complete: data.auto_complete !== false, // Default to true unless explicitly set to false
     };
     
     try {

@@ -1,0 +1,96 @@
+{
+  "timestamp": "2025-08-27T15:35:48.775Z",
+  "successRate": 0,
+  "testResults": [
+    {
+      "name": "Create Test Purchase Transaction",
+      "status": "FAILED",
+      "details": "Failed to create test transaction: Query failed: Command failed: docker exec rental_manager_postgres psql -U rental_user -d rental_db -c \"\n                    INSERT INTO transaction_headers (\n                        id, transaction_type, transaction_number, status,\n                        transaction_date, supplier_id, location_id, currency,\n                        subtotal, discount_amount, tax_amount, shipping_amount,\n                        total_amount, paid_amount, deposit_paid, customer_advance_balance,\n                        delivery_required, pickup_required, extension_count, total_extension_charges,\n                        payment_status, payment_method, is_active, created_at, updated_at, notes\n                    ) VALUES (\n                        'test-purchase-08948094', 'PURCHASE', 'PUR-TEST-8094', 'COMPLETED',\n                        '2025-08-27T15:35:48.094Z', 'b128a522-2923-4535-98fa-0f04db881ab4', '70b8dc79-846b-47be-9450-507401a27494', 'INR',\n                        75.00, 0.00, 7.50, 0.00, 82.50, 0.00, false, 0.00,\n                        false, false, 0, 0.00, 'PENDING', 'BANK_TRANSFER',\n                        true, '2025-08-27T15:35:48.094Z', '2025-08-27T15:35:48.094Z', 'Direct inventory verification test'\n                    ) RETURNING id\n                \"\nERROR:  invalid input syntax for type uuid: \"test-purchase-08948094\"\nLINE 10:                         'test-purchase-08948094', 'PURCHASE'...\n                                 ^\n"
+    },
+    {
+      "name": "Simulate Inventory Service Updates",
+      "status": "FAILED",
+      "details": "Cannot simulate updates - transaction creation failed"
+    },
+    {
+      "name": "Verify inventory_units Table Updates",
+      "status": "FAILED",
+      "details": "inventory_units table not updated as expected: 0 new units (expected 3)",
+      "data": {
+        "baselineCount": 0,
+        "currentCount": 0,
+        "newUnitsCount": 0,
+        "expectedIncrease": 3,
+        "unitsDetails": "id | sku | batch_code | status | condition | quantity | purchase_price \n----+-----+------------+--------+-----------+----------+----------------\n(0 rows)"
+      }
+    },
+    {
+      "name": "Verify stock_levels Table Updates",
+      "status": "FAILED",
+      "details": "stock_levels not updated as expected: quantity 5 (expected >= 8)",
+      "data": {
+        "baselineQuantity": 5,
+        "currentQuantity": 5,
+        "expectedQuantity": 8,
+        "quantityOnHand": 5,
+        "quantityAvailable": 5,
+        "recentlyUpdated": false,
+        "updatedAt": "2025-08-27 07:05:21.744744+00"
+      }
+    },
+    {
+      "name": "Verify stock_movements Table Updates",
+      "status": "FAILED",
+      "details": "No purchase movements found for test item in recent timeframe",
+      "data": {
+        "baselineMovements": 1,
+        "currentMovements": 0,
+        "expectedNewMovements": 1
+      }
+    },
+    {
+      "name": "Verify Transaction-Inventory Linkage",
+      "status": "FAILED",
+      "details": "No transaction linkage found for recent purchase movements"
+    }
+  ],
+  "baseline": {
+    "dbConnectivity": true,
+    "apiHealth": true,
+    "inventory_units": 0,
+    "stock_levels": 1,
+    "stock_movements": 2,
+    "purchase_transactions": 15,
+    "completed_purchases": 1,
+    "transaction_lines": 12,
+    "testDataStatus": {
+      "supplier": {
+        "exists": true,
+        "name": "company_name"
+      },
+      "location": {
+        "exists": true,
+        "name": "location_name"
+      },
+      "item": {
+        "exists": true,
+        "name": "item_name"
+      }
+    },
+    "itemStock": {
+      "exists": true,
+      "quantity_on_hand": 5,
+      "quantity_available": 5,
+      "average_cost": 25,
+      "item_name": "Test Item 1756114080519"
+    },
+    "existingUnits": 0,
+    "purchaseMovements": 1
+  },
+  "summary": {
+    "totalTests": 6,
+    "passed": 0,
+    "failed": 6,
+    "errors": 0
+  }
+}

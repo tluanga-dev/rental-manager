@@ -94,6 +94,9 @@ class PurchaseCreate(BaseModel):
     notes: Optional[str] = None
     tags: Optional[List[str]] = Field(default_factory=list)
     
+    # Auto-completion setting (default True for immediate inventory updates)
+    auto_complete: bool = Field(True, description="Automatically complete purchase and update inventory")
+    
     # Delivery
     delivery_required: bool = False
     delivery_address: Optional[str] = None

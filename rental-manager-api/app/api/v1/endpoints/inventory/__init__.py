@@ -7,6 +7,8 @@ This package contains all API endpoints for the inventory module.
 from fastapi import APIRouter
 
 from app.api.v1.endpoints.inventory import (
+    stocks,
+    items,
     stock_levels,
     stock_movements,
     inventory_units,
@@ -17,6 +19,21 @@ from app.api.v1.endpoints.inventory import (
 router = APIRouter()
 
 # Include sub-routers
+
+# Main inventory overview endpoints
+router.include_router(
+    stocks.router,
+    prefix="/stocks",
+    tags=["inventory-stocks"]
+)
+
+router.include_router(
+    items.router,
+    prefix="/items",
+    tags=["inventory-items"]
+)
+
+# Detailed management endpoints
 router.include_router(
     stock_levels.router,
     prefix="/stock-levels",
@@ -43,6 +60,8 @@ router.include_router(
 
 __all__ = [
     "router",
+    "stocks",
+    "items",
     "stock_levels",
     "stock_movements",
     "inventory_units",

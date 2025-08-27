@@ -24,13 +24,13 @@ export const inventoryUnitsApi = {
     warranty_expiry?: string;
     notes?: string;
   }) => {
-    const response = await apiClient.post<InventoryUnit>('/inventory/inventory/units', data);
+    const response = await apiClient.post<InventoryUnit>('/inventory/units', data);
     return response.data.success ? response.data.data : response.data;
   },
 
   // Get inventory unit by ID - Updated to match API_REFERENCE.md
   getById: async (unitId: string) => {
-    const response = await apiClient.get<InventoryUnit>(`/inventory/inventory/units/${unitId}`);
+    const response = await apiClient.get<InventoryUnit>(`/inventory/units/${unitId}`);
     return response.data.success ? response.data.data : response.data;
   },
 
@@ -60,7 +60,7 @@ export const inventoryUnitsApi = {
       params.append('search', filters.search);
     }
     
-    const response = await apiClient.get<InventoryUnit[]>(`/inventory/inventory/units?${params.toString()}`);
+    const response = await apiClient.get<InventoryUnit[]>(`/inventory/units?${params.toString()}`);
     return response.data.success ? response.data.data : response.data;
   },
 

@@ -180,10 +180,11 @@ export const rentableItemsApi = {
     if (params.skip !== undefined) searchParams.append('skip', params.skip.toString());
     if (params.limit !== undefined) searchParams.append('limit', params.limit.toString());
     
-    // Use the old inventory_unit/rentable endpoint as fallback
-    const url = `/inventory/inventory_unit/rentable${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+    // Use the inventory stocks endpoint with rentable filter
+    searchParams.append('is_rentable', 'true'); // Filter for rentable items only
+    const url = `/inventory/stocks${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
     
-    console.log('🔄 Making fallback API call to inventory units endpoint:', {
+    console.log('🔄 Making API call to inventory stocks endpoint:', {
       url: url,
       full_url: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}${url}`,
       params: params,

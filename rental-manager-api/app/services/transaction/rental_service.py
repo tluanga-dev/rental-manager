@@ -46,6 +46,7 @@ from app.schemas.transaction.rental import (
 )
 
 from app.core.errors import NotFoundError, ValidationError, ConflictError
+from app.services.inventory.inventory_service import inventory_service
 
 logger = logging.getLogger(__name__)
 
@@ -195,7 +196,11 @@ class RentalService:
             await self._block_items_for_rental(
                 lines,
                 rental_data.rental_start_date,
-                rental_data.rental_end_date
+                rental_data.rental_end_date,
+                rental_data.customer_id,
+                transaction.id,
+                rental_data.location_id,
+                created_by
             )
             
             await self.session.commit()
@@ -383,7 +388,13 @@ class RentalService:
         )
         
         # Release items back to inventory
-        await self._release_rental_items(transaction.transaction_lines)
+        await self._release_rental_items(
+            transaction.transaction_lines,
+            transaction.location_id,
+            transaction.id,
+            {"item_returns": [item.__dict__ for item in return_data.items], "inspector_notes": return_data.inspector_notes},
+            processed_by
+        )
         
         await self.session.commit()
         
@@ -891,25 +902,84 @@ class RentalService:
         self,
         lines: List[TransactionLine],
         start_date: date,
-        end_date: date
+        end_date: date,
+        customer_id: UUID,
+        transaction_id: UUID,
+        location_id: UUID,
+        performed_by: UUID
     ):
         """Block items from inventory for the rental period."""
-        # This would integrate with the inventory blocking service
-        # For now, just log the action
-        for line in lines:
-            logger.info(
-                f"Blocking item {line.item_id} quantity {line.quantity} "
-                f"from {start_date} to {end_date}"
-            )
+        try:
+            for line in lines:
+                if line.item_id and line.quantity > 0:
+                    # Process rental checkout - move from available to on-rent
+                    units, stock, movement = await inventory_service.process_rental_checkout(
+                        self.session,
+                        item_id=line.item_id,
+                        location_id=location_id,
+                        quantity=line.quantity,
+                        customer_id=customer_id,
+                        transaction_id=transaction_id,
+                        performed_by=performed_by
+                    )
+                    
+                    logger.info(
+                        f"Blocked {len(units)} units of item {line.item_id} for rental "
+                        f"from {start_date} to {end_date}"
+                    )
+                    
+        except Exception as e:
+            logger.error(f"Failed to block items for rental: {str(e)}")
+            raise ConflictError(f"Insufficient inventory available for rental: {str(e)}")
     
-    async def _release_rental_items(self, lines: List[TransactionLine]):
+    async def _release_rental_items(
+        self,
+        lines: List[TransactionLine],
+        location_id: UUID,
+        transaction_id: UUID,
+        return_data: Dict[str, Any],
+        performed_by: UUID
+    ):
         """Release items back to inventory after return."""
-        for line in lines:
-            if line.returned_quantity >= line.quantity:
-                logger.info(
-                    f"Releasing item {line.item_id} quantity {line.returned_quantity} "
-                    f"back to inventory"
-                )
+        try:
+            for line in lines:
+                if line.item_id and line.returned_quantity > 0:
+                    # Calculate damaged quantity based on return assessment
+                    damaged_quantity = Decimal("0")
+                    if return_data.get("item_returns"):
+                        for item_return in return_data["item_returns"]:
+                            if item_return.get("line_id") == str(line.id):
+                                # Check condition rating - poor or damaged items count as damaged
+                                condition = item_return.get("condition_rating", "A")
+                                if condition in ["D", "F"]:  # Damaged or Failed conditions
+                                    damaged_quantity = line.returned_quantity
+                                break
+                    
+                    # Get unit IDs for this line (simplified - would need proper tracking)
+                    unit_ids = []  # Would need to track which units were rented
+                    
+                    # Process rental return
+                    units, stock, movement = await inventory_service.process_rental_return(
+                        self.session,
+                        item_id=line.item_id,
+                        location_id=location_id,
+                        quantity=line.returned_quantity,
+                        damaged_quantity=damaged_quantity,
+                        transaction_id=transaction_id,
+                        unit_ids=unit_ids,
+                        condition_notes=return_data.get("inspector_notes"),
+                        performed_by=performed_by
+                    )
+                    
+                    logger.info(
+                        f"Released {len(units)} units of item {line.item_id} back to inventory "
+                        f"(damaged: {damaged_quantity})"
+                    )
+                    
+        except Exception as e:
+            logger.error(f"Failed to release rental items: {str(e)}")
+            # Don't raise - return processing shouldn't fail due to inventory issues
+            logger.exception("Detailed inventory release error:")
     
     async def _get_transaction_line(
         self,

@@ -9,7 +9,7 @@ export const itemInventoryApi = {
   // Get inventory overview for multiple items (optimized for table display)
   getOverview: async (params?: ItemInventoryQueryParams): Promise<ItemInventoryOverview[]> => {
     try {
-      // Use the exact API endpoint: /api/inventory/stocks_info_all_items_brief
+      // Use the correct API endpoint: /api/inventory/stocks
       const apiParams: Record<string, any> = {
         // Default parameters as specified
         sort_by: params?.sort_by || 'item_name',
@@ -29,10 +29,10 @@ export const itemInventoryApi = {
         apiParams.stock_status = params.stock_status;
       }
       if (params?.brand_id) {
-        apiParams.brand = params.brand_id; // Backend uses 'brand' parameter
+        apiParams.brand_id = params.brand_id; // Backend expects 'brand_id'
       }
       if (params?.category_id) {
-        apiParams.category = params.category_id; // Backend uses 'category' parameter
+        apiParams.category_id = params.category_id; // Backend expects 'category_id'
       }
       if (params?.is_rentable !== undefined && params.is_rentable !== '') {
         apiParams.is_rentable = params.is_rentable;
@@ -43,7 +43,7 @@ export const itemInventoryApi = {
 
       console.log('🔍 Calling inventory API with params:', apiParams);
 
-      const response = await apiClient.get('/inventory/stocks_info_all_items_brief', { 
+      const response = await apiClient.get('/inventory/stocks', { 
         params: apiParams
       });
       

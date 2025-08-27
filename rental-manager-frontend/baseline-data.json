@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-08-27T15:26:04.320Z",
+  "baseline": {
+    "dbConnectivity": true,
+    "apiHealth": true,
+    "inventory_units": 0,
+    "stock_levels": 1,
+    "stock_movements": 2,
+    "purchase_transactions": 15,
+    "completed_purchases": 1,
+    "transaction_lines": 12,
+    "testDataStatus": {
+      "supplier": {
+        "exists": true,
+        "name": "company_name"
+      },
+      "location": {
+        "exists": true,
+        "name": "location_name"
+      },
+      "item": {
+        "exists": true,
+        "name": "item_name"
+      }
+    },
+    "itemStock": {
+      "exists": true,
+      "quantity_on_hand": 5,
+      "quantity_available": 5,
+      "average_cost": 25,
+      "item_name": "Test Item 1756114080519"
+    },
+    "existingUnits": 0,
+    "purchaseMovements": 1
+  },
+  "testData": {
+    "supplier_id": "b128a522-2923-4535-98fa-0f04db881ab4",
+    "location_id": "70b8dc79-846b-47be-9450-507401a27494",
+    "item_id": "bb2c8224-755d-4005-8868-b0683944364f"
+  }
+}
