@@ -10,11 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+// Using Tooltip instead of HoverCard for better compatibility
 import { Shield, Eye, Users, Settings, Crown, AlertTriangle } from 'lucide-react';
 import { PermissionType } from '@/types/auth';
 
@@ -108,13 +104,13 @@ export function PermissionBadge({ className = '', showDetails = true }: Permissi
 
   return (
     <TooltipProvider>
-      <HoverCard>
-        <HoverCardTrigger asChild>
+      <Tooltip>
+        <TooltipTrigger asChild>
           <div className="cursor-help">
             {badge}
           </div>
-        </HoverCardTrigger>
-        <HoverCardContent className="w-80" side="bottom">
+        </TooltipTrigger>
+        <TooltipContent className="w-80 max-w-sm" side="bottom">
           <div className="space-y-3">
             {/* Header */}
             <div className="flex items-center gap-2">
@@ -177,8 +173,8 @@ export function PermissionBadge({ className = '', showDetails = true }: Permissi
               🚨 Development Mode - All permissions are mocked
             </div>
           </div>
-        </HoverCardContent>
-      </HoverCard>
+        </TooltipContent>
+      </Tooltip>
     </TooltipProvider>
   );
 }

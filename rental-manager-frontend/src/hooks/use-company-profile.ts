@@ -72,24 +72,35 @@ export function useCompanyProfile(): UseCompanyProfileResult {
 export function useCompanyProfileWithDefaults(): CompanyProfileData {
   const { companyProfile, isLoading } = useCompanyProfile();
 
+  // Always return a valid object with defaults
+  const defaultProfile: CompanyProfileData = {
+    company_name: 'Your Company Name',
+    company_address: '123 Business Street',
+    company_email: 'info@yourcompany.com',
+    company_phone: '(555) 123-4567',
+    company_gst_no: '',
+    company_registration_number: '',
+    currency_code: 'INR',
+    currency_symbol: '₹',
+    tax_number: '',
+    logo_url: undefined,
+    website: undefined,
+  };
+
   // Return defaults while loading or if no company profile exists
   if (isLoading || !companyProfile) {
-    return {
-      company_name: 'Your Company Name',
-      company_address: '123 Business Street',
-      company_email: 'info@yourcompany.com',
-      company_phone: '(555) 123-4567',
-      company_gst_no: '',
-      company_registration_number: '',
-      currency_code: 'INR',
-      currency_symbol: '₹',
-      tax_number: '',
-      logo_url: undefined,
-      website: undefined,
-    };
+    return defaultProfile;
   }
 
-  return companyProfile;
+  // Ensure all required fields have values even if API returns null/undefined
+  return {
+    ...defaultProfile,
+    ...companyProfile,
+    company_name: companyProfile.company_name || defaultProfile.company_name,
+    company_address: companyProfile.company_address || defaultProfile.company_address,
+    company_email: companyProfile.company_email || defaultProfile.company_email,
+    company_phone: companyProfile.company_phone || defaultProfile.company_phone,
+  };
 }
 
 /**

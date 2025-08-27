@@ -267,13 +267,13 @@ export function PurchaseDetailView({
       <div className="hidden print:block mb-6">
         <div className="text-center mb-4">
           <h1 className="text-3xl font-bold">Purchase Order</h1>
-          <p className="text-gray-600">{companyProfile.company_name}</p>
+          <p className="text-gray-600">{companyProfile?.company_name || 'Your Company Name'}</p>
           <p className="text-sm text-gray-500">
-            {companyProfile.company_address.replace(/\n/g, ', ')}
+            {companyProfile?.company_address?.replace(/\n/g, ', ') || '123 Business Street'}
           </p>
           <p className="text-sm text-gray-500">
-            Phone: {companyProfile.company_phone} | 
-            Email: {companyProfile.company_email}
+            Phone: {companyProfile?.company_phone || '(555) 123-4567'} | 
+            Email: {companyProfile?.company_email || 'info@yourcompany.com'}
           </p>
         </div>
         <div className="border-t border-b py-2 my-4">
