@@ -49,20 +49,9 @@ export function InventoryUnitsTabs({
   item,
   fullWidth = false,
 }: InventoryUnitsTabsProps) {
-  const [activeTab, setActiveTab] = useState('item-details');
+  const [activeTab, setActiveTab] = useState('all-inventory');
 
   const tabs = [
-    {
-      id: 'item-details',
-      label: 'Item Details',
-      icon: Package,
-      content: (
-        <ItemDetailsTab 
-          item={item!} 
-          isLoading={false}
-        />
-      ),
-    },
     {
       id: 'all-inventory',
       label: 'All Inventory',
@@ -73,6 +62,17 @@ export function InventoryUnitsTabs({
           locations={allInventory} 
           isLoading={isLoadingAllInventory}
           itemName={itemName}
+        />
+      ),
+    },
+    {
+      id: 'item-details',
+      label: 'Item Details',
+      icon: Package,
+      content: (
+        <ItemDetailsTab 
+          item={item!} 
+          isLoading={false}
         />
       ),
     },
