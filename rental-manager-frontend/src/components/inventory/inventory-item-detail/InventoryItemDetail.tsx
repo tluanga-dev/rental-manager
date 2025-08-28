@@ -106,42 +106,6 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Transform units data into AllInventory format for the comprehensive view
-  // Since the backend doesn't have a separate all-inventory endpoint,
-  // we'll use the units data to create the location-grouped view
-  const allInventory = React.useMemo(() => {
-    if (!units || units.length === 0) return [];
-    
-    // Group units by location
-    const locationMap = new Map();
-    
-    units.forEach(unit => {
-      const locationName = unit.location_name || 'Unknown Location';
-      
-      if (!locationMap.has(locationName)) {
-        locationMap.set(locationName, {
-          location_id: unit.location_id || '',
-          location_name: locationName,
-          serialized_units: [],
-          bulk_stock: {
-            total_quantity: 0,
-            available: 0,
-            reserved: 0,
-            rented: 0,
-            in_maintenance: 0,
-            damaged: 0,
-          }
-        });
-      }
-      
-      const location = locationMap.get(locationName);
-      location.serialized_units.push(unit);
-    });
-    
-    return Array.from(locationMap.values());
-  }, [units]);
-  
-  const isLoadingAllInventory = isLoadingUnits;
 
   const handleBack = () => {
     router.push('/inventory/items');
@@ -162,7 +126,6 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     refetchUnits();
     if (activeTab === 'movements') refetchMovements();
     if (activeTab === 'analytics') refetchAnalytics();
-    // all-inventory uses the same units data, so no separate refetch needed
   };
 
   if (isLoadingItem) {
@@ -296,11 +259,9 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
         units={units}
         movements={movements}
         analytics={defaultAnalytics}
-        allInventory={allInventory}
         isLoadingUnits={isLoadingUnits}
         isLoadingMovements={isLoadingMovements}
         isLoadingAnalytics={isLoadingAnalytics}
-        isLoadingAllInventory={isLoadingAllInventory}
         itemName={item.item_name}
         item={item}
         fullWidth={true}

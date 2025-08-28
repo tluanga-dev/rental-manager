@@ -6,11 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Package, 
   Activity, 
-  BarChart3,
-  Layers
+  BarChart3
 } from 'lucide-react';
 import { UnitsTable } from './UnitsTable';
-import { AllInventoryTable } from './AllInventoryTable';
 import { MovementsTable } from './MovementsTable';
 import { StockAnalytics } from './StockAnalytics';
 import { ItemDetailsTab } from './ItemDetailsTab';
@@ -18,19 +16,16 @@ import type {
   InventoryUnitDetail, 
   StockMovementDetail, 
   InventoryAnalytics,
-  InventoryItemDetail,
-  AllInventoryLocation
+  InventoryItemDetail
 } from '@/types/inventory-items';
 
 interface InventoryUnitsTabsProps {
   units: InventoryUnitDetail[];
   movements: StockMovementDetail[];
   analytics: InventoryAnalytics;
-  allInventory?: AllInventoryLocation[]; // New comprehensive inventory data
   isLoadingUnits?: boolean;
   isLoadingMovements?: boolean;
   isLoadingAnalytics?: boolean;
-  isLoadingAllInventory?: boolean;
   itemName?: string; // Item name for rental blocking context
   item?: InventoryItemDetail; // Full item data for stock information
   fullWidth?: boolean; // Use full width layout
@@ -40,31 +35,16 @@ export function InventoryUnitsTabs({
   units,
   movements,
   analytics,
-  allInventory = [],
   isLoadingUnits,
   isLoadingMovements,
   isLoadingAnalytics,
-  isLoadingAllInventory,
   itemName,
   item,
   fullWidth = false,
 }: InventoryUnitsTabsProps) {
-  const [activeTab, setActiveTab] = useState('all-inventory');
+  const [activeTab, setActiveTab] = useState('item-details');
 
   const tabs = [
-    {
-      id: 'all-inventory',
-      label: 'All Inventory',
-      icon: Layers,
-      count: allInventory.reduce((sum, loc) => sum + (loc.serialized_units?.length || 0) + ((loc.bulk_stock?.total_quantity || 0) > 0 ? 1 : 0), 0),
-      content: (
-        <AllInventoryTable 
-          locations={allInventory} 
-          isLoading={isLoadingAllInventory}
-          itemName={itemName}
-        />
-      ),
-    },
     {
       id: 'item-details',
       label: 'Item Details',
@@ -117,7 +97,7 @@ export function InventoryUnitsTabs({
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-5">
+      <TabsList className="grid w-full grid-cols-4">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
