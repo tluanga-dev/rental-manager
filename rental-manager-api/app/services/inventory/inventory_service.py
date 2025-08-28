@@ -174,7 +174,7 @@ class InventoryService:
             adjustment=adjustment_quantity,
             reason=f"Purchase receipt - PO: {purchase_order_number or 'N/A'}",
             affect_available=True,
-            performed_by_id=created_by
+            performed_by_id=None  # Set to None for dev mode, will be fixed with proper user
         )
         
         stock, movement = await stock_level.adjust_quantity(
@@ -666,7 +666,7 @@ class InventoryService:
         location_id: Optional[UUID] = None,
         stock_status: Optional[str] = None,
         is_rentable: Optional[bool] = None,
-        is_saleable: Optional[bool] = None,
+        is_salable: Optional[bool] = None,
         sort_by: str = "item_name",
         sort_order: str = "asc",
         skip: int = 0,
@@ -683,7 +683,7 @@ class InventoryService:
             location_id: Filter by location
             stock_status: Filter by stock status
             is_rentable: Filter rentable items
-            is_saleable: Filter saleable items
+            is_salable: Filter saleable items
             sort_by: Sort field
             sort_order: Sort order
             skip: Skip records
@@ -735,8 +735,8 @@ class InventoryService:
         if is_rentable is not None:
             filters.append(Item.is_rentable == is_rentable)
         
-        if is_saleable is not None:
-            filters.append(Item.is_saleable == is_saleable)
+        if is_salable is not None:
+            filters.append(Item.is_salable == is_salable)
         
         # Apply location filter if specified
         if location_id:
@@ -805,7 +805,7 @@ class InventoryService:
             for sl in stock_levels:
                 location_breakdown.append({
                     "location_id": str(sl.location_id),
-                    "location_name": sl.location.name if sl.location else "Unknown",
+                    "location_name": sl.location.location_name if sl.location else "Unknown",
                     "quantity_on_hand": float(sl.quantity_on_hand),
                     "quantity_available": float(sl.quantity_available),
                     "quantity_reserved": float(sl.quantity_reserved),
@@ -821,7 +821,7 @@ class InventoryService:
                 "category": {
                     "id": str(item.category.id) if item.category else None,
                     "name": item.category.name if item.category else None,
-                    "code": item.category.code if item.category else None
+                    "code": item.category.category_code if item.category else None
                 } if item.category else None,
                 "brand": {
                     "id": str(item.brand.id) if item.brand else None,
@@ -830,7 +830,7 @@ class InventoryService:
                 "unit_of_measurement": {
                     "id": str(item.unit_of_measurement.id) if item.unit_of_measurement else None,
                     "name": item.unit_of_measurement.name if item.unit_of_measurement else None,
-                    "abbreviation": item.unit_of_measurement.abbreviation if item.unit_of_measurement else None
+                    "abbreviation": item.unit_of_measurement.code if item.unit_of_measurement else None
                 } if item.unit_of_measurement else None,
                 "total_units": total_units,
                 "total_quantity": float(total_quantity),
@@ -840,11 +840,11 @@ class InventoryService:
                 "damaged_quantity": float(damaged_quantity),
                 "under_repair_quantity": float(under_repair_quantity),
                 "stock_status": overall_status,
-                "rental_rate": float(item.rental_rate_per_period) if item.rental_rate_per_period else None,
+                "rental_rate": float(item.rental_rate_per_day) if item.rental_rate_per_day else None,
                 "sale_price": float(item.sale_price) if item.sale_price else None,
                 "security_deposit": float(item.security_deposit) if item.security_deposit else None,
                 "is_rentable": item.is_rentable,
-                "is_saleable": item.is_saleable,
+                "is_salable": item.is_salable,
                 "is_active": item.is_active,
                 "location_breakdown": location_breakdown,
                 "created_at": item.created_at.isoformat(),
@@ -885,8 +885,9 @@ class InventoryService:
                 selectinload(Item.unit_of_measurement),
                 selectinload(Item.stock_levels).selectinload(StockLevel.location),
                 selectinload(Item.inventory_units).selectinload(InventoryUnit.location),
-                selectinload(Item.inventory_units).selectinload(InventoryUnit.supplier),
-                selectinload(Item.stock_movements).selectinload(StockMovement.location)
+                selectinload(Item.inventory_units).selectinload(InventoryUnit.supplier)
+                # Removed: selectinload(Item.stock_movements) - causes eager loading error with lazy="dynamic"
+                # Stock movements are fetched separately below with proper eager loading
             )
             .where(Item.id == item_id)
         )
@@ -913,11 +914,11 @@ class InventoryService:
                 "quantity": float(unit.quantity),
                 "location": {
                     "id": str(unit.location.id) if unit.location else None,
-                    "name": unit.location.name if unit.location else None
+                    "name": unit.location.location_name if unit.location else None
                 } if unit.location else None,
                 "supplier": {
                     "id": str(unit.supplier.id) if unit.supplier else None,
-                    "name": unit.supplier.supplier_name if unit.supplier else None
+                    "name": unit.supplier.company_name if unit.supplier else None
                 } if unit.supplier else None,
                 "purchase_date": unit.purchase_date.isoformat() if unit.purchase_date else None,
                 "purchase_price": float(unit.purchase_price),
@@ -948,7 +949,7 @@ class InventoryService:
                 "id": str(sl.id),
                 "location": {
                     "id": str(sl.location.id) if sl.location else None,
-                    "name": sl.location.name if sl.location else None
+                    "name": sl.location.location_name if sl.location else None
                 } if sl.location else None,
                 "quantity_on_hand": float(sl.quantity_on_hand),
                 "quantity_available": float(sl.quantity_available),
@@ -1001,7 +1002,7 @@ class InventoryService:
                 "quantity_after": float(movement.quantity_after),
                 "location": {
                     "id": str(movement.location.id) if movement.location else None,
-                    "name": movement.location.name if movement.location else None
+                    "name": movement.location.location_name if movement.location else None
                 } if movement.location else None,
                 "performed_by": {
                     "id": str(movement.performed_by.id) if movement.performed_by else None,
@@ -1022,11 +1023,11 @@ class InventoryService:
                 "item_name": item.item_name,
                 "sku": item.sku,
                 "description": item.description,
-                "image_url": item.image_url,
+                "image_url": getattr(item, 'image_url', None),
                 "category": {
                     "id": str(item.category.id) if item.category else None,
                     "name": item.category.name if item.category else None,
-                    "code": item.category.code if item.category else None
+                    "code": item.category.category_code if item.category else None
                 } if item.category else None,
                 "brand": {
                     "id": str(item.brand.id) if item.brand else None,
@@ -1035,14 +1036,13 @@ class InventoryService:
                 "unit_of_measurement": {
                     "id": str(item.unit_of_measurement.id) if item.unit_of_measurement else None,
                     "name": item.unit_of_measurement.name if item.unit_of_measurement else None,
-                    "abbreviation": item.unit_of_measurement.abbreviation if item.unit_of_measurement else None
+                    "abbreviation": item.unit_of_measurement.code if item.unit_of_measurement else None
                 } if item.unit_of_measurement else None,
-                "rental_rate_per_period": float(item.rental_rate_per_period) if item.rental_rate_per_period else None,
-                "rental_period": item.rental_period,
+                "rental_rate_per_period": float(item.rental_rate_per_day) if item.rental_rate_per_day else None,
                 "sale_price": float(item.sale_price) if item.sale_price else None,
                 "security_deposit": float(item.security_deposit) if item.security_deposit else None,
                 "is_rentable": item.is_rentable,
-                "is_saleable": item.is_saleable,
+                "is_salable": item.is_salable,
                 "is_active": item.is_active,
                 "created_at": item.created_at.isoformat(),
                 "updated_at": item.updated_at.isoformat()

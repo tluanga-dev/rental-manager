@@ -173,7 +173,15 @@ export function AllInventoryTable({ locations, isLoading, itemName }: AllInvento
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [locationFilter, setLocationFilter] = useState<string>('all');
-  const [expandedLocations, setExpandedLocations] = useState<Set<string>>(new Set());
+  // Auto-expand all locations by default for better visibility
+  const [expandedLocations, setExpandedLocations] = useState<Set<string>>(
+    new Set(locations.map(loc => loc.location_id))
+  );
+
+  // Update expanded locations when locations change
+  React.useEffect(() => {
+    setExpandedLocations(new Set(locations.map(loc => loc.location_id)));
+  }, [locations]);
 
   // Get all serialized units for filtering
   const allUnits = locations.flatMap(loc => 
@@ -313,8 +321,8 @@ export function AllInventoryTable({ locations, isLoading, itemName }: AllInvento
               locations.map((location) => {
                 const isExpanded = expandedLocations.has(location.location_id);
                 const locationUnits = groupedUnits[location.location_name] || [];
-                const hasSerializedUnits = location.serialized_units.length > 0;
-                const hasBulkStock = location.bulk_stock.total_quantity > 0;
+                const hasSerializedUnits = (location.serialized_units?.length || 0) > 0;
+                const hasBulkStock = (location.bulk_stock?.total_quantity || 0) > 0;
                 
                 if (!hasSerializedUnits && !hasBulkStock) return null;
                 
@@ -337,7 +345,7 @@ export function AllInventoryTable({ locations, isLoading, itemName }: AllInvento
                           <MapPin className="h-4 w-4" />
                           {location.location_name}
                           <span className="text-muted-foreground text-sm ml-2">
-                            ({location.serialized_units.length} units, {location.bulk_stock.total_quantity} bulk)
+                            ({location.serialized_units?.length || 0} units, {location.bulk_stock?.total_quantity || 0} bulk)
                           </span>
                         </Button>
                       </TableCell>

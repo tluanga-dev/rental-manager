@@ -56,12 +56,26 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     data: units = [],
     isLoading: isLoadingUnits,
     refetch: refetchUnits,
+    error: unitsError,
   } = useQuery({
     queryKey: ['inventory-item-units', itemId],
-    queryFn: () => inventoryItemsApi.getItemUnits(itemId),
+    queryFn: async () => {
+      console.log('🔄 Fetching units for item:', itemId);
+      const result = await inventoryItemsApi.getItemUnits(itemId);
+      console.log('🔄 Query function returned:', result?.length || 0, 'units');
+      return result;
+    },
     enabled: !!itemId,
-    staleTime: 1000 * 60 * 2, // 2 minutes
+    staleTime: 0, // Disable cache for debugging
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
+    gcTime: 0, // Don't keep in cache after unmount
   });
+  
+  // Debug logging
+  console.log('🎯 InventoryItemDetail - units state:', units?.length || 0, 'units');
+  console.log('🎯 Units loading:', isLoadingUnits);
+  console.log('🎯 Units error:', unitsError);
 
   // Fetch movements
   const {
@@ -87,17 +101,42 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Fetch all inventory (comprehensive view)
-  const {
-    data: allInventory = [],
-    isLoading: isLoadingAllInventory,
-    refetch: refetchAllInventory,
-  } = useQuery({
-    queryKey: ['inventory-item-all-inventory', itemId],
-    queryFn: () => inventoryItemsApi.getItemAllInventory(itemId),
-    enabled: !!itemId && activeTab === 'all-inventory',
-    staleTime: 1000 * 60 * 2, // 2 minutes
-  });
+  // Transform units data into AllInventory format for the comprehensive view
+  // Since the backend doesn't have a separate all-inventory endpoint,
+  // we'll use the units data to create the location-grouped view
+  const allInventory = React.useMemo(() => {
+    if (!units || units.length === 0) return [];
+    
+    // Group units by location
+    const locationMap = new Map();
+    
+    units.forEach(unit => {
+      const locationName = unit.location_name || 'Unknown Location';
+      
+      if (!locationMap.has(locationName)) {
+        locationMap.set(locationName, {
+          location_id: unit.location_id || '',
+          location_name: locationName,
+          serialized_units: [],
+          bulk_stock: {
+            total_quantity: 0,
+            available: 0,
+            reserved: 0,
+            rented: 0,
+            in_maintenance: 0,
+            damaged: 0,
+          }
+        });
+      }
+      
+      const location = locationMap.get(locationName);
+      location.serialized_units.push(unit);
+    });
+    
+    return Array.from(locationMap.values());
+  }, [units]);
+  
+  const isLoadingAllInventory = isLoadingUnits;
 
   const handleBack = () => {
     router.push('/inventory/items');
@@ -118,7 +157,7 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     refetchUnits();
     if (activeTab === 'movements') refetchMovements();
     if (activeTab === 'analytics') refetchAnalytics();
-    if (activeTab === 'all-inventory') refetchAllInventory();
+    // all-inventory uses the same units data, so no separate refetch needed
   };
 
   if (isLoadingItem) {
