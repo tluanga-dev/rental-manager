@@ -109,13 +109,23 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [locationFilter, setLocationFilter] = useState<string>('all');
 
+  // Debug logging
+  console.log('🔍 UnitsTable received units:', units?.length || 0);
+  console.log('🔍 Units is array?', Array.isArray(units));
+  console.log('🔍 Units value:', units);
+  if (units && units.length > 0) {
+    console.log('🔍 First unit sample:', JSON.stringify(units[0], null, 2));
+    console.log('🔍 First unit has unit_identifier?', 'unit_identifier' in units[0]);
+    console.log('🔍 First unit has location_name?', 'location_name' in units[0]);
+  }
+
   // Get unique locations for filter
-  const locations = Array.from(new Set(units.map(u => u.location_name)));
+  const locations = Array.from(new Set(units.map(u => u.location_name).filter(Boolean)));
 
   // Filter units
   const filteredUnits = units.filter(unit => {
     const matchesSearch = !searchTerm || 
-      unit.unit_identifier.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (unit.unit_identifier && unit.unit_identifier.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (unit.serial_number && unit.serial_number.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesStatus = statusFilter === 'all' || unit.status === statusFilter;
@@ -123,6 +133,8 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
     
     return matchesSearch && matchesStatus && matchesLocation;
   });
+  
+  console.log('🔍 Filtered units:', filteredUnits.length);
 
   if (isLoading) {
     return (

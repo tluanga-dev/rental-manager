@@ -19,6 +19,7 @@ import type { InventoryItemDetail } from '@/types/inventory-items';
 
 interface ProductInfoCardProps {
   item: InventoryItemDetail;
+  compact?: boolean;
 }
 
 const ITEM_STATUS_CONFIG = {
@@ -36,9 +37,22 @@ const ITEM_STATUS_CONFIG = {
   },
 };
 
-export function ProductInfoCard({ item }: ProductInfoCardProps) {
+export function ProductInfoCard({ item, compact = false }: ProductInfoCardProps) {
   const statusConfig = ITEM_STATUS_CONFIG[item.item_status as keyof typeof ITEM_STATUS_CONFIG];
 
+  // Compact mode - just show status badge
+  if (compact) {
+    return (
+      <Badge 
+        variant="outline" 
+        className={cn('text-sm', statusConfig?.className || 'bg-gray-100 text-gray-800 border-gray-200')}
+      >
+        {statusConfig?.label || 'Unknown'}
+      </Badge>
+    );
+  }
+
+  // Full card mode
   return (
     <Card>
       <CardHeader>
@@ -74,8 +88,8 @@ export function ProductInfoCard({ item }: ProductInfoCardProps) {
               <Grid3X3 className="h-4 w-4 text-muted-foreground" />
               <div>
                 <p className="text-xs text-muted-foreground">Category</p>
-                <p className="font-medium">{item.category.name}</p>
-                <p className="text-xs text-muted-foreground">Code: {item.category.code}</p>
+                <p className="font-medium">{item.category?.name || 'N/A'}</p>
+                <p className="text-xs text-muted-foreground">Code: {item.category?.code || 'N/A'}</p>
               </div>
             </div>
             
@@ -83,7 +97,7 @@ export function ProductInfoCard({ item }: ProductInfoCardProps) {
               <Tag className="h-4 w-4 text-muted-foreground" />
               <div>
                 <p className="text-xs text-muted-foreground">Brand</p>
-                <p className="font-medium">{item.brand.name}</p>
+                <p className="font-medium">{item.brand?.name || 'N/A'}</p>
               </div>
             </div>
           </div>

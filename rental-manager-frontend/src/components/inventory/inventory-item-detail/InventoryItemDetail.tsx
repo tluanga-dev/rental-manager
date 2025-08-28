@@ -204,38 +204,37 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header with Breadcrumb */}
-      <div className="space-y-4">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/inventory">Inventory</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/inventory/items">Inventory Items</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{item.item_name}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
-        {/* Action Buttons */}
+    <div className="space-y-4">
+      {/* Header with Breadcrumb and Actions */}
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleBack}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to List
-          </Button>
-          
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/inventory">Inventory</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/inventory/items">Inventory Items</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{item.item_name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
+          {/* Action Buttons */}
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleBack}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -265,35 +264,42 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
             </Button>
           </div>
         </div>
-      </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Product Info */}
-        <div className="lg:col-span-1">
-          <ProductInfoCard item={item} />
-        </div>
-
-        {/* Right Column - Stock Summary and Tabs */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Stock Summary Cards */}
-          <StockSummaryCards item={item} />
-
-          {/* Tabs for Units, Movements, Analytics */}
-          <InventoryUnitsTabs
-            units={units}
-            movements={movements}
-            analytics={defaultAnalytics}
-            allInventory={allInventory}
-            isLoadingUnits={isLoadingUnits}
-            isLoadingMovements={isLoadingMovements}
-            isLoadingAnalytics={isLoadingAnalytics}
-            isLoadingAllInventory={isLoadingAllInventory}
-            itemName={item.item_name}
-            item={item}
-          />
+        {/* Item Header Info - Compact */}
+        <div className="bg-white rounded-lg border p-4">
+          <div className="flex items-start justify-between">
+            <div className="space-y-1">
+              <h1 className="text-2xl font-bold text-gray-900">{item.item_name}</h1>
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <span>SKU: <span className="font-medium">{item.sku}</span></span>
+                <span>•</span>
+                <span>Category: <span className="font-medium">{item.category?.name || 'N/A'}</span></span>
+                <span>•</span>
+                <span>Brand: <span className="font-medium">{item.brand?.name || 'N/A'}</span></span>
+              </div>
+            </div>
+            <ProductInfoCard item={item} compact={true} />
+          </div>
         </div>
       </div>
+
+      {/* Stock Summary Cards - Horizontal Strip */}
+      <StockSummaryCards item={item} />
+
+      {/* Full Width Tabs for All Content */}
+      <InventoryUnitsTabs
+        units={units}
+        movements={movements}
+        analytics={defaultAnalytics}
+        allInventory={allInventory}
+        isLoadingUnits={isLoadingUnits}
+        isLoadingMovements={isLoadingMovements}
+        isLoadingAnalytics={isLoadingAnalytics}
+        isLoadingAllInventory={isLoadingAllInventory}
+        itemName={item.item_name}
+        item={item}
+        fullWidth={true}
+      />
     </div>
   );
 }

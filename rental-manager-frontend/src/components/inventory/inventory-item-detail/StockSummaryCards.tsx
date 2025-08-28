@@ -42,7 +42,7 @@ export function StockSummaryCards({ item }: StockSummaryCardsProps) {
       icon: Package,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
-      subtitle: `${location_breakdown.length} locations`,
+      subtitle: `${location_breakdown?.length || 0} locations`,
     },
     {
       title: 'Available',
@@ -91,8 +91,8 @@ export function StockSummaryCards({ item }: StockSummaryCardsProps) {
                     </p>
                     <p className="text-2xl font-bold mt-1">
                       {card.format === 'currency' 
-                        ? formatCurrencySync(card.value as number)
-                        : card.value.toLocaleString()
+                        ? formatCurrencySync((card.value as number) || 0)
+                        : (card.value || 0).toLocaleString()
                       }
                     </p>
                     {card.subtitle && (
@@ -183,7 +183,7 @@ export function StockSummaryCards({ item }: StockSummaryCardsProps) {
       </Card>
 
       {/* Location Breakdown */}
-      {location_breakdown.length > 0 && (
+      {(location_breakdown?.length || 0) > 0 && (
         <Card>
           <CardContent className="p-4">
             <div className="space-y-3">

@@ -5,3 +5,4 @@ export { InventoryUnitsTabs } from './InventoryUnitsTabs';
 export { UnitsTable } from './UnitsTable';
 export { MovementsTable } from './MovementsTable';
 export { StockAnalytics } from './StockAnalytics';
+export { ItemDetailsTab } from './ItemDetailsTab';
