@@ -58,7 +58,7 @@ export function InventoryUnitsTabs({
     },
     {
       id: 'units',
-      label: 'Units Only',
+      label: 'Inventory Unit',
       icon: Package,
       count: units.length,
       content: (
