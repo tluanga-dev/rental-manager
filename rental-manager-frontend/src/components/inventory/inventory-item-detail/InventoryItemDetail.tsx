@@ -47,7 +47,12 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     refetch: refetchItem,
   } = useQuery({
     queryKey: ['inventory-item', itemId],
-    queryFn: () => inventoryItemsApi.getItemDetail(itemId),
+    queryFn: async () => {
+      const result = await inventoryItemsApi.getItemDetail(itemId);
+      console.log('📊 Item detail fetched:', result);
+      console.log('📊 Stock summary:', result?.stock_summary);
+      return result;
+    },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 

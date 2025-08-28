@@ -23,7 +23,14 @@ interface StockSummaryCardsProps {
 }
 
 export function StockSummaryCards({ item }: StockSummaryCardsProps) {
-  const { stock_summary, location_breakdown, total_value } = item;
+  // Handle both old and new API field names
+  const stock_summary = item.stock_summary || {};
+  const { location_breakdown, total_value } = item;
+  const total = stock_summary.total || stock_summary.total_units || 0;
+  const available = stock_summary.available || stock_summary.total_available || 0;
+  const reserved = stock_summary.reserved || stock_summary.total_reserved || 0;
+  const rented = stock_summary.rented || stock_summary.total_on_rent || 0;
+  const locationsCount = stock_summary.locations_count || location_breakdown?.length || 0;
   
   const getStockHealthColor = (percentage: number) => {
     if (percentage >= 80) return 'text-green-600 bg-green-50';
@@ -31,43 +38,43 @@ export function StockSummaryCards({ item }: StockSummaryCardsProps) {
     return 'text-red-600 bg-red-50';
   };
 
-  const stockHealthPercentage = stock_summary.total > 0 
-    ? (stock_summary.available / stock_summary.total) * 100 
+  const stockHealthPercentage = total > 0 
+    ? (available / total) * 100 
     : 0;
 
   const cards = [
     {
       title: 'Total Units',
-      value: stock_summary.total,
+      value: total,
       icon: Package,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
-      subtitle: `${location_breakdown?.length || 0} locations`,
+      subtitle: `${locationsCount} location${locationsCount !== 1 ? 's' : ''}`,
     },
     {
       title: 'Available',
-      value: stock_summary.available,
+      value: available,
       icon: CheckCircle,
       color: 'text-green-600',
       bgColor: 'bg-green-50',
-      percentage: stock_summary.total > 0 
-        ? ((stock_summary.available / stock_summary.total) * 100).toFixed(1) 
+      percentage: total > 0 
+        ? ((available / total) * 100).toFixed(1) 
         : '0',
     },
     {
       title: 'Reserved/Rented',
-      value: stock_summary.reserved + stock_summary.rented,
+      value: reserved + rented,
       icon: Clock,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
       breakdown: {
-        reserved: stock_summary.reserved,
-        rented: stock_summary.rented,
+        reserved: reserved,
+        rented: rented,
       },
     },
     {
       title: 'Total Value',
-      value: total_value,
+      value: total_value || (total * (item.unit_price || 0)),
       icon: TrendingUp,
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50',
