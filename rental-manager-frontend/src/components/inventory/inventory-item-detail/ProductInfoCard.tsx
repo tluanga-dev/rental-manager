@@ -38,7 +38,9 @@ const ITEM_STATUS_CONFIG = {
 };
 
 export function ProductInfoCard({ item, compact = false }: ProductInfoCardProps) {
-  const statusConfig = ITEM_STATUS_CONFIG[item.item_status as keyof typeof ITEM_STATUS_CONFIG];
+  // Handle nested item structure from API
+  const actualItem = item.item || item;
+  const statusConfig = ITEM_STATUS_CONFIG[actualItem.item_status as keyof typeof ITEM_STATUS_CONFIG];
 
   // Compact mode - just show status badge
   if (compact) {

@@ -237,13 +237,13 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
         <div className="bg-white rounded-lg border p-4">
           <div className="flex items-start justify-between">
             <div className="space-y-1">
-              <h1 className="text-2xl font-bold text-gray-900">{item.item_name}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{item.item?.item_name || item.item_name}</h1>
               <div className="flex items-center gap-4 text-sm text-gray-600">
-                <span>SKU: <span className="font-medium">{item.sku}</span></span>
+                <span>SKU: <span className="font-medium">{item.item?.sku || item.sku}</span></span>
                 <span>•</span>
-                <span>Category: <span className="font-medium">{item.category?.name || 'N/A'}</span></span>
+                <span>Category: <span className="font-medium">{item.item?.category?.name || item.category?.name || 'N/A'}</span></span>
                 <span>•</span>
-                <span>Brand: <span className="font-medium">{item.brand?.name || 'N/A'}</span></span>
+                <span>Brand: <span className="font-medium">{item.item?.brand?.name || item.brand?.name || 'N/A'}</span></span>
               </div>
             </div>
             <ProductInfoCard item={item} compact={true} />
