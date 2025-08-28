@@ -28,6 +28,7 @@ import { RentalStatusToggle } from '@/components/rental-blocking/RentalStatusTog
 import { useRentalBlocking } from '@/hooks/useRentalBlocking';
 import { cn } from '@/lib/utils';
 import { formatCurrencySync } from '@/lib/currency-utils';
+import { InventoryUnitDetailDialog } from './InventoryUnitDetailDialog';
 import type { InventoryUnitDetail, InventoryUnitStatus, ConditionGrade, InventoryItemDetail } from '@/types/inventory-items';
 
 interface UnitsTableProps {
@@ -108,6 +109,7 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [locationFilter, setLocationFilter] = useState<string>('all');
+  const [selectedUnit, setSelectedUnit] = useState<InventoryUnitDetail | null>(null);
 
   // Debug logging
   console.log('🔍 UnitsTable received units:', units?.length || 0);
@@ -281,7 +283,11 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
                 const StatusIcon = statusConfig.icon;
                 
                 return (
-                  <TableRow key={unit.id}>
+                  <TableRow 
+                    key={unit.id}
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => setSelectedUnit(unit)}
+                  >
                     <TableCell className="font-medium">
                       {unit.unit_identifier}
                     </TableCell>
@@ -357,6 +363,12 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
           </TableBody>
         </Table>
       </div>
+
+      {/* Unit Detail Dialog */}
+      <InventoryUnitDetailDialog 
+        unit={selectedUnit} 
+        onClose={() => setSelectedUnit(null)} 
+      />
     </div>
   );
 }
