@@ -31,6 +31,9 @@ export function ItemDetailsTab({ item, isLoading }: ItemDetailsTabProps) {
     );
   }
 
+  // Handle nested item structure from API
+  const itemData = item.item || item;
+
   return (
     <div className="space-y-6">
       {/* Basic Information */}
@@ -44,27 +47,27 @@ export function ItemDetailsTab({ item, isLoading }: ItemDetailsTabProps) {
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Item Name</p>
-            <p className="font-medium">{item.item_name}</p>
+            <p className="font-medium">{itemData.item_name}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">SKU</p>
-            <p className="font-medium">{item.sku}</p>
+            <p className="font-medium">{itemData.sku}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Status</p>
-            <Badge className="mt-1">{item.item_status || 'Active'}</Badge>
+            <Badge className="mt-1">{itemData.item_status || itemData.is_active ? 'Active' : 'Inactive'}</Badge>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Category</p>
-            <p className="font-medium">{item.category?.name || 'N/A'}</p>
+            <p className="font-medium">{itemData.category?.name || 'N/A'}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Brand</p>
-            <p className="font-medium">{item.brand?.name || 'N/A'}</p>
+            <p className="font-medium">{itemData.brand?.name || 'N/A'}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Unit of Measurement</p>
-            <p className="font-medium">{item.unit_of_measurement || 'Unit'}</p>
+            <p className="font-medium">{itemData.unit_of_measurement?.name || itemData.unit_of_measurement || 'Unit'}</p>
           </div>
         </CardContent>
       </Card>
@@ -80,15 +83,15 @@ export function ItemDetailsTab({ item, isLoading }: ItemDetailsTabProps) {
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Unit Price</p>
-            <p className="font-medium text-lg">{formatCurrencySync(item.unit_price || 0)}</p>
+            <p className="font-medium text-lg">{formatCurrencySync(itemData.unit_price || itemData.cost_price || 0)}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Sale Price</p>
-            <p className="font-medium text-lg">{formatCurrencySync(item.sale_price || 0)}</p>
+            <p className="font-medium text-lg">{formatCurrencySync(itemData.sale_price || 0)}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Rental Rate</p>
-            <p className="font-medium text-lg">{formatCurrencySync(item.rental_rate || 0)}</p>
+            <p className="text-sm text-muted-foreground">Rental Rate (Per Period)</p>
+            <p className="font-medium text-lg">{formatCurrencySync(itemData.rental_rate_per_period || itemData.rental_rate || 0)}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Total Value</p>
@@ -110,19 +113,23 @@ export function ItemDetailsTab({ item, isLoading }: ItemDetailsTabProps) {
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Min Stock Level</p>
-            <p className="font-medium">{item.min_stock_level || 0}</p>
+            <p className="font-medium">{itemData.min_stock_level || itemData.reorder_level || 0}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Max Stock Level</p>
-            <p className="font-medium">{item.max_stock_level || 'Unlimited'}</p>
+            <p className="font-medium">{itemData.max_stock_level || itemData.maximum_stock_level || 'Unlimited'}</p>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Reorder Point</p>
-            <p className="font-medium">{item.reorder_point || 0}</p>
+            <p className="text-sm text-muted-foreground">Is Rentable</p>
+            <Badge variant={itemData.is_rentable ? "default" : "secondary"}>
+              {itemData.is_rentable ? 'Yes' : 'No'}
+            </Badge>
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">Reorder Quantity</p>
-            <p className="font-medium">{item.reorder_quantity || 0}</p>
+            <p className="text-sm text-muted-foreground">Is Salable</p>
+            <Badge variant={itemData.is_salable ? "default" : "secondary"}>
+              {itemData.is_salable ? 'Yes' : 'No'}
+            </Badge>
           </div>
         </CardContent>
       </Card>
@@ -138,19 +145,19 @@ export function ItemDetailsTab({ item, isLoading }: ItemDetailsTabProps) {
         <CardContent className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-1">Description</p>
-            <p className="text-sm">{item.description || 'No description available'}</p>
+            <p className="text-sm">{itemData.description || 'No description available'}</p>
           </div>
           
           <Separator />
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground">Barcode</p>
-              <p className="font-medium font-mono">{item.barcode || 'N/A'}</p>
+              <p className="text-sm text-muted-foreground">Security Deposit</p>
+              <p className="font-medium">{formatCurrencySync(itemData.security_deposit || 0)}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Internal Code</p>
-              <p className="font-medium">{item.internal_code || 'N/A'}</p>
+              <p className="font-medium">{itemData.internal_code || 'N/A'}</p>
             </div>
           </div>
           
@@ -160,25 +167,25 @@ export function ItemDetailsTab({ item, isLoading }: ItemDetailsTabProps) {
             <div>
               <p className="text-sm text-muted-foreground">Created Date</p>
               <p className="font-medium">
-                {item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}
+                {itemData.created_at ? new Date(itemData.created_at).toLocaleDateString() : 'N/A'}
               </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Last Updated</p>
               <p className="font-medium">
-                {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : 'N/A'}
+                {itemData.updated_at ? new Date(itemData.updated_at).toLocaleDateString() : 'N/A'}
               </p>
             </div>
           </div>
           
           {/* Custom Attributes */}
-          {item.attributes && Object.keys(item.attributes).length > 0 && (
+          {itemData.attributes && Object.keys(itemData.attributes).length > 0 && (
             <>
               <Separator />
               <div>
                 <p className="text-sm text-muted-foreground mb-2">Custom Attributes</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {Object.entries(item.attributes).map(([key, value]) => (
+                  {Object.entries(itemData.attributes).map(([key, value]) => (
                     <div key={key} className="flex justify-between py-1">
                       <span className="text-sm text-muted-foreground capitalize">
                         {key.replace(/_/g, ' ')}:
