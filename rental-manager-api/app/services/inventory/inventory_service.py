@@ -943,6 +943,7 @@ class InventoryService:
         total_reserved = Decimal("0")
         total_on_rent = Decimal("0")
         total_damaged = Decimal("0")
+        total_value = Decimal("0")
         
         for sl in item.stock_levels:
             stock_levels.append({
@@ -976,6 +977,10 @@ class InventoryService:
             total_reserved += sl.quantity_reserved
             total_on_rent += sl.quantity_on_rent
             total_damaged += sl.quantity_damaged
+        
+        # Calculate total value from inventory units
+        for unit in item.inventory_units:
+            total_value += unit.purchase_price * unit.quantity
         
         # Get recent stock movements (last 20)
         movements_query = (
@@ -1049,6 +1054,7 @@ class InventoryService:
             },
             "inventory_units": inventory_units,
             "stock_levels": stock_levels,
+            "total_value": float(total_value),
             "stock_summary": {
                 "total_units": len(inventory_units),
                 "total_on_hand": float(total_on_hand),
@@ -1056,6 +1062,7 @@ class InventoryService:
                 "total_reserved": float(total_reserved),
                 "total_on_rent": float(total_on_rent),
                 "total_damaged": float(total_damaged),
+                "total_value": float(total_value),
                 "locations_count": len(stock_levels),
                 "overall_utilization_rate": float(total_on_rent / total_on_hand * 100) if total_on_hand > 0 else 0,
                 "overall_availability_rate": float(total_available / total_on_hand * 100) if total_on_hand > 0 else 0
