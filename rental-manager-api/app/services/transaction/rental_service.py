@@ -736,51 +736,86 @@ class RentalService:
         end_date: date,
         strategy: RentalPricingStrategy
     ) -> Dict[str, Decimal]:
-        """Calculate rental pricing based on items and period."""
+        """Calculate rental pricing based on items and period, using the new pricing system."""
+        from app.services.rental_pricing_service import RentalPricingService, PricingOptimizationStrategy
+        
         subtotal = Decimal("0.00")
         security_deposit = Decimal("0.00")
         discount_amount = Decimal("0.00")
+        total_savings = Decimal("0.00")  # Track savings from tiered pricing
         
         duration_days = (end_date - start_date).days
+        pricing_service = RentalPricingService(self.session)
         
         for item_data in items:
             item = await self.item_repo.get_by_id(item_data.item_id)
             if not item:
                 continue
             
-            # Get base rate
+            # Use custom rate if provided, otherwise use pricing service
             if item_data.custom_daily_rate:
+                # Custom rate overrides pricing system
                 daily_rate = item_data.custom_daily_rate
+                line_total = daily_rate * duration_days * item_data.quantity
             else:
-                daily_rate = item.rental_rates.get("daily", Decimal("0.00"))
+                try:
+                    # Use the new pricing service to get optimal pricing
+                    pricing_result = await pricing_service.calculate_rental_pricing(
+                        item_id=item_data.item_id,
+                        rental_days=duration_days,
+                        calculation_date=start_date,
+                        optimization_strategy=PricingOptimizationStrategy.LOWEST_COST
+                    )
+                    
+                    # Use the calculated total cost
+                    line_total = pricing_result.total_cost * item_data.quantity
+                    
+                    # Track savings if any
+                    if pricing_result.savings_compared_to_daily:
+                        total_savings += pricing_result.savings_compared_to_daily * item_data.quantity
+                    
+                except Exception as e:
+                    # Fallback to item's base daily rate if pricing calculation fails
+                    logger.warning(f"Failed to calculate pricing for item {item_data.item_id}: {e}")
+                    
+                    # Try to get the best rate from the item model
+                    best_rate = item.get_best_rental_rate(duration_days)
+                    if best_rate:
+                        line_total = best_rate * item_data.quantity
+                    else:
+                        # Final fallback to daily rate
+                        daily_rate = item.rental_rate_per_day or Decimal("0.00")
+                        line_total = daily_rate * duration_days * item_data.quantity
             
-            # Apply pricing strategy
-            if strategy == RentalPricingStrategy.TIERED:
-                # Apply duration discounts
-                if duration_days >= 30:
-                    daily_rate *= Decimal("0.8")  # 20% discount for monthly
-                elif duration_days >= 7:
-                    daily_rate *= Decimal("0.9")  # 10% discount for weekly
-            elif strategy == RentalPricingStrategy.SEASONAL:
-                # Apply seasonal adjustments (simplified)
+            # Apply legacy pricing strategy modifiers if needed
+            if strategy == RentalPricingStrategy.SEASONAL:
+                # Apply seasonal adjustments on top of calculated price
                 current_month = datetime.now().month
                 if current_month in [6, 7, 8]:  # Summer peak
-                    daily_rate *= Decimal("1.2")  # 20% increase
+                    line_total *= Decimal("1.2")  # 20% increase
                 elif current_month in [12, 1, 2]:  # Winter low
-                    daily_rate *= Decimal("0.9")  # 10% discount
+                    line_total *= Decimal("0.9")  # 10% discount
             
-            # Calculate line totals
-            line_total = daily_rate * duration_days * item_data.quantity
             subtotal += line_total
             
             # Calculate security deposit
-            item_deposit = item.replacement_value * self.SECURITY_DEPOSIT_PERCENTAGE * item_data.quantity
+            # Use item's security deposit if set, otherwise calculate based on value
+            if item.security_deposit:
+                item_deposit = item.security_deposit * item_data.quantity
+            else:
+                # Fallback to percentage of sale price or rental rate
+                base_value = item.sale_price or (item.rental_rate_per_day * 30) or Decimal("100.00")
+                item_deposit = base_value * self.SECURITY_DEPOSIT_PERCENTAGE * item_data.quantity
             security_deposit += item_deposit
             
             # Apply item-specific discount if provided
             if item_data.discount_percent:
                 item_discount = line_total * item_data.discount_percent / 100
                 discount_amount += item_discount
+        
+        # Add total savings from tiered pricing to discount amount
+        if total_savings > 0:
+            discount_amount += total_savings
         
         # Calculate tax (simplified - would be more complex in production)
         tax_rate = Decimal("0.10")  # 10% tax
@@ -794,7 +829,8 @@ class RentalService:
             "discount_amount": discount_amount,
             "tax_amount": tax_amount,
             "total_amount": total_amount,
-            "security_deposit": security_deposit
+            "security_deposit": security_deposit,
+            "savings_from_tiered_pricing": total_savings  # New field to track savings
         }
     
     async def _create_rental_lines(

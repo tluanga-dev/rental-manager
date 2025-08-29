@@ -114,11 +114,20 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
   // Debug logging
   console.log('🔍 UnitsTable received units:', units?.length || 0);
   console.log('🔍 Units is array?', Array.isArray(units));
-  console.log('🔍 Units value:', units);
+  console.log('🔍 UnitsTable received item:', item);
+  if (item) {
+    console.log('🔍 Item rental_rate:', item.rental_rate);
+    console.log('🔍 Item sale_price:', item.sale_price);
+    console.log('🔍 Item keys:', Object.keys(item));
+  }
   if (units && units.length > 0) {
     console.log('🔍 First unit sample:', JSON.stringify(units[0], null, 2));
     console.log('🔍 First unit has unit_identifier?', 'unit_identifier' in units[0]);
     console.log('🔍 First unit has location_name?', 'location_name' in units[0]);
+    console.log('🔍 First unit has rental_rate_per_period?', 'rental_rate_per_period' in units[0]);
+    console.log('🔍 First unit rental_rate_per_period value:', units[0].rental_rate_per_period);
+    console.log('🔍 First unit has sale_price?', 'sale_price' in units[0]);
+    console.log('🔍 First unit sale_price value:', units[0].sale_price);
   }
 
   // Get unique locations for filter
@@ -213,6 +222,8 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
               <TableHead>Status</TableHead>
               <TableHead>Condition</TableHead>
               <TableHead>Rental Status</TableHead>
+              <TableHead>Rental Rate</TableHead>
+              <TableHead>Sale Rate</TableHead>
               <TableHead>Acquisition</TableHead>
               <TableHead>Last Movement</TableHead>
               <TableHead>Notes</TableHead>
@@ -221,7 +232,7 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
           <TableBody>
             {filteredUnits.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="text-center py-8">
+                <TableCell colSpan={11} className="text-center py-8">
                   <Package className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                   {item && item.stock_summary && item.stock_summary.total > 0 ? (
                     <div className="space-y-3">
@@ -347,6 +358,27 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
                         disabled={unit.item_is_rental_blocked}
                         overrideReason={unit.item_is_rental_blocked ? `Item blocked: ${unit.item_rental_block_reason}` : undefined}
                       />
+                    </TableCell>
+                    <TableCell>
+                      {(unit.rental_rate_per_period || item?.rental_rate) ? (
+                        <div className="flex flex-col">
+                          <span className="font-medium text-sm">
+                            {formatCurrencySync(unit.rental_rate_per_period || item?.rental_rate || 0)}
+                          </span>
+                          <span className="text-xs text-muted-foreground">/day</span>
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground text-sm">Not set</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {(unit.sale_price || item?.sale_price) ? (
+                        <span className="font-medium text-sm">
+                          {formatCurrencySync(unit.sale_price || item?.sale_price || 0)}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground text-sm">Not set</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">

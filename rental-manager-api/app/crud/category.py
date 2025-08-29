@@ -31,7 +31,7 @@ class CategoryRepository:
             category_path=obj_data.get('category_path', obj_data['name']),
             category_level=obj_data.get('category_level', 1),
             display_order=obj_data.get('display_order', 0),
-            is_leaf=obj_data.get('is_leaf', True),
+            is_leaf=obj_data.get('is_leaf', False),
             created_by=obj_data.get('created_by'),
             updated_by=obj_data.get('updated_by')
         )

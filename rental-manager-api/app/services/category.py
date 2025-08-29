@@ -125,7 +125,7 @@ class CategoryService:
             "category_code": category_code,
             "category_level": category_level,
             "category_path": category_path,
-            "is_leaf": True,  # New categories are always leaf initially
+            # is_leaf comes from the request data now (defaults to False in schema)
             "created_by": created_by,
             "updated_by": created_by
         })

@@ -24,6 +24,8 @@ import {
 import { ProductInfoCard } from './ProductInfoCard';
 import { StockSummaryCards } from './StockSummaryCards';
 import { InventoryUnitsTabs } from './InventoryUnitsTabs';
+import { PricingInfoCard } from './PricingInfoCard';
+import { PricingManagementModal } from '@/components/rental-pricing/PricingManagementModal';
 import { inventoryItemsApi } from '@/services/api/inventory-items';
 import type { 
   InventoryUnitDetail, 
@@ -39,6 +41,7 @@ interface InventoryItemDetailProps {
 export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('units');
+  const [showPricingModal, setShowPricingModal] = useState(false);
 
   // Use SKU if provided, otherwise fall back to ID
   const identifier = itemSku || itemId || '';
@@ -282,6 +285,14 @@ export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProp
       {/* Stock Summary Cards - Horizontal Strip */}
       <StockSummaryCards item={item} />
 
+      {/* Pricing Information Card */}
+      {item.is_rentable && (
+        <PricingInfoCard 
+          item={item} 
+          onManagePricing={() => setShowPricingModal(true)}
+        />
+      )}
+
       {/* Full Width Tabs for All Content */}
       <InventoryUnitsTabs
         units={units}
@@ -294,6 +305,17 @@ export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProp
         item={item}
         fullWidth={true}
       />
+
+      {/* Pricing Management Modal */}
+      {item.is_rentable && (
+        <PricingManagementModal
+          isOpen={showPricingModal}
+          onClose={() => setShowPricingModal(false)}
+          itemId={item.item_id}
+          itemName={item.item_name}
+          currentDailyRate={item.rental_rate}
+        />
+      )}
     </div>
   );
 }

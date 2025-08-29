@@ -160,6 +160,7 @@ function NewCategoryContent() {
         name: categoryName.trim(),
         parent_category_id: (!parentCategory || parentCategory === 'root') ? null : parentCategory,
         display_order: 0,
+        is_leaf: isLeaf,
       };
 
       console.log('Creating category with payload:', createPayload);
@@ -348,9 +349,11 @@ function NewCategoryContent() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="is-leaf">Leaf Category</Label>
+                  <Label htmlFor="is-leaf">Can Contain Products</Label>
                   <p className="text-sm text-gray-500">
-                    Leaf categories can have products assigned to them
+                    {isLeaf 
+                      ? "Products can be directly assigned to this category (no subcategories allowed)"
+                      : "This category can only contain subcategories (no direct products)"}
                   </p>
                 </div>
                 <Switch
@@ -412,7 +415,7 @@ function NewCategoryContent() {
                 <div>
                   <Label>Category Type</Label>
                   <p className="text-sm text-gray-600 mt-1">
-                    {isLeaf ? 'Leaf Category (can have products)' : 'Parent Category (can have subcategories)'}
+                    {isLeaf ? 'Product Container - Can hold products directly' : 'Parent Category - Can only contain subcategories'}
                   </p>
                 </div>
               </CardContent>
@@ -426,11 +429,15 @@ function NewCategoryContent() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-slate-800 dark:text-slate-200">
-                <p>• Categories can be nested up to unlimited levels</p>
-                <p>• Only leaf categories can have products assigned</p>
-                <p>• Parent categories can only contain subcategories</p>
-                <p>• Category names should be clear and descriptive</p>
-                <p>• Once created, the category type (leaf/parent) cannot be changed</p>
+                <p className="font-semibold">Category Structure:</p>
+                <p>• <strong>Parent Categories</strong>: Organize subcategories (e.g., "Electronics" → "Cameras" → "Mirrorless")</p>
+                <p>• <strong>Product Categories</strong>: Hold actual products (e.g., "Sony A7 III" goes in "Mirrorless")</p>
+                <div className="pt-2 border-t border-slate-300 dark:border-slate-700">
+                  <p className="font-semibold">Important Notes:</p>
+                  <p>• Default: Categories are created as parent categories (can have subcategories)</p>
+                  <p>• Enable "Can Contain Products" only for final categories in your hierarchy</p>
+                  <p>• Once created, a category's type cannot be changed</p>
+                </div>
               </CardContent>
             </Card>
           </div>

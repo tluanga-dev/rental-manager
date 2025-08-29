@@ -9,6 +9,7 @@ from app.models.contact_person import ContactPerson
 from app.models.unit_of_measurement import UnitOfMeasurement
 from app.models.item import Item
 from app.models.location import Location
+from app.models.rental_pricing import RentalPricing, PricingStrategy, PeriodType
 
 # Import transaction models
 from app.models.transaction import (
@@ -67,6 +68,7 @@ __all__ = [
     "UnitOfMeasurement",
     "Item",
     "Location",
+    "RentalPricing", "PricingStrategy", "PeriodType",
     
     # Transaction models
     "TransactionHeader",

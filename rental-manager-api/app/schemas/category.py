@@ -24,6 +24,7 @@ class CategoryCreate(CategoryBase):
     
     # category_code is optional on create - will be auto-generated if not provided
     category_code: Optional[str] = Field(None, max_length=15, description="Category code (auto-generated if not provided)")
+    is_leaf: bool = Field(False, description="True if category can contain products, False if it can contain subcategories")
     
     @field_validator('category_code')
     @classmethod

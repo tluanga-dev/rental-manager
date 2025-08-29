@@ -111,6 +111,10 @@ export interface InventoryUnitDetail {
   acquisition_cost?: number;
   notes?: string;
   
+  // Pricing fields
+  rental_rate_per_period?: number;
+  sale_price?: number;
+  
   // Rental blocking fields
   is_rental_blocked?: boolean;
   rental_block_reason?: string;

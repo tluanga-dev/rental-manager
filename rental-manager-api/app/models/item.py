@@ -302,6 +302,9 @@ class Item(RentalManagerBaseModel):
     stock_movements = relationship("StockMovement", back_populates="item", lazy="dynamic")
     stock_levels = relationship("StockLevel", back_populates="item", lazy="select")
     
+    # Rental pricing relationship
+    rental_pricing = relationship("RentalPricing", back_populates="item", lazy="select", cascade="all, delete-orphan")
+    
     # Indexes for performance optimization
     __table_args__ = (
         # Core search indexes
@@ -509,6 +512,69 @@ class Item(RentalManagerBaseModel):
         
         if updated_by:
             self.updated_by = updated_by
+    
+    def get_best_rental_rate(self, rental_days: int) -> Optional[Decimal]:
+        """
+        Get the best rental rate for a given duration.
+        
+        This method checks the rental pricing tiers first, then falls back to the
+        daily rate if no structured pricing is available.
+        
+        Args:
+            rental_days: Number of rental days
+            
+        Returns:
+            Total rental cost for the period, or None if no pricing available
+        """
+        from datetime import date
+        
+        # Check if we have structured rental pricing
+        if self.rental_pricing:
+            applicable_pricing = []
+            today = date.today()
+            
+            for pricing in self.rental_pricing:
+                if pricing.is_applicable_for_duration(rental_days):
+                    applicable_pricing.append(pricing)
+            
+            # Find the pricing tier with the lowest total cost
+            if applicable_pricing:
+                best_cost = None
+                for pricing in applicable_pricing:
+                    try:
+                        cost = pricing.calculate_total_cost(rental_days)
+                        if best_cost is None or cost < best_cost:
+                            best_cost = cost
+                    except ValueError:
+                        continue
+                
+                if best_cost is not None:
+                    return best_cost
+        
+        # Fallback to daily rate
+        if self.rental_rate_per_day:
+            return self.rental_rate_per_day * rental_days
+        
+        return None
+    
+    def get_daily_equivalent_rate(self, rental_days: int) -> Optional[Decimal]:
+        """
+        Get the daily equivalent rate for a given rental duration.
+        
+        Args:
+            rental_days: Number of rental days
+            
+        Returns:
+            Daily equivalent rate, or None if no pricing available
+        """
+        total_cost = self.get_best_rental_rate(rental_days)
+        if total_cost and rental_days > 0:
+            return total_cost / rental_days
+        return None
+    
+    def has_structured_pricing(self) -> bool:
+        """Check if item has structured rental pricing tiers."""
+        return bool(self.rental_pricing and any(p.is_active for p in self.rental_pricing))
     
     @property
     def display_name(self) -> str:

@@ -30,7 +30,7 @@ class Category(RentalManagerBaseModel):
     category_path = Column(String(500), nullable=False, index=True, comment="Full category path")
     category_level = Column(Integer, nullable=False, default=1, comment="Hierarchy level")
     display_order = Column(Integer, nullable=False, default=0, comment="Display order within parent")
-    is_leaf = Column(Boolean, nullable=False, default=True, comment="True if category has no children")
+    is_leaf = Column(Boolean, nullable=False, default=False, comment="True if category has no children")
     
     # Self-referential relationships for hierarchy
     parent = relationship("Category", remote_side="Category.id", back_populates="children")
@@ -60,7 +60,7 @@ class Category(RentalManagerBaseModel):
         category_path: Optional[str] = None,
         category_level: int = 1,
         display_order: int = 0,
-        is_leaf: bool = True,
+        is_leaf: bool = False,
         **kwargs
     ):
         """

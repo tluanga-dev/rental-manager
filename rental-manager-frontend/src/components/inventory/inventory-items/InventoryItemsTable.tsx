@@ -161,28 +161,7 @@ export function InventoryItemsTable({
             </TableHead>
             <TableHead>Available</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 flex items-center gap-1"
-                onClick={() => onSort('rental_rate')}
-              >
-                Rental Rate
-                {renderSortIcon('rental_rate')}
-              </Button>
-            </TableHead>
-            <TableHead className="text-right">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 flex items-center gap-1"
-                onClick={() => onSort('sale_price')}
-              >
-                Selling Price
-                {renderSortIcon('sale_price')}
-              </Button>
-            </TableHead>
+            <TableHead>Rental Pricing</TableHead>
             <TableHead className="text-center">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -269,25 +248,20 @@ export function InventoryItemsTable({
                     item.rental_rate ? (
                       <div className="flex flex-col">
                         <span className="font-medium">
-                          {formatCurrencySync(item.rental_rate)}
+                          {formatCurrencySync(item.rental_rate)}/day
                         </span>
-                        <span className="text-xs text-muted-foreground">/day</span>
+                        <span className="text-xs text-muted-foreground">
+                          Default rate
+                        </span>
                       </div>
                     ) : (
-                      <span className="text-muted-foreground text-sm">Not set</span>
+                      <span className="text-xs text-muted-foreground">
+                        No pricing set
+                      </span>
                     )
                   ) : (
-                    <span className="text-muted-foreground text-sm">-</span>
-                  )}
-                </TableCell>
-                <TableCell className="text-right">
-                  {item.sale_price ? (
-                    <span className="font-medium">
-                      {formatCurrencySync(item.sale_price)}
-                    </span>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">
-                      Not set
+                    <span className="text-xs text-muted-foreground">
+                      Not rentable
                     </span>
                   )}
                 </TableCell>

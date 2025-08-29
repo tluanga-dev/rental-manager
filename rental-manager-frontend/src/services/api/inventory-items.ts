@@ -178,6 +178,12 @@ export const inventoryItemsApi = {
       
       if (rawUnits && Array.isArray(rawUnits)) {
         console.log(`✅ Processing ${rawUnits.length} units for mapping`);
+        if (rawUnits.length > 0) {
+          console.log('🔍 Raw unit fields:', Object.keys(rawUnits[0]));
+          console.log('🔍 Raw unit rental_rate_per_period:', rawUnits[0].rental_rate_per_period);
+          console.log('🔍 Raw unit rental_rate:', rawUnits[0].rental_rate);
+          console.log('🔍 Raw unit sale_price:', rawUnits[0].sale_price);
+        }
         
         // Map the API response to match frontend expectations
         const units = rawUnits.map((unit: any) => ({
@@ -192,6 +198,9 @@ export const inventoryItemsApi = {
           acquisition_date: unit.purchase_date || unit.acquisition_date || unit.created_at,
           acquisition_cost: unit.purchase_price || unit.acquisition_cost,
           notes: unit.notes,
+          // Pricing fields
+          rental_rate_per_period: unit.rental_rate_per_period || unit.rental_rate,
+          sale_price: unit.sale_price,
           // Rental blocking fields
           is_rental_blocked: unit.is_rental_blocked || false,
           rental_block_reason: unit.rental_block_reason,
