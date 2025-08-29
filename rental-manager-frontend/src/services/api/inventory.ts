@@ -174,6 +174,15 @@ export const inventoryUnitsApi = {
     return response.data.success ? response.data.data : response.data;
   },
 
+  // Update sale price for a specific inventory unit
+  updateSalePrice: async (unitId: string, salePrice: number) => {
+    const response = await apiClient.put(
+      `/inventory/units/${unitId}/sale-price`,
+      { sale_price: salePrice }
+    );
+    return response.data.success ? response.data.data : response.data;
+  },
+
   // Batch update rental rate for multiple inventory units by item and location
   batchUpdateRentalRate: async (itemId: string, locationId: string, rentalRatePerPeriod: number) => {
     const response = await apiClient.put(

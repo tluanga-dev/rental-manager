@@ -34,6 +34,7 @@ import {
 } from 'lucide-react';
 import { formatCurrencySync } from '@/lib/currency-utils';
 import { RentalRateEditor } from '@/components/rentals/RentalRateEditor';
+import { SalePriceEditor } from '@/components/sales/SalePriceEditor';
 import { itemsApi } from '@/services/api/items';
 import { inventoryUnitsApi } from '@/services/api/inventory';
 import type { InventoryUnitDetail, InventoryItemDetail } from '@/types/inventory-items';
@@ -84,6 +85,15 @@ export function UnitDetailsTab({ unit, item }: UnitDetailsTabProps) {
     // Update local state to reflect the change immediately
     (unit as any).rental_rate_per_period = newRate;
     // Note: Toast is handled by RentalRateEditor component
+  };
+
+  const handleSalePriceUpdate = async (newPrice: number) => {
+    console.log('UnitDetailsTab: Updating sale price for unit:', unit.id, 'to:', newPrice);
+    const result = await inventoryUnitsApi.updateSalePrice(unit.id, newPrice);
+    console.log('UnitDetailsTab: API response:', result);
+    // Update local state to reflect the change immediately
+    (unit as any).sale_price = newPrice;
+    // Note: Toast is handled by SalePriceEditor component
   };
 
   const handlePeriodChange = async (value: string) => {
@@ -200,12 +210,19 @@ export function UnitDetailsTab({ unit, item }: UnitDetailsTabProps) {
               </p>
             </div>
           )}
-          {(unit as any).sale_price && (
-            <div className="space-y-1">
-              <p className="text-sm text-muted-foreground">Sale Price</p>
-              <p className="font-medium">{formatCurrencySync((unit as any).sale_price)}</p>
-            </div>
-          )}
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Sale Price</p>
+            <SalePriceEditor
+              currentPrice={(unit as any).sale_price || 0}
+              unitId={unit.id}
+              currency="₹"
+              editable={true}
+              showChangeButton={true}
+              onPriceChange={handleSalePriceUpdate}
+              placeholder="Set sale price"
+              className="w-full"
+            />
+          </div>
           {(unit as any).rental_rate_per_period && (
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Rental Rate (Per Period)</p>

@@ -373,6 +373,59 @@ async def update_unit_rental_rate(
     }
 
 
+@router.put("/{unit_id}/sale-price")
+async def update_unit_sale_price(
+    unit_id: UUID,
+    sale_price: float = Body(..., embed=True, ge=0, description="Sale price"),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Update sale price for a specific inventory unit.
+    
+    Args:
+        unit_id: Unit ID
+        sale_price: New sale price
+        
+    Returns:
+        Success response with updated unit
+    """
+    from app.crud.inventory import inventory_unit as crud_unit
+    from sqlalchemy import select
+    from app.models.inventory.inventory_unit import InventoryUnit
+    
+    # Get the unit
+    result = await db.execute(
+        select(InventoryUnit).where(InventoryUnit.id == unit_id)
+    )
+    unit = result.scalar_one_or_none()
+    
+    if not unit:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Inventory unit not found"
+        )
+    
+    # Update the sale price
+    unit.sale_price = sale_price
+    unit.updated_by = current_user.id
+    unit.updated_at = datetime.now(timezone.utc)
+    
+    await db.commit()
+    await db.refresh(unit)
+    
+    return {
+        "success": True,
+        "message": f"Sale price updated to {sale_price}",
+        "data": {
+            "id": str(unit.id),
+            "unit_identifier": unit.sku,
+            "sale_price": float(unit.sale_price) if unit.sale_price else None,
+            "updated_at": unit.updated_at.isoformat() if unit.updated_at else None
+        }
+    }
+
+
 @router.put("/{unit_id}", response_model=InventoryUnitResponse)
 async def update_inventory_unit(
     unit_id: UUID,
