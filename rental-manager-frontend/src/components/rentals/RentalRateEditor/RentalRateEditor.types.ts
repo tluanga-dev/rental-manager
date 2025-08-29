@@ -60,7 +60,7 @@ export interface RentalRateDisplayProps {
 export interface RentalRateInputProps {
   value: number;
   onChange: (value: number) => void;
-  onSave: () => void;
+  onSave: (value: number) => void;
   onCancel: () => void;
   loading?: boolean;
   minRate?: number;

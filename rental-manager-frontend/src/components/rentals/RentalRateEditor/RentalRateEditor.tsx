@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Edit2, Check, X, Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -60,15 +60,21 @@ function RentalRateInput({
 }: RentalRateInputProps) {
   const [inputValue, setInputValue] = useState(value.toString());
   const [validationError, setValidationError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Update input value when prop changes
+  // Update input value when prop changes, but not during editing
+  const [isUserEditing, setIsUserEditing] = useState(false);
+  
   useEffect(() => {
-    setInputValue(value.toString());
-  }, [value]);
+    if (!isUserEditing) {
+      setInputValue(value.toString());
+    }
+  }, [value, isUserEditing]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
+    setIsUserEditing(true); // Mark that user is actively editing
     
     // Clear validation errors on change
     setValidationError(null);
@@ -78,7 +84,9 @@ function RentalRateInput({
   };
 
   const handleSave = () => {
-    const numValue = parseFloat(inputValue);
+    // Get the current value from the DOM input (handles cases where React state might be stale)
+    const currentDOMValue = inputRef.current?.value || inputValue;
+    const numValue = parseFloat(currentDOMValue);
     
     // Validate input
     if (isNaN(numValue)) {
@@ -96,15 +104,18 @@ function RentalRateInput({
       return;
     }
     
-    // Clear errors and save
+    // Clear errors and save - pass the new value directly to onSave
     setValidationError(null);
-    onChange(numValue); // Now call onChange with the final validated value
-    onSave();
+    setIsUserEditing(false); // User finished editing
+    console.log('RentalRateInput: handleSave - inputValue:', inputValue, 'numValue:', numValue);
+    onChange(numValue); // Update local state
+    onSave(numValue); // Pass the new value directly to save handler
   };
 
   const handleCancel = () => {
     setInputValue(value.toString()); // Reset input to original value
     setValidationError(null);
+    setIsUserEditing(false); // User finished editing (cancelled)
     // Don't call onChange here - we're canceling, so no state change should happen
     onCancel();
   };
@@ -122,6 +133,7 @@ function RentalRateInput({
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
           <Input
+            ref={inputRef}
             type="number"
             value={inputValue}
             onChange={handleInputChange}
@@ -216,8 +228,12 @@ export function RentalRateEditor({
     // Don't call onRateChange here - only call it when user saves
   }, []);
 
-  const handleSave = useCallback(async () => {
+  const handleSave = useCallback(async (newRate?: number) => {
     if (!editable || isLoading || externalLoading) return;
+    
+    // Use the passed value or fall back to localRate
+    const rateToSave = newRate ?? localRate;
+    console.log('RentalRateEditor: handleSave - newRate:', newRate, 'localRate:', localRate, 'rateToSave:', rateToSave);
     
     try {
       setIsLoading(true);
@@ -227,10 +243,10 @@ export function RentalRateEditor({
       if (saveToMaster && itemId) {
         try {
           if (onMasterDataUpdate) {
-            await onMasterDataUpdate(itemId, localRate);
+            await onMasterDataUpdate(itemId, rateToSave);
           } else {
             // Fallback to direct API call
-            await itemsApi.updateRentalRate(itemId, localRate);
+            await itemsApi.updateRentalRate(itemId, rateToSave);
           }
         } catch (masterError) {
           console.error('Failed to update master data:', masterError);
@@ -244,14 +260,17 @@ export function RentalRateEditor({
 
       // Always update local state (await if it's async)
       if (onRateChange) {
-        await onRateChange(localRate);
+        await onRateChange(rateToSave);
       }
+      
+      // Update local state after successful save
+      setLocalRate(rateToSave);
       setIsEditing(false);
       
       // Show success toast only if we reach here without errors
       toast({
         title: "Rate Updated Successfully",
-        description: `Rental rate updated to ${currency}${localRate}/${periodText}${saveToMaster && itemId ? ' and saved to master data' : ''}`,
+        description: `Rental rate updated to ${currency}${rateToSave}/${periodText}${saveToMaster && itemId ? ' and saved to master data' : ''}`,
         variant: "default",
       });
       
