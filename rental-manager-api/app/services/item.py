@@ -49,7 +49,14 @@ class ItemService:
         # Generate SKU if not provided
         sku = item_data.sku
         if not sku or sku == "AUTO":
-            sku = await self.sku_generator.generate_sku(item_data.category_id)
+            # Temporary fix: Generate simple timestamp-based SKU to avoid async context issues
+            import time
+            import random
+            timestamp = int(time.time())
+            random_suffix = random.randint(100, 999)
+            sku = f"ITEM-{timestamp}-{random_suffix}"
+            # TODO: Revert to proper SKU generation after fixing async context issue
+            # sku = await self.sku_generator.generate_sku(item_data.category_id)
         
         # Check if SKU already exists
         if await self.repository.exists_by_sku(sku):
