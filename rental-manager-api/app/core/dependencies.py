@@ -157,11 +157,11 @@ async def get_item_repository(db: AsyncSession = Depends(get_db)) -> ItemReposit
 
 
 async def get_item_service(
-    db: AsyncSession = Depends(get_db),
-    sku_generator: SKUGenerator = Depends(get_sku_generator)
+    db: AsyncSession = Depends(get_db)
 ) -> ItemService:
     """Get item service instance."""
     repository = ItemRepository(db)
+    sku_generator = SKUGenerator(db)
     return ItemService(repository, sku_generator)
 
 

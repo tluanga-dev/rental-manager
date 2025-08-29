@@ -133,7 +133,7 @@ export const categoriesApi = {
       is_leaf: 'true' // Send as string for proper query parameter serialization
     } : { is_leaf: 'true' };
     
-    const response = await apiClient.get('/categories/', { 
+    const response = await apiClient.get('/v1/categories/', { 
       params: queryParams
     });
     // The axios interceptor wraps responses in {success: true, data: originalResponse}

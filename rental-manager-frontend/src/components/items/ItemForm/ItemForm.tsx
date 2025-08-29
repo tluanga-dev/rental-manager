@@ -279,7 +279,14 @@ export function ItemForm({
       is_salable: data.is_salable ?? false,
     };
     
-    submitMutation.mutate(apiPayload);
+    // Clear validation state before submitting
+    itemValidation.clearValidation();
+    
+    // Submit the form
+    await onSubmit(apiPayload);
+    
+    // Clear validation state after successful submission (if no error thrown)
+    itemValidation.clearValidation();
   };
 
   // Handle error dialog actions

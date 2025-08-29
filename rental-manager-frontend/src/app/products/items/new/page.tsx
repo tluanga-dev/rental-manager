@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ItemForm, type ItemFormData } from '@/components/items/ItemForm';
+import { ItemCreationSuccessDialog } from '@/components/dialogs/ItemCreationSuccessDialog';
 import { useAppStore } from '@/stores/app-store';
 import { itemsApi } from '@/services/api/items';
 import { 
@@ -20,6 +21,9 @@ function NewItemContent() {
   const { addNotification } = useAppStore();
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [createdItem, setCreatedItem] = useState<any>(null);
+  const formRef = useRef<any>(null);
 
   const handleSubmit = async (data: ItemFormData) => {
     setIsSubmitting(true);
@@ -27,14 +31,21 @@ function NewItemContent() {
     try {
       const newItem = await itemsApi.create(data);
       
-      addNotification({
-        type: 'success',
-        title: 'Item Created',
-        message: `Item "${data.item_name}" has been created successfully.`,
+      // Store the created item data
+      setCreatedItem({
+        id: newItem.id,
+        item_name: newItem.item_name || data.item_name,
+        sku: newItem.sku,
+        is_rentable: newItem.is_rentable || data.is_rentable,
+        is_salable: newItem.is_salable || data.is_salable,
+        rental_rate_per_day: newItem.rental_rate_per_day || data.rental_rate_per_day,
+        sale_price: newItem.sale_price || data.sale_price,
       });
       
-      // Redirect to the new item's detail page
-      router.push(`/products/items/${newItem.id}`);
+      // Show success dialog instead of immediate redirect
+      setShowSuccessDialog(true);
+      
+      // Don't show notification here - let the dialog handle it
     } catch (error: any) {
       console.error('Failed to create item:', error);
       console.error('Error response:', error.response);
@@ -67,6 +78,29 @@ function NewItemContent() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleViewItem = () => {
+    if (createdItem?.id) {
+      setShowSuccessDialog(false);
+      router.push(`/products/items/${createdItem.id}`);
+    }
+  };
+
+  const handleCreateAnother = () => {
+    setShowSuccessDialog(false);
+    setCreatedItem(null);
+    // Reset the form - this will need to be implemented in ItemForm
+    if (formRef.current?.reset) {
+      formRef.current.reset();
+    }
+    // Clear any validation states
+    window.location.reload(); // Simple reload to reset everything
+  };
+
+  const handleGoToList = () => {
+    setShowSuccessDialog(false);
+    router.push('/products/items');
   };
 
   const handleCancel = () => {
@@ -153,6 +187,19 @@ function NewItemContent() {
           />
         </CardContent>
       </Card>
+
+      {/* Success Dialog */}
+      {createdItem && (
+        <ItemCreationSuccessDialog
+          open={showSuccessDialog}
+          onOpenChange={setShowSuccessDialog}
+          itemData={createdItem}
+          onViewItem={handleViewItem}
+          onCreateAnother={handleCreateAnother}
+          onGoToList={handleGoToList}
+          autoRedirectSeconds={5}
+        />
+      )}
     </div>
   );
 }

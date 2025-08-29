@@ -17,7 +17,21 @@ export const itemsApi = {
     console.log(JSON.stringify(data, null, 2));
     
     const response = await apiClient.post('/items/', data);
-    return response.data.success ? response.data.data : response.data;
+    const result = response.data.success ? response.data.data : response.data;
+    
+    // Ensure we have an ID for navigation
+    if (!result.id && result.item_id) {
+      result.id = result.item_id;
+    }
+    
+    // If still no ID, use SKU as fallback
+    if (!result.id && result.sku) {
+      result.id = result.sku;
+    }
+    
+    console.log('✅ Item created successfully:', result);
+    
+    return result;
   },
 
   // Get all items with optional filters - Updated for Item Master API
