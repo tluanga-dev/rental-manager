@@ -97,7 +97,14 @@ export function ItemsStep({ data, onUpdate, onNext, onBack }: ItemsStepProps) {
 
   // Transform RentableItem from API to our wizard format
   const transformItemForWizard = (item: RentableItem): ItemForWizard => {
-    return {
+    console.log('🎭 Transforming item for wizard display:', {
+      item_id: item.id,
+      item_name: item.item_name,
+      total_available_quantity: item.total_available_quantity,
+      location_availability: item.location_availability
+    });
+    
+    const wizardItem = {
       id: item.id,
       name: item.item_name,
       sku: item.sku,
@@ -116,6 +123,9 @@ export function ItemsStep({ data, onUpdate, onNext, onBack }: ItemsStepProps) {
       serial_number_required: (item as any).serial_number_required || false,
       location_availability: item.location_availability || [],
     };
+    
+    console.log('✨ Wizard item created with available_quantity:', wizardItem.available_quantity);
+    return wizardItem;
   };
 
   // Transform RentableInventoryUnit directly from the new API to wizard format
@@ -152,6 +162,13 @@ export function ItemsStep({ data, onUpdate, onNext, onBack }: ItemsStepProps) {
       try {
         setIsLoading(true);
         setError(null);
+        
+        console.log('🚀 Starting to fetch rentable items with params:', {
+          location_id: data.location_id,
+          search_name: searchTerm,
+          limit: 100,
+          skip: 0
+        });
 
         // Use the new rentable items endpoint with proper filters
         const response = await rentableItemsApi.getRentableItems({
@@ -160,39 +177,106 @@ export function ItemsStep({ data, onUpdate, onNext, onBack }: ItemsStepProps) {
           location_id: data.location_id || undefined,
           search_name: searchTerm || undefined, // Include search term in API call
         });
-        console.log('API Response:', response);
-        if (response && Array.isArray(response)) {
-          const transformedItems = response.map(transformItemForWizard);
+        
+        console.log('📦 Primary API Response received:', {
+          response_type: typeof response,
+          is_array: Array.isArray(response),
+          length: Array.isArray(response) ? response.length : 'N/A',
+          sample_item: Array.isArray(response) && response.length > 0 ? response[0] : null
+        });
+        
+        if (response && Array.isArray(response) && response.length > 0) {
+          console.log('✅ Primary API returned items, transforming...');
+          const transformedItems = response
+            .filter(item => item && typeof item === 'object') // Filter out invalid items
+            .map(item => {
+              try {
+                return transformItemForWizard(item);
+              } catch (error) {
+                console.error('❌ Error transforming rentable item:', item, error);
+                return null;
+              }
+            })
+            .filter(item => item !== null); // Remove failed transformations
+            
+          console.log('🔄 Primary API items transformed:', {
+            original_count: response.length,
+            transformed_count: transformedItems.length,
+            sample_transformed: transformedItems[0]
+          });
+          
           setAvailableItems(transformedItems);
           setFilteredItems(transformedItems);
-        } else {
-          // Fallback: Use the old inventory unit endpoint if the new one fails
-          console.warn('New rentable items API failed, falling back to inventory units');
+          
+        } else if (response && Array.isArray(response) && response.length === 0) {
+          console.log('📭 Primary API returned empty array - trying fallback');
+          
+          // Fallback: Use the old inventory unit endpoint
+          console.log('🔄 Falling back to inventory units API...');
           const rawUnits = await rentableItemsApi.getRentableInventoryUnits({
             limit: 100,
             skip: 0,
             location_id: data.location_id || undefined,
           });
+          
+          console.log('📦 Fallback API Response received:', {
+            response_type: typeof rawUnits,
+            is_array: Array.isArray(rawUnits),
+            length: Array.isArray(rawUnits) ? rawUnits.length : 'N/A',
+            sample_unit: Array.isArray(rawUnits) && rawUnits.length > 0 ? rawUnits[0] : null
+          });
 
-          if (rawUnits && Array.isArray(rawUnits)) {
-            const transformedItems = rawUnits.map((unit, index) => transformInventoryUnitForWizard(unit, index));
+          if (rawUnits && Array.isArray(rawUnits) && rawUnits.length > 0) {
+            console.log('✅ Fallback API returned units, transforming...');
+            const transformedItems = rawUnits
+              .filter(unit => unit && typeof unit === 'object' && unit.item_id) // Filter out invalid units
+              .map((unit, index) => {
+                try {
+                  return transformInventoryUnitForWizard(unit, index);
+                } catch (error) {
+                  console.error('❌ Error transforming inventory unit:', unit, error);
+                  return null;
+                }
+              })
+              .filter(item => item !== null); // Remove failed transformations
+              
             // Apply search filter locally for fallback
             const searchFiltered = searchTerm
-              ? (transformedItems || []).filter(item =>
+              ? transformedItems.filter(item =>
                 (item?.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                 (item?.category || '').toLowerCase().includes(searchTerm.toLowerCase())
               )
-              : (transformedItems || []);
+              : transformedItems;
+              
+            console.log('🔄 Fallback API items transformed:', {
+              original_count: rawUnits.length,
+              transformed_count: transformedItems.length,
+              search_filtered_count: searchFiltered.length,
+              sample_transformed: transformedItems[0]
+            });
 
             setAvailableItems(transformedItems);
             setFilteredItems(searchFiltered);
           } else {
-            throw new Error('Failed to load items from both APIs');
+            console.log('📭 Both APIs returned no items');
+            setAvailableItems([]);
+            setFilteredItems([]);
+            setError('No rentable items found. Please check if items are configured as rentable in the system.');
           }
+        } else {
+          console.error('❌ Primary API returned invalid response format');
+          throw new Error('Invalid response format from rentable items API');
         }
       } catch (err) {
-        console.error('Error fetching rentable items:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load items');
+        console.error('❌ Error fetching rentable items:', {
+          error: err,
+          message: err instanceof Error ? err.message : 'Unknown error',
+          location_id: data.location_id,
+          search_term: searchTerm
+        });
+        setError(err instanceof Error ? err.message : 'Failed to load items. Please check your connection and try again.');
+        setAvailableItems([]);
+        setFilteredItems([]);
       } finally {
         setIsLoading(false);
       }
@@ -292,6 +376,8 @@ export function ItemsStep({ data, onUpdate, onNext, onBack }: ItemsStepProps) {
           availableItems={filteredItems}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
+          isLoading={isLoading}
+          error={error}
         />
       </div>
 
@@ -451,6 +537,8 @@ function AddItemDialog({
   availableItems,
   searchTerm,
   onSearchChange,
+  isLoading,
+  error,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -458,6 +546,8 @@ function AddItemDialog({
   availableItems: ItemForWizard[];
   searchTerm: string;
   onSearchChange: (term: string) => void;
+  isLoading: boolean;
+  error: string | null;
 }) {
   // Two-screen state management
   const [currentScreen, setCurrentScreen] = useState<'browse' | 'configure'>('browse');
@@ -840,19 +930,49 @@ function AddItemDialog({
             {/* Items Table - Takes all remaining space */}
             <div className="flex-1 min-h-0 overflow-hidden border border-gray-200 rounded-lg">
               <div className="h-full overflow-auto">
-                <Table>
-                  <TableHeader className="sticky top-0 bg-white z-10">
-                    <TableRow>
-                      <TableHead>Item Details</TableHead>
-                      <TableHead>Category</TableHead>
-                      <TableHead>SKU</TableHead>
-                      <TableHead className="text-right">Rate/Period</TableHead>
-                      <TableHead className="text-center">Available</TableHead>
-                      <TableHead className="text-center">Locations</TableHead>
-                      <TableHead className="text-center">Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
+                {/* Loading State */}
+                {isLoading && (
+                  <div className="flex items-center justify-center h-64">
+                    <div className="text-center">
+                      <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2 text-indigo-600" />
+                      <p className="text-sm text-gray-600">Loading rental items...</p>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Error State */}
+                {error && !isLoading && (
+                  <div className="flex items-center justify-center h-64">
+                    <div className="text-center max-w-md">
+                      <AlertTriangle className="h-8 w-8 mx-auto mb-2 text-red-500" />
+                      <p className="text-sm text-red-600 mb-2">Failed to load rental items</p>
+                      <p className="text-xs text-gray-500 mb-4">{error}</p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => window.location.reload()}
+                      >
+                        Retry
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Items Table */}
+                {!isLoading && !error && (
+                  <Table>
+                    <TableHeader className="sticky top-0 bg-white z-10">
+                      <TableRow>
+                        <TableHead>Item Details</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>SKU</TableHead>
+                        <TableHead className="text-right">Rate/Period</TableHead>
+                        <TableHead className="text-center">Available</TableHead>
+                        <TableHead className="text-center">Locations</TableHead>
+                        <TableHead className="text-center">Action</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
                     {paginatedItems.map((item) => (
                       <TableRow key={item.id} className="hover:bg-gray-50">
                         <TableCell>
@@ -931,8 +1051,9 @@ function AddItemDialog({
                         </TableRow>
                       ))
                     )}
-                  </TableBody>
-                </Table>
+                    </TableBody>
+                  </Table>
+                )}
               </div>
             </div>
           </div>

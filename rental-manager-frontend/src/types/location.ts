@@ -1,4 +1,4 @@
-export type LocationType = 'WAREHOUSE' | 'STORE' | 'SERVICE_CENTER';
+export type LocationType = 'WAREHOUSE' | 'STORE' | 'SERVICE_CENTER' | 'OTHER';
 
 export interface Location {
   id: string;

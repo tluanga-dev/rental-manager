@@ -17,7 +17,7 @@ import {
  */
 export function formatLocationName(location: Location): string {
   const typeConfig = LOCATION_TYPE_VISUAL_CONFIG[location.location_type];
-  const badge = `[${typeConfig.badge}]`;
+  const badge = `[${typeConfig?.badge || 'UNK'}]`; // Fallback badge for undefined types
   const code = location.location_code;
   const name = location.location_name;
   
@@ -46,21 +46,24 @@ export function formatLocationSubtitle(location: Location): string {
  * Get location type icon from PRD configuration
  */
 export function getLocationIcon(type: LocationType): string {
-  return LOCATION_TYPE_VISUAL_CONFIG[type].icon;
+  const config = LOCATION_TYPE_VISUAL_CONFIG[type];
+  return config?.icon || '📍'; // Fallback icon for undefined types
 }
 
 /**
  * Get location type badge from PRD configuration
  */
 export function getLocationBadge(type: LocationType): string {
-  return LOCATION_TYPE_VISUAL_CONFIG[type].badge;
+  const config = LOCATION_TYPE_VISUAL_CONFIG[type];
+  return config?.badge || 'UNK'; // Fallback badge for undefined types
 }
 
 /**
  * Get location type color from PRD configuration
  */
 export function getLocationColor(type: LocationType): string {
-  return LOCATION_TYPE_VISUAL_CONFIG[type].color;
+  const config = LOCATION_TYPE_VISUAL_CONFIG[type];
+  return config?.color || '#6b7280'; // Fallback gray color for undefined types
 }
 
 /**
@@ -187,7 +190,12 @@ export function createLocationOption(
   index?: number,
   searchTerm?: string
 ): LocationOption {
-  const typeConfig = LOCATION_TYPE_VISUAL_CONFIG[location.location_type];
+  const typeConfig = LOCATION_TYPE_VISUAL_CONFIG[location.location_type] || {
+    badge: 'UNK',
+    color: '#6b7280',
+    icon: '📍',
+    label: 'Unknown'
+  }; // Fallback config for undefined types
   const isActive = isLocationActive(location);
   const isSelected = selectedLocationId === location.id;
   const isHighlighted = highlightedIndex === index;
@@ -275,9 +283,10 @@ export function generateMockLocations(count: number = 20): Location[] {
     const state = states[index % states.length];
     const isInactive = index % 8 === 0; // 12.5% inactive
     
-    const typeLabel = LOCATION_TYPE_VISUAL_CONFIG[type].label;
+    const typeConfig = LOCATION_TYPE_VISUAL_CONFIG[type] || { label: 'Unknown', badge: 'UNK' };
+    const typeLabel = typeConfig.label;
     const name = `${typeLabel} ${index + 1}`;
-    const code = `${LOCATION_TYPE_VISUAL_CONFIG[type].badge}${String(index + 1).padStart(3, '0')}`;
+    const code = `${typeConfig.badge}${String(index + 1).padStart(3, '0')}`;
     
     return {
       id: `location-${index + 1}`,

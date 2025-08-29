@@ -36,6 +36,7 @@ export interface RentableInventoryUnit {
   quantity_available: string;
   location_id: string;
   name: string;
+  location_name?: string; // Add optional location_name field to match API response
   serial_number: string | null;
 }
 
