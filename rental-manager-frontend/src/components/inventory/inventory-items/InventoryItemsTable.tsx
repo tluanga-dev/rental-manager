@@ -177,10 +177,10 @@ export function InventoryItemsTable({
                 variant="ghost"
                 size="sm"
                 className="h-8 flex items-center gap-1"
-                onClick={() => onSort('total_value')}
+                onClick={() => onSort('sale_price')}
               >
-                Value
-                {renderSortIcon('total_value')}
+                Selling Price
+                {renderSortIcon('sale_price')}
               </Button>
             </TableHead>
             <TableHead className="text-center">Actions</TableHead>
@@ -281,26 +281,15 @@ export function InventoryItemsTable({
                   )}
                 </TableCell>
                 <TableCell className="text-right">
-                  <div className="flex flex-col">
+                  {item.sale_price ? (
                     <span className="font-medium">
-                      {item.total_value > 0 ? (
-                        formatCurrencySync(item.total_value)
-                      ) : (
-                        <span className="text-muted-foreground" title="No pricing data available">
-                          -
-                        </span>
-                      )}
+                      {formatCurrencySync(item.sale_price)}
                     </span>
-                    {(item.sale_price || item.purchase_price) ? (
-                      <span className="text-xs text-muted-foreground">
-                        @ {formatCurrencySync(item.sale_price || item.purchase_price || 0)}/unit
-                      </span>
-                    ) : (
-                      <span className="text-xs text-orange-600">
-                        No price set
-                      </span>
-                    )}
-                  </div>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">
+                      Not set
+                    </span>
+                  )}
                 </TableCell>
                 <TableCell className="text-center">
                   <Button
