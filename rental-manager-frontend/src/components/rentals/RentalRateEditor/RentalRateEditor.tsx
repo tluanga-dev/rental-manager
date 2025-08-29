@@ -242,11 +242,13 @@ export function RentalRateEditor({
         }
       }
 
-      // Always update local state
-      onRateChange?.(localRate);
+      // Always update local state (await if it's async)
+      if (onRateChange) {
+        await onRateChange(localRate);
+      }
       setIsEditing(false);
       
-      // Show success toast
+      // Show success toast only if we reach here without errors
       toast({
         title: "Rate Updated Successfully",
         description: `Rental rate updated to ${currency}${localRate}/${periodText}${saveToMaster && itemId ? ' and saved to master data' : ''}`,
