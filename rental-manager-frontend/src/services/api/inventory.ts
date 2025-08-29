@@ -168,7 +168,7 @@ export const inventoryUnitsApi = {
   // Update rental rate for a specific inventory unit
   updateRentalRate: async (unitId: string, rentalRatePerPeriod: number) => {
     const response = await apiClient.put(
-      `/inventory/units/${unitId}/rental-rate`,
+      `/v1/inventory/units/${unitId}/rental-rate`,
       { rental_rate_per_period: rentalRatePerPeriod }
     );
     return response.data.success ? response.data.data : response.data;

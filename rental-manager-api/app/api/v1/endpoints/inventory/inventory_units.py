@@ -6,7 +6,7 @@ Provides endpoints for managing individual inventory units with serial/batch tra
 
 from typing import Optional, List
 from uuid import UUID
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status, Body
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -317,6 +317,60 @@ async def create_inventory_units_bulk(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
+
+
+@router.put("/{unit_id}/rental-rate")
+async def update_unit_rental_rate(
+    unit_id: UUID,
+    rental_rate_per_period: float = Body(..., embed=True, ge=0, description="Rental rate per period"),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Update rental rate for a specific inventory unit.
+    
+    Args:
+        unit_id: Unit ID
+        rental_rate_per_period: New rental rate per period
+        
+    Returns:
+        Success response with updated unit
+    """
+    from app.crud.inventory import inventory_unit as crud_unit
+    from sqlalchemy import select
+    from app.models.inventory.inventory_unit import InventoryUnit
+    
+    # Get the unit
+    result = await db.execute(
+        select(InventoryUnit).where(InventoryUnit.id == unit_id)
+    )
+    unit = result.scalar_one_or_none()
+    
+    if not unit:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Inventory unit not found"
+        )
+    
+    # Update the rental rate
+    unit.rental_rate_per_period = rental_rate_per_period
+    unit.updated_by = current_user.id
+    unit.updated_at = datetime.now(timezone.utc)
+    
+    await db.commit()
+    await db.refresh(unit)
+    
+    return {
+        "success": True,
+        "message": f"Rental rate updated to {rental_rate_per_period}",
+        "data": {
+            "id": str(unit.id),
+            "unit_identifier": unit.sku,
+            "rental_rate_per_period": float(unit.rental_rate_per_period) if unit.rental_rate_per_period else None,
+            "rental_period": unit.rental_period,
+            "updated_at": unit.updated_at.isoformat() if unit.updated_at else None
+        }
+    }
 
 
 @router.put("/{unit_id}", response_model=InventoryUnitResponse)

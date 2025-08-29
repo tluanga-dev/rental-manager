@@ -35,6 +35,7 @@ import {
 import { formatCurrencySync } from '@/lib/currency-utils';
 import { RentalRateEditor } from '@/components/rentals/RentalRateEditor';
 import { itemsApi } from '@/services/api/items';
+import { inventoryApi } from '@/services/api/inventory';
 import type { InventoryUnitDetail, InventoryItemDetail } from '@/types/inventory-items';
 
 interface UnitDetailsTabProps {
@@ -77,8 +78,23 @@ export function UnitDetailsTab({ unit, item }: UnitDetailsTabProps) {
   };
 
   const handleRateUpdate = async (newRate: number) => {
-    // This will be handled by the RentalRateEditor component
-    console.log('Rate updated to:', newRate);
+    try {
+      console.log('Updating rental rate for unit:', unit.id, 'to:', newRate);
+      await inventoryApi.updateRentalRate(unit.id, newRate);
+      toast({
+        title: 'Rental Rate Updated',
+        description: `Rate set to ${formatCurrencySync(newRate)}/${getRentalPeriodText(rentalPeriod)}`,
+      });
+      // Update local state to reflect the change immediately
+      (unit as any).rental_rate_per_period = newRate;
+    } catch (error) {
+      console.error('Failed to update rental rate:', error);
+      toast({
+        title: 'Failed to Update Rate',
+        description: 'Could not save the rental rate. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handlePeriodChange = async (value: string) => {
@@ -229,7 +245,7 @@ export function UnitDetailsTab({ unit, item }: UnitDetailsTabProps) {
                   <p className="text-sm text-muted-foreground">Rental Rate</p>
                   <RentalRateEditor
                     currentRate={(unit as any).rental_rate_per_period || 0}
-                    itemId={unit.item_id}
+                    itemId={undefined} // Don't pass itemId to prevent internal API call
                     periodText={getRentalPeriodText(rentalPeriod)}
                     editable={true}
                     showChangeButton={true}
