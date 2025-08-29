@@ -15,7 +15,7 @@ import type {
   GetAllInventoryParams,
 } from '@/types/inventory-items';
 
-const BASE_PATH = '/inventory/items';
+const BASE_PATH = '/inventory/stocks';
 
 export const inventoryItemsApi = {
   /**
@@ -32,30 +32,59 @@ export const inventoryItemsApi = {
       });
     }
     
-    const response = await apiClient.get<InventoryItemSummary[] | any>(
+    const response = await apiClient.get<{success: boolean; data: any[]; total: number; skip: number; limit: number} | any[]>(
       `${BASE_PATH}?${queryParams.toString()}`
     );
-    // Handle both array and object responses
+    
+    // Handle the standard API response format from inventory stocks endpoint
     const data = response.data;
     
-    // If data is an array, return it directly
-    if (Array.isArray(data)) {
-      return data;
+    let rawItems: any[] = [];
+    
+    // If data is the standard API response format with success, data, total, etc.
+    if (data && typeof data === 'object' && 'success' in data && 'data' in data && Array.isArray(data.data)) {
+      rawItems = data.data;
+    }
+    // If data is an array, return it directly (fallback)
+    else if (Array.isArray(data)) {
+      rawItems = data;
+    }
+    // If data is an object with a 'data' property that's an array (fallback)
+    else if (data && typeof data === 'object' && Array.isArray(data.data)) {
+      rawItems = data.data;
+    }
+    // If data is an object with an 'items' property that's an array (fallback)
+    else if (data && typeof data === 'object' && Array.isArray(data.items)) {
+      rawItems = data.items;
     }
     
-    // If data is an object with a 'data' property that's an array
-    if (data && typeof data === 'object' && Array.isArray(data.data)) {
-      return data.data;
-    }
+    // Transform the backend response to match frontend expectations
+    // Backend sends flat properties, but frontend expects nested stock_summary
+    const transformedItems: InventoryItemSummary[] = rawItems.map(item => ({
+      item_id: item.item_id,
+      sku: item.sku,
+      item_name: item.item_name,
+      category: item.category,
+      brand: item.brand,
+      stock_summary: {
+        total: item.total_quantity || item.total_units || 0,
+        available: item.available_quantity || 0,
+        reserved: item.reserved_quantity || 0,
+        rented: item.on_rent_quantity || 0,
+        in_maintenance: item.under_repair_quantity || 0,
+        damaged: item.damaged_quantity || 0,
+        stock_status: item.stock_status || 'OUT_OF_STOCK'
+      },
+      total_value: item.total_value || 0,
+      item_status: item.is_active ? 'ACTIVE' : 'INACTIVE',
+      purchase_price: item.purchase_price,
+      sale_price: item.sale_price,
+      rental_rate: item.rental_rate,
+      is_rentable: item.is_rentable || false,
+      is_salable: item.is_salable || false
+    }));
     
-    // If data is an object with an 'items' property that's an array
-    if (data && typeof data === 'object' && Array.isArray(data.items)) {
-      return data.items;
-    }
-    
-    // Default to empty array
-    console.warn('Unexpected response format from inventory items API:', data);
-    return [];
+    return transformedItems;
   },
 
   /**
@@ -63,8 +92,9 @@ export const inventoryItemsApi = {
    */
   async getItemDetail(itemId: string): Promise<InventoryItemDetail> {
     try {
+      // Use the items endpoint for detailed item information
       const response = await apiClient.get<InventoryItemDetail>(
-        `${BASE_PATH}/${itemId}`
+        `/inventory/items/${itemId}`
       );
       
       // Handle both direct data and wrapped responses
@@ -100,28 +130,79 @@ export const inventoryItemsApi = {
         });
       }
       
-      const response = await apiClient.get<InventoryUnitDetail[]>(
-        `${BASE_PATH}/${itemId}/units?${queryParams.toString()}`
+      const response = await apiClient.get<any>(
+        `/inventory/items/${itemId}/units?${queryParams.toString()}`
       );
       
-      // Handle both direct array and wrapped responses
+      // Handle the API response structure
       const data = response.data;
       
-      // If data is an array, return it directly
-      if (Array.isArray(data)) {
-        return data;
+      console.log('🔍 API Response structure check:');
+      console.log('  - Response type:', typeof data);
+      console.log('  - Has success?', 'success' in data);
+      console.log('  - Has data?', 'data' in data);
+      if (data && data.data) {
+        console.log('  - data.data type:', typeof data.data);
+        console.log('  - Has inventory_units?', 'inventory_units' in data.data);
+        if (data.data.inventory_units) {
+          console.log('  - Units count:', data.data.inventory_units.length);
+          console.log('  - First unit sample:', JSON.stringify(data.data.inventory_units[0], null, 2));
+        }
       }
       
-      // If data is wrapped in a data object
-      if (data && typeof data === 'object' && 'data' in data && Array.isArray((data as any).data)) {
-        return (data as any).data;
+      // The API returns: { success: true, data: { item_id, item_name, sku, inventory_units: [...], total_units } }
+      // Simplified check - just look for the inventory_units wherever they are
+      let rawUnits = null;
+      
+      if (data?.data?.inventory_units) {
+        rawUnits = data.data.inventory_units;
+        console.log('📦 Found units in data.data.inventory_units');
+      } else if (data?.inventory_units) {
+        rawUnits = data.inventory_units;
+        console.log('📦 Found units in data.inventory_units');
+      } else if (Array.isArray(data?.data)) {
+        rawUnits = data.data;
+        console.log('📦 Found units as data.data array');
+      } else if (Array.isArray(data)) {
+        rawUnits = data;
+        console.log('📦 Found units as direct array');
+      }
+      
+      if (rawUnits && Array.isArray(rawUnits)) {
+        console.log(`✅ Processing ${rawUnits.length} units for mapping`);
+        
+        // Map the API response to match frontend expectations
+        const units = rawUnits.map((unit: any) => ({
+          id: unit.id,
+          unit_identifier: unit.sku || unit.unit_identifier || '',
+          serial_number: unit.serial_number,
+          location_id: unit.location?.id || unit.location_id || '',
+          location_name: unit.location?.name || unit.location_name || '',
+          status: unit.status || 'AVAILABLE',
+          condition: unit.condition || unit.condition_display || '',
+          last_movement: unit.last_movement,
+          acquisition_date: unit.purchase_date || unit.acquisition_date || unit.created_at,
+          acquisition_cost: unit.purchase_price || unit.acquisition_cost,
+          notes: unit.notes,
+          // Rental blocking fields
+          is_rental_blocked: unit.is_rental_blocked || false,
+          rental_block_reason: unit.rental_block_reason,
+          rental_blocked_at: unit.rental_blocked_at,
+          rental_blocked_by: unit.rental_blocked_by,
+        }));
+        
+        console.log('✅ Mapped units successfully, returning', units.length, 'units');
+        if (units.length > 0) {
+          console.log('✅ Sample mapped unit:', JSON.stringify(units[0], null, 2));
+        }
+        return units;
       }
       
       // Default to empty array for units (item might not be serialized)
-      console.warn('Unexpected response format from inventory units API:', data);
+      console.warn('⚠️ No units found in response, returning empty array');
       return [];
     } catch (error) {
-      console.error(`Error fetching units for item ${itemId}:`, error);
+      console.error(`❌ Error fetching units for item ${itemId}:`, error);
       return []; // Return empty array instead of throwing for units
     }
   },
@@ -145,7 +226,7 @@ export const inventoryItemsApi = {
       }
       
       const response = await apiClient.get<StockMovementDetail[]>(
-        `${BASE_PATH}/${itemId}/movements?${queryParams.toString()}`
+        `/inventory/items/${itemId}/movements?${queryParams.toString()}`
       );
       
       // Handle both direct array and wrapped responses
@@ -176,7 +257,7 @@ export const inventoryItemsApi = {
   async getItemAnalytics(itemId: string): Promise<InventoryAnalytics> {
     try {
       const response = await apiClient.get<InventoryAnalytics>(
-        `${BASE_PATH}/${itemId}/analytics`
+        `/inventory/items/${itemId}/analytics`
       );
       
       // Handle both direct data and wrapped responses
@@ -224,7 +305,7 @@ export const inventoryItemsApi = {
       }
       
       const response = await apiClient.get<AllInventoryLocation[]>(
-        `${BASE_PATH}/${itemId}/all-inventory?${queryParams.toString()}`
+        `/inventory/items/${itemId}/all-inventory?${queryParams.toString()}`
       );
       
       // Handle both direct array and wrapped responses

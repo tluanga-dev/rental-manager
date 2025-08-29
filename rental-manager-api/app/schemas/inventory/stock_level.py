@@ -150,7 +150,7 @@ class StockAdjustment(BaseModel):
     adjustment: Decimal = Field(..., description="Adjustment amount (+ or -)")
     reason: str = Field(..., min_length=3, max_length=500, description="Adjustment reason")
     affect_available: bool = Field(True, description="Adjust available quantity")
-    performed_by_id: UUID = Field(..., description="User performing adjustment")
+    performed_by_id: Optional[UUID] = Field(None, description="User performing adjustment")
     notes: Optional[str] = Field(None, description="Additional notes")
     
     @field_validator('adjustment')
@@ -268,8 +268,8 @@ class MultiLocationStock(BaseModel):
     primary_location_stock: Optional[Decimal] = Field(None, description="Primary location stock")
 
 
-class StockAdjustment(BaseModel):
-    """Schema for stock adjustments."""
+class StockAdjustmentRequest(BaseModel):
+    """Schema for stock adjustment requests from API."""
     item_id: UUID = Field(..., description="Item ID")
     location_id: UUID = Field(..., description="Location ID")
     adjustment_type: str = Field(..., description="Type of adjustment")

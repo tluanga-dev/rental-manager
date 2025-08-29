@@ -23,7 +23,9 @@ export function AuthConnectionGuard({
     isLoading: authLoading, 
     isBackendOnline, 
     checkBackendHealth,
-    logout 
+    logout,
+    isDevelopmentMode,
+    isAuthDisabled
   } = useAuthStore();
   const { addNotification } = useAppStore();
   
@@ -32,6 +34,11 @@ export function AuthConnectionGuard({
 
   // Check backend health on mount and periodically
   useEffect(() => {
+    // Skip backend health checks in development mode with auth disabled
+    if (isDevelopmentMode && isAuthDisabled) {
+      return;
+    }
+    
     const checkBackend = async () => {
       setIsCheckingBackend(true);
       const isOnline = await checkBackendHealth();
@@ -68,10 +75,15 @@ export function AuthConnectionGuard({
     const interval = setInterval(checkBackend, 30000);
 
     return () => clearInterval(interval);
-  }, [checkBackendHealth, addNotification, showOfflineAlert, isBackendOnline]);
+  }, [checkBackendHealth, addNotification, showOfflineAlert, isBackendOnline, isDevelopmentMode, isAuthDisabled]);
 
   // Redirect to login if authentication is required but user is not authenticated
   useEffect(() => {
+    // Skip auth check in development mode with auth disabled
+    if (isDevelopmentMode && isAuthDisabled) {
+      return;
+    }
+    
     if (requireAuth && !authLoading && !isAuthenticated) {
       addNotification({
         type: 'warning',
@@ -80,10 +92,15 @@ export function AuthConnectionGuard({
       });
       router.replace('/login');
     }
-  }, [requireAuth, authLoading, isAuthenticated, router, addNotification]);
+  }, [requireAuth, authLoading, isAuthenticated, router, addNotification, isDevelopmentMode, isAuthDisabled]);
 
   // Handle backend offline scenarios
   useEffect(() => {
+    // Skip offline handling in development mode with auth disabled
+    if (isDevelopmentMode && isAuthDisabled) {
+      return;
+    }
+    
     if (!isBackendOnline && isAuthenticated) {
       // If backend is offline for too long, consider logging out
       const logoutTimer = setTimeout(() => {
@@ -98,7 +115,7 @@ export function AuthConnectionGuard({
 
       return () => clearTimeout(logoutTimer);
     }
-  }, [isBackendOnline, isAuthenticated, logout, router, addNotification]);
+  }, [isBackendOnline, isAuthenticated, logout, router, addNotification, isDevelopmentMode, isAuthDisabled]);
 
   // Show loading state while checking auth
   if (requireAuth && authLoading) {
@@ -115,7 +132,8 @@ export function AuthConnectionGuard({
   }
 
   // Don't render children if auth is required but user is not authenticated
-  if (requireAuth && !isAuthenticated) {
+  // Skip this check in development mode with auth disabled
+  if (requireAuth && !isAuthenticated && !(isDevelopmentMode && isAuthDisabled)) {
     return null;
   }
 

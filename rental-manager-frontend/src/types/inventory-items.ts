@@ -71,7 +71,7 @@ export type MovementType =
 
 // Inventory item summary (for list view)
 export interface InventoryItemSummary {
-  id: string;
+  item_id: string;
   sku: string;
   item_name: string;
   category: CategorySummary;
@@ -83,7 +83,7 @@ export interface InventoryItemSummary {
   sale_price?: number;
   rental_rate?: number;
   is_rentable: boolean;
-  is_saleable: boolean;
+  is_salable: boolean;
 }
 
 // Detailed inventory item (for detail view)
@@ -158,7 +158,7 @@ export interface InventoryItemsFilterState {
   item_status: ItemStatus | 'all';
   stock_status: StockStatus | 'all';
   is_rentable: boolean | undefined;
-  is_saleable: boolean | undefined;
+  is_salable: boolean | undefined;
 }
 
 // Sort configuration
@@ -175,7 +175,7 @@ export interface GetInventoryItemsParams {
   item_status?: string;
   stock_status?: string;
   is_rentable?: boolean;
-  is_saleable?: boolean;
+  is_salable?: boolean;
   sort_by?: string;
   sort_order?: 'asc' | 'desc';
   skip?: number;

@@ -102,34 +102,43 @@ async def list_inventory_units(
     )
 
 
-@router.get("/{unit_id}", response_model=InventoryUnitResponse)
+@router.get("/{unit_id}")
 async def get_inventory_unit(
     unit_id: UUID,
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Get specific inventory unit.
+    Get specific inventory unit with detailed information.
     
     Args:
         unit_id: Unit ID
         
     Returns:
-        Unit details
+        Unit details with related data
         
     Raises:
         404: Unit not found
     """
-    from app.crud.inventory import inventory_unit as crud_unit
+    from app.services.inventory.inventory_service import inventory_service
     
-    unit = await crud_unit.get(db, id=unit_id)
-    
-    if not unit:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Inventory unit not found"
+    try:
+        unit_detail = await inventory_service.get_inventory_unit_detail(
+            db,
+            unit_id=unit_id
         )
-    
-    return unit
+        
+        if not unit_detail:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Inventory unit not found"
+            )
+        
+        return {"success": True, "data": unit_detail}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve inventory unit detail: {str(e)}"
+        )
 
 
 @router.get("/serial/{serial_number}", response_model=InventoryUnitResponse)

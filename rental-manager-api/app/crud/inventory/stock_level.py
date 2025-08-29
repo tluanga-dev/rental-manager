@@ -156,7 +156,7 @@ class CRUDStockLevel(CRUDBase[StockLevel, StockLevelCreate, StockLevelUpdate]):
             quantity_after=stock_level.quantity_on_hand,
             reason=adjustment.reason,
             notes=adjustment.notes,
-            performed_by_id=performed_by,
+            performed_by_id=adjustment.performed_by_id,  # Use adjustment's performed_by_id (None for dev mode)
             movement_date=datetime.utcnow()
         )
         

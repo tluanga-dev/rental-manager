@@ -458,13 +458,13 @@ class InventoryUnit(RentalManagerBaseModel):
             raise ValueError("Next maintenance before last maintenance")
         
         # Validate numeric fields
-        if self.quantity <= 0:
+        if self.quantity is not None and self.quantity <= 0:
             raise ValueError("Quantity must be positive")
         
-        if self.purchase_price < 0:
+        if self.purchase_price is not None and self.purchase_price < 0:
             raise ValueError("Purchase price cannot be negative")
         
-        if self.rental_period <= 0:
+        if self.rental_period is not None and self.rental_period <= 0:
             raise ValueError("Rental period must be positive")
     
     # Status management methods

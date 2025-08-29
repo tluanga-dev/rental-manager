@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   Table, 
   TableBody, 
@@ -28,7 +29,6 @@ import { RentalStatusToggle } from '@/components/rental-blocking/RentalStatusTog
 import { useRentalBlocking } from '@/hooks/useRentalBlocking';
 import { cn } from '@/lib/utils';
 import { formatCurrencySync } from '@/lib/currency-utils';
-import { InventoryUnitDetailDialog } from './InventoryUnitDetailDialog';
 import type { InventoryUnitDetail, InventoryUnitStatus, ConditionGrade, InventoryItemDetail } from '@/types/inventory-items';
 
 interface UnitsTableProps {
@@ -105,11 +105,11 @@ const CONDITION_CONFIG: Record<ConditionGrade, {
 };
 
 export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps) {
+  const router = useRouter();
   const { toggleEntityStatus } = useRentalBlocking();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [locationFilter, setLocationFilter] = useState<string>('all');
-  const [selectedUnit, setSelectedUnit] = useState<InventoryUnitDetail | null>(null);
 
   // Debug logging
   console.log('🔍 UnitsTable received units:', units?.length || 0);
@@ -286,7 +286,20 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
                   <TableRow 
                     key={unit.id}
                     className="cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => setSelectedUnit(unit)}
+                    onClick={() => {
+                      // Navigate to unit detail page using SKU-based URL structure
+                      const itemSku = item?.sku || item?.item?.sku;
+                      if (itemSku) {
+                        router.push(`/inventory/items/${itemSku}/units/${unit.id}`);
+                      } else {
+                        // Fallback to old structure if SKU not available
+                        const queryParams = new URLSearchParams();
+                        if (item?.id) queryParams.set('itemId', item.id.toString());
+                        if (item?.name) queryParams.set('itemName', item.name);
+                        const queryString = queryParams.toString();
+                        router.push(`/inventory/units/${unit.id}${queryString ? `?${queryString}` : ''}`);
+                      }
+                    }}
                   >
                     <TableCell className="font-medium">
                       {unit.unit_identifier}
@@ -364,11 +377,6 @@ export function UnitsTable({ units, isLoading, itemName, item }: UnitsTableProps
         </Table>
       </div>
 
-      {/* Unit Detail Dialog */}
-      <InventoryUnitDetailDialog 
-        unit={selectedUnit} 
-        onClose={() => setSelectedUnit(null)} 
-      />
     </div>
   );
 }

@@ -67,6 +67,10 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - ENVIRONMENT=development
       - DEBUG=true
+      - DISABLE_AUTH_IN_DEV=true
+      - DEV_MOCK_USER_ID=dev-user-1
+      - DEV_MOCK_USER_EMAIL=dev@example.com
+      - DEV_MOCK_USER_ROLE=ADMIN
     depends_on:
       postgres:
         condition: service_healthy
@@ -93,6 +97,11 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
       - NODE_ENV=development
+      - NEXT_PUBLIC_DISABLE_AUTH=true
+      - NEXT_PUBLIC_MOCK_USER_ROLE=ADMIN
+      - NEXT_PUBLIC_DEV_MODE=true
+      - NEXT_PUBLIC_BYPASS_RBAC=true
+      - NEXT_PUBLIC_DEBUG_MODE=true
     depends_on:
       - rental-manager-api
     networks:

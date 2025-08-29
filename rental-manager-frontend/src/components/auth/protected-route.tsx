@@ -39,10 +39,17 @@ export function ProtectedRoute({
     hasUserType,
     isSuperuser,
     isAdmin,
-    user
+    user,
+    isDevelopmentMode,
+    isAuthDisabled
   } = useAuthStore();
 
   useEffect(() => {
+    // Skip authentication check if in development mode with auth disabled
+    if (isDevelopmentMode && isAuthDisabled) {
+      return;
+    }
+    
     // Only redirect if we're sure the auth state has been loaded and user is not authenticated
     // Add a small delay to ensure hydration completes
     const checkAuth = setTimeout(() => {
@@ -53,7 +60,7 @@ export function ProtectedRoute({
     }, 100); // Small delay to ensure hydration
 
     return () => clearTimeout(checkAuth);
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, router, isDevelopmentMode, isAuthDisabled]);
 
   // Show loading state - Important: Show loading during initial hydration
   // This prevents premature redirects while auth state is being loaded from storage
@@ -68,9 +75,9 @@ export function ProtectedRoute({
     );
   }
 
-  // Redirect to login if not authenticated
+  // Redirect to login if not authenticated (unless in dev mode with auth disabled)
   // Only after loading is complete to avoid hydration issues
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !(isDevelopmentMode && isAuthDisabled)) {
     // Show a brief loading state while redirect happens
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -130,6 +137,12 @@ export function ProtectedRoute({
       </div>
     );
   };
+
+  // Skip all permission checks in development mode with auth disabled
+  if (isDevelopmentMode && isAuthDisabled) {
+    // In dev mode, render children directly without any permission checks
+    return <>{children}</>;
+  }
 
   // Check user type requirements (specific type)
   if (requiredUserType && !(allowSuperuserBypass && isSuperuser()) && !hasUserType(requiredUserType)) {

@@ -634,8 +634,10 @@ class PurchaseService:
             # Create line object for return (without adding to session)
             line = TransactionLine()
             line.id = line_id
+            line.item_id = item_data.item_id
             line.quantity = item_data.quantity
             line.unit_price = item_data.unit_price
+            line.location_id = item_data.location_id
             lines.append(line)
         
         # No need to flush since we used raw SQL
@@ -686,6 +688,7 @@ class PurchaseService:
         """
         try:
             logger.info(f"Updating inventory for purchase transaction {transaction_id}")
+            logger.info(f"Lines to process: {len(lines) if lines else 0}")
             
             # Process each line item
             for line in lines:
@@ -716,7 +719,7 @@ class PurchaseService:
                         serial_numbers = []  # Will be auto-generated if needed
                     else:
                         # Multiple items - use batch code
-                        batch_code = f"PO-{purchase_data.purchase_order_number or transaction_id.hex[:8]}-{datetime.now().strftime('%Y%m%d')}"
+                        batch_code = f"PO-{getattr(purchase_data, 'purchase_order_number', None) or purchase_data.reference_number or transaction_id.hex[:8]}-{datetime.now().strftime('%Y%m%d')}"
                     
                     # Create inventory units and update stock levels
                     units, stock, movement = await inventory_service.create_inventory_units(
@@ -728,7 +731,7 @@ class PurchaseService:
                         serial_numbers=serial_numbers,
                         batch_code=batch_code,
                         supplier_id=purchase_data.supplier_id,
-                        purchase_order_number=purchase_data.purchase_order_number,
+                        purchase_order_number=getattr(purchase_data, 'purchase_order_number', None) or purchase_data.reference_number,
                         created_by=created_by
                     )
                     
@@ -736,7 +739,7 @@ class PurchaseService:
                     if movement:
                         movement.transaction_header_id = transaction_id
                         movement.transaction_line_id = line.id
-                        movement.reference_number = purchase_data.purchase_order_number
+                        movement.reference_number = getattr(purchase_data, 'purchase_order_number', None) or purchase_data.reference_number
                         movement.movement_type = "STOCK_MOVEMENT_PURCHASE"
                     
                     logger.info(
@@ -754,6 +757,8 @@ class PurchaseService:
             # Don't raise the exception - inventory creation failure shouldn't fail the purchase
             # But log it for investigation
             logger.exception("Detailed inventory update error:")
+            # Re-raise for debugging
+            raise
     
     async def complete_purchase_and_update_inventory(
         self,

@@ -7,18 +7,18 @@ import { Database } from 'lucide-react';
 
 interface InventoryItemDetailPageProps {
   params: Promise<{
-    id: string;
+    sku: string;
   }>;
 }
 
 export default function InventoryItemDetailPage({ params }: InventoryItemDetailPageProps) {
-  const { id } = use(params);
+  const { sku } = use(params);
 
   return (
     <AuthConnectionGuard requireAuth={true} showOfflineAlert={true}>
       <div className="container mx-auto p-6">
         {/* Main Content - Full Width */}
-        <InventoryItemDetail itemId={id} />
+        <InventoryItemDetail itemSku={sku} />
       </div>
     </AuthConnectionGuard>
   );

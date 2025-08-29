@@ -1069,6 +1069,110 @@ class InventoryService:
             },
             "recent_movements": recent_movements
         }
+    
+    async def get_inventory_item_detail_by_sku(
+        self,
+        db: AsyncSession,
+        *,
+        sku: str
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Get detailed inventory information for a specific item by SKU.
+        
+        Args:
+            db: Database session
+            sku: Item SKU
+            
+        Returns:
+            Detailed inventory item information
+        """
+        from app.models.item import Item
+        
+        # First get the item by SKU
+        item_query = select(Item).where(
+            and_(
+                Item.sku == sku,
+                Item.is_active == True
+            )
+        )
+        result = await db.execute(item_query)
+        item = result.scalar_one_or_none()
+        
+        if not item:
+            return None
+        
+        # Use the existing method with the item's UUID
+        return await self.get_inventory_item_detail(db, item_id=item.id)
+    
+    async def get_inventory_unit_detail(
+        self,
+        db: AsyncSession,
+        *,
+        unit_id: UUID
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Get detailed information for a specific inventory unit.
+        
+        Args:
+            db: Database session
+            unit_id: Unit ID
+            
+        Returns:
+            Detailed unit information
+        """
+        from app.models.inventory.inventory_unit import InventoryUnit
+        from app.models.item import Item
+        from app.models.location import Location
+        from app.models.supplier import Supplier
+        
+        # Get unit with related data
+        unit_query = select(InventoryUnit).options(
+            selectinload(InventoryUnit.item),
+            selectinload(InventoryUnit.location),
+            selectinload(InventoryUnit.supplier)
+        ).where(InventoryUnit.id == unit_id)
+        
+        result = await db.execute(unit_query)
+        unit = result.scalar_one_or_none()
+        
+        if not unit:
+            return None
+        
+        # Format unit detail
+        return {
+            "id": str(unit.id),
+            "item_id": str(unit.item_id),
+            "item_name": unit.item.item_name if unit.item else None,
+            "sku": unit.sku,
+            "unit_identifier": unit.sku,  # For compatibility
+            "serial_number": unit.serial_number,
+            "batch_code": unit.batch_code,
+            "barcode": unit.barcode,
+            "location_id": str(unit.location_id) if unit.location_id else None,
+            "location_name": unit.location.location_name if unit.location else None,
+            "supplier_id": str(unit.supplier_id) if unit.supplier_id else None,
+            "supplier_name": unit.supplier.company_name if unit.supplier else None,
+            "status": unit.status if unit.status else None,
+            "condition": unit.condition if unit.condition else None,
+            "purchase_date": unit.purchase_date.isoformat() if unit.purchase_date else None,
+            "purchase_price": float(unit.purchase_price) if unit.purchase_price else None,
+            "acquisition_date": unit.purchase_date.isoformat() if unit.purchase_date else None,
+            "acquisition_cost": float(unit.purchase_price) if unit.purchase_price else None,
+            "warranty_expiry": unit.warranty_expiry.isoformat() if unit.warranty_expiry else None,
+            "last_maintenance_date": unit.last_maintenance_date.isoformat() if unit.last_maintenance_date else None,
+            "next_maintenance_date": unit.next_maintenance_date.isoformat() if unit.next_maintenance_date else None,
+            "rental_rate_per_period": float(unit.rental_rate_per_period) if unit.rental_rate_per_period else None,
+            "rental_period": unit.rental_period if hasattr(unit, 'rental_period') else None,
+            "security_deposit": float(unit.security_deposit) if unit.security_deposit else None,
+            "is_rental_blocked": unit.is_rental_blocked,
+            "rental_block_reason": unit.rental_block_reason,
+            "rental_blocked_at": unit.rental_blocked_at.isoformat() if unit.rental_blocked_at else None,
+            "rental_blocked_by": unit.rental_blocked_by,
+            "notes": unit.notes,
+            "last_movement": None,  # TODO: Get last movement
+            "created_at": unit.created_at.isoformat(),
+            "updated_at": unit.updated_at.isoformat()
+        }
 
 
 # Create service instance

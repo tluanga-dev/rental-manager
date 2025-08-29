@@ -62,10 +62,16 @@ async def register(
 
 @router.post("/login", response_model=Token)
 async def login(
+    request: Request,
     user_data: UserLogin,
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     """Token login with JSON payload"""
+    # Check for development mode bypass
+    if should_bypass_auth(request):
+        # Return mock tokens for development
+        return create_mock_token_response()
+    
     # Try to authenticate with email or username
     result = await db.execute(
         select(User).where(
@@ -166,10 +172,16 @@ async def login(
 @router.post("/refresh", response_model=Token)
 async def refresh_token(
     *,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     token_data: TokenRefresh,
 ) -> Any:
     """Refresh access token using refresh token"""
+    # Check for development mode bypass
+    if should_bypass_auth(request):
+        # Return mock tokens for development
+        return create_mock_token_response()
+    
     try:
         payload = security_manager.decode_token(token_data.refresh_token)
         user_id = payload.get("sub")
@@ -216,9 +228,13 @@ async def refresh_token(
 
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(
+    request: Request,
     current_user: User = Depends(get_current_user),
 ) -> Any:
     """Get current user information"""
+    # In development mode with bypass, return enhanced mock user
+    if should_bypass_auth(request) and hasattr(current_user, 'to_dict'):
+        return current_user.to_dict()
     return current_user
 
 

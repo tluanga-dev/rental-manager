@@ -8,7 +8,8 @@ import {
   Download, 
   Edit, 
   RefreshCw,
-  AlertCircle 
+  AlertCircle,
+  Eye 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -31,12 +32,16 @@ import type {
 } from '@/types/inventory-items';
 
 interface InventoryItemDetailProps {
-  itemId: string;
+  itemId?: string;
+  itemSku?: string;
 }
 
-export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
+export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('units');
+
+  // Use SKU if provided, otherwise fall back to ID
+  const identifier = itemSku || itemId || '';
 
   // Fetch item details
   const {
@@ -46,14 +51,15 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     error: itemError,
     refetch: refetchItem,
   } = useQuery({
-    queryKey: ['inventory-item', itemId],
+    queryKey: ['inventory-item', identifier],
     queryFn: async () => {
-      const result = await inventoryItemsApi.getItemDetail(itemId);
+      const result = await inventoryItemsApi.getItemDetail(identifier);
       console.log('📊 Item detail fetched:', result);
       console.log('📊 Stock summary:', result?.stock_summary);
       return result;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: !!identifier,
   });
 
   // Fetch units
@@ -63,14 +69,14 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     refetch: refetchUnits,
     error: unitsError,
   } = useQuery({
-    queryKey: ['inventory-item-units', itemId],
+    queryKey: ['inventory-item-units', identifier],
     queryFn: async () => {
-      console.log('🔄 Fetching units for item:', itemId);
-      const result = await inventoryItemsApi.getItemUnits(itemId);
+      console.log('🔄 Fetching units for item:', identifier);
+      const result = await inventoryItemsApi.getItemUnits(identifier);
       console.log('🔄 Query function returned:', result?.length || 0, 'units');
       return result;
     },
-    enabled: !!itemId,
+    enabled: !!identifier,
     staleTime: 0, // Disable cache for debugging
     refetchOnMount: 'always',
     refetchOnWindowFocus: true,
@@ -88,9 +94,9 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     isLoading: isLoadingMovements,
     refetch: refetchMovements,
   } = useQuery({
-    queryKey: ['inventory-item-movements', itemId],
-    queryFn: () => inventoryItemsApi.getItemMovements(itemId, { limit: 100 }),
-    enabled: !!itemId && activeTab === 'movements',
+    queryKey: ['inventory-item-movements', identifier],
+    queryFn: () => inventoryItemsApi.getItemMovements(identifier, { limit: 100 }),
+    enabled: !!identifier && activeTab === 'movements',
     staleTime: 1000 * 60 * 2, // 2 minutes
   });
 
@@ -100,15 +106,28 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
     isLoading: isLoadingAnalytics,
     refetch: refetchAnalytics,
   } = useQuery({
-    queryKey: ['inventory-item-analytics', itemId],
-    queryFn: () => inventoryItemsApi.getItemAnalytics(itemId),
-    enabled: !!itemId && activeTab === 'analytics',
+    queryKey: ['inventory-item-analytics', identifier],
+    queryFn: () => inventoryItemsApi.getItemAnalytics(identifier),
+    enabled: !!identifier && activeTab === 'analytics',
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
 
   const handleBack = () => {
     router.push('/inventory/items');
+  };
+
+  const handleViewProductDetails = () => {
+    // Navigate to product details page using SKU
+    const sku = item?.item?.sku || item?.sku;
+    console.log('🔍 View Product Details clicked');
+    console.log('Item data:', item);
+    console.log('SKU found:', sku);
+    if (sku) {
+      router.push(`/products/items/sku/${sku}`);
+    } else {
+      console.warn('⚠️ No SKU found in item data');
+    }
   };
 
   const handleEdit = () => {
@@ -202,6 +221,15 @@ export function InventoryItemDetail({ itemId }: InventoryItemDetailProps) {
             >
               <ArrowLeft className="h-4 w-4" />
               Back
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleViewProductDetails}
+              className="flex items-center gap-2"
+            >
+              <Eye className="h-4 w-4" />
+              View Product Details
             </Button>
             <Button
               variant="outline"

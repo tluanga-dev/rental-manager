@@ -25,18 +25,23 @@ class MockUser:
         email: str = None,
         role: str = None
     ):
-        self.id = user_id or settings.DEV_MOCK_USER_ID
+        # Generate a valid UUID for the mock user
+        import uuid
+        self.id = str(uuid.UUID('12345678-1234-5678-1234-567812345678'))
         self.email = email or settings.DEV_MOCK_USER_EMAIL
         self.username = "dev_user"
+        self.first_name = "Development"
+        self.last_name = "User"
         self.full_name = "Development User"
+        self.phone = "+1234567890"
         self.is_active = True
         self.is_superuser = True
         self.is_verified = True
         self.created_at = "2024-01-01T00:00:00Z"
         self.updated_at = "2024-01-01T00:00:00Z"
         
-        # Role and permissions
-        self.role = role or settings.DEV_MOCK_USER_ROLE
+        # Role - use lowercase to match enum
+        self.role = "admin"
         self.user_type = "SUPERADMIN"
         
         # Mock all permissions
@@ -63,9 +68,13 @@ class MockUser:
             "id": self.id,
             "email": self.email,
             "username": self.username,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
             "full_name": self.full_name,
+            "phone": self.phone,
             "is_active": self.is_active,
             "is_superuser": self.is_superuser,
+            "isSuperuser": self.is_superuser,  # Frontend expects camelCase
             "is_verified": self.is_verified,
             "role": self.role,
             "user_type": self.user_type,

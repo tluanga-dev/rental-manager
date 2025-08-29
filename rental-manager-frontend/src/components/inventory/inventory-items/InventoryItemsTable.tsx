@@ -88,12 +88,13 @@ export function InventoryItemsTable({
       : <ArrowDown className="h-4 w-4" />;
   };
 
-  const handleViewDetails = (itemId: string) => {
-    router.push(`/inventory/items/${itemId}`);
+  const handleViewDetails = (item: InventoryItemSummary) => {
+    // Navigate using SKU instead of ID
+    router.push(`/inventory/items/${item.sku}`);
   };
 
   const getStockPercentage = (item: InventoryItemSummary) => {
-    const { total, available } = item.stock_summary;
+    const { total, available } = item.stock_summary || { total: 0, available: 0 };
     if (total === 0) return 0;
     return (available / total) * 100;
   };
@@ -176,13 +177,13 @@ export function InventoryItemsTable({
         </TableHeader>
         <TableBody>
           {items.map((item) => {
-            const stockConfig = STOCK_STATUS_CONFIG[item.stock_summary.stock_status as StockStatus];
+            const stockConfig = STOCK_STATUS_CONFIG[item.stock_summary?.stock_status as StockStatus];
             const StockIcon = stockConfig?.icon || Package;
             const itemStatusConfig = ITEM_STATUS_CONFIG[item.item_status as keyof typeof ITEM_STATUS_CONFIG];
             const stockPercentage = getStockPercentage(item);
 
             return (
-              <TableRow key={item.id} className="hover:bg-muted/50">
+              <TableRow key={item.item_id} className="hover:bg-muted/50">
                 <TableCell className="font-medium">{item.sku}</TableCell>
                 <TableCell>
                   <div className="flex flex-col">
@@ -201,11 +202,18 @@ export function InventoryItemsTable({
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{item.category.name}</TableCell>
-                <TableCell>{item.brand.name}</TableCell>
+                <TableCell>{item.category?.name || 'N/A'}</TableCell>
+                <TableCell>{item.brand?.name || 'N/A'}</TableCell>
                 <TableCell>
                   <div className="flex flex-col items-center space-y-1">
-                    <span className="font-medium">{item.stock_summary.total}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{item.stock_summary?.total || 0}</span>
+                      {(item.stock_summary?.total || 0) > 0 && (
+                        <Badge variant="outline" className="text-xs px-1 py-0 bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
+                          ✓
+                        </Badge>
+                      )}
+                    </div>
                     <Progress 
                       value={stockPercentage} 
                       className="w-20 h-2"
@@ -214,10 +222,10 @@ export function InventoryItemsTable({
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="font-medium">{item.stock_summary.available}</span>
-                    {item.stock_summary.reserved > 0 && (
+                    <span className="font-medium">{item.stock_summary?.available || 0}</span>
+                    {(item.stock_summary?.reserved || 0) > 0 && (
                       <span className="text-xs text-muted-foreground">
-                        {item.stock_summary.reserved} reserved
+                        {item.stock_summary?.reserved || 0} reserved
                       </span>
                     )}
                   </div>
@@ -272,7 +280,7 @@ export function InventoryItemsTable({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleViewDetails(item.id)}
+                    onClick={() => handleViewDetails(item)}
                     className="flex items-center gap-2"
                   >
                     <Eye className="h-4 w-4" />

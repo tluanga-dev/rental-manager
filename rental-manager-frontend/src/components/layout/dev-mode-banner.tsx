@@ -39,13 +39,15 @@ export function DevModeBanner({ className = '' }: DevModeBannerProps) {
     <div className={`bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg border-b-2 border-orange-600 ${className}`}>
       <div className="container mx-auto px-4">
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
-          <CollapsibleTrigger asChild>
-            <Button 
-              variant="ghost" 
-              className="w-full py-3 text-white hover:bg-white/10 justify-between items-center"
-              onClick={toggleExpanded}
-            >
-              <div className="flex items-center gap-3">
+          {/* Header with two sections - clickable trigger and interactive controls */}
+          <div className="flex items-center justify-between py-3">
+            {/* Left side - clickable trigger */}
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className="flex items-center gap-3 py-2 px-3 text-white hover:bg-white/10 rounded-md"
+                onClick={toggleExpanded}
+              >
                 <AlertTriangle className="h-5 w-5 animate-pulse" />
                 <span className="font-bold text-sm">
                   🚨 DEVELOPMENT MODE - AUTHENTICATION BYPASSED
@@ -53,24 +55,26 @@ export function DevModeBanner({ className = '' }: DevModeBannerProps) {
                 <Badge variant="destructive" className="bg-red-600 text-white">
                   DEV
                 </Badge>
-              </div>
-              <div className="flex items-center gap-3">
-                {user && (
-                  <div className="flex items-center gap-2 text-xs">
-                    <User className="h-4 w-4" />
-                    <span>{user.full_name || user.username}</span>
-                    <Badge variant="outline" className="bg-white/20 text-white border-white/40">
-                      {user.userType || user.role?.name || 'ADMIN'}
-                    </Badge>
-                  </div>
-                )}
-                <UserSwitcher />
-                <DevDashboard />
-                <AuthTestPanel />
                 <Settings className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-              </div>
-            </Button>
-          </CollapsibleTrigger>
+              </Button>
+            </CollapsibleTrigger>
+
+            {/* Right side - interactive controls (outside of button) */}
+            <div className="flex items-center gap-3">
+              {user && (
+                <div className="flex items-center gap-2 text-xs">
+                  <User className="h-4 w-4" />
+                  <span>{user.full_name || user.username}</span>
+                  <Badge variant="outline" className="bg-white/20 text-white border-white/40">
+                    {user.userType || user.role?.name || 'ADMIN'}
+                  </Badge>
+                </div>
+              )}
+              <UserSwitcher />
+              <DevDashboard />
+              <AuthTestPanel />
+            </div>
+          </div>
           
           <CollapsibleContent>
             <div className="pb-4 px-4 bg-white/10 backdrop-blur-sm">
