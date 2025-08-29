@@ -1,9 +1,19 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useToast } from '@/components/ui/use-toast';
 import {
   Package,
   MapPin,
@@ -20,15 +30,23 @@ import {
   Hash,
   Barcode,
   Clock,
+  CircleDollarSign,
 } from 'lucide-react';
 import { formatCurrencySync } from '@/lib/currency-utils';
-import type { InventoryUnitDetail } from '@/types/inventory-items';
+import { RentalRateEditor } from '@/components/rentals/RentalRateEditor';
+import { itemsApi } from '@/services/api/items';
+import type { InventoryUnitDetail, InventoryItemDetail } from '@/types/inventory-items';
 
 interface UnitDetailsTabProps {
   unit: InventoryUnitDetail;
+  item?: InventoryItemDetail | null;
 }
 
-export function UnitDetailsTab({ unit }: UnitDetailsTabProps) {
+export function UnitDetailsTab({ unit, item }: UnitDetailsTabProps) {
+  const { toast } = useToast();
+  const [rentalPeriod, setRentalPeriod] = useState((unit as any).rental_period?.toString() || '1');
+  const [securityDeposit, setSecurityDeposit] = useState((unit as any).security_deposit || '');
+
   const formatDate = (dateString?: string | null) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -46,6 +64,41 @@ export function UnitDetailsTab({ unit }: UnitDetailsTabProps) {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
+    });
+  };
+
+  const getRentalPeriodText = (period: string) => {
+    switch (period) {
+      case '1': return 'day';
+      case '7': return 'week';
+      case '30': return 'month';
+      default: return 'period';
+    }
+  };
+
+  const handleRateUpdate = async (newRate: number) => {
+    // This will be handled by the RentalRateEditor component
+    console.log('Rate updated to:', newRate);
+  };
+
+  const handlePeriodChange = async (value: string) => {
+    setRentalPeriod(value);
+    // TODO: Call API to update rental period
+    toast({
+      title: 'Rental Period Updated',
+      description: `Rental period set to per ${getRentalPeriodText(value)}`,
+    });
+  };
+
+  const handleDepositChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSecurityDeposit(e.target.value);
+  };
+
+  const handleDepositSave = async () => {
+    // TODO: Call API to update security deposit
+    toast({
+      title: 'Security Deposit Updated',
+      description: `Security deposit set to ${formatCurrencySync(parseFloat(securityDeposit) || 0)}`,
     });
   };
 
@@ -161,6 +214,78 @@ export function UnitDetailsTab({ unit }: UnitDetailsTabProps) {
             </div>
           )}
         </CardContent>
+        
+        {/* Rental Pricing Section - Only show if item is rentable */}
+        {(item as any)?.item?.is_rentable && (
+          <>
+            <Separator className="my-4" />
+            <CardContent>
+              <h4 className="text-sm font-medium mb-4 flex items-center gap-2">
+                <CircleDollarSign className="h-4 w-4" />
+                Rental Pricing Configuration
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Rental Rate</p>
+                  <RentalRateEditor
+                    currentRate={(unit as any).rental_rate_per_period || 0}
+                    itemId={unit.item_id}
+                    periodText={getRentalPeriodText(rentalPeriod)}
+                    editable={true}
+                    showChangeButton={true}
+                    saveToMaster={false}
+                    onRateChange={handleRateUpdate}
+                    placeholder="Set rental rate"
+                    className="w-full"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Rental Period</p>
+                  <Select
+                    value={rentalPeriod}
+                    onValueChange={handlePeriodChange}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Per Day</SelectItem>
+                      <SelectItem value="7">Per Week</SelectItem>
+                      <SelectItem value="30">Per Month</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Security Deposit</p>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={securityDeposit}
+                      onChange={handleDepositChange}
+                      placeholder="Enter deposit amount"
+                      className="flex-1"
+                    />
+                    <Button
+                      size="sm"
+                      onClick={handleDepositSave}
+                      variant="outline"
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              {(item as any)?.item?.rental_rate_per_period && (
+                <div className="mt-3 p-2 bg-muted/50 rounded-md">
+                  <p className="text-xs text-muted-foreground">
+                    ℹ️ Master rental rate: {formatCurrencySync((item as any).item.rental_rate_per_period)}/
+                    {getRentalPeriodText((item as any).item.rental_period || '1')}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </>
+        )}
       </Card>
 
       {/* Maintenance & Warranty */}

@@ -177,13 +177,6 @@ const menuItems: MenuItem[] = [
         permissions: ['INVENTORY_VIEW'],
       },
       {
-        id: 'inventory-units',
-        label: 'All Units',
-        icon: 'Package',
-        path: '/inventory/units',
-        permissions: ['INVENTORY_VIEW'],
-      },
-      {
         id: 'batch-tracking',
         label: 'Batch Tracking',
         icon: 'Package',

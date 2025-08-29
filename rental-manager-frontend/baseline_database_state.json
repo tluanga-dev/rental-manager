@@ -1,0 +1,25 @@
+{
+  "timestamp": "2025-08-28T00:58:00Z",
+  "database_snapshot": {
+    "transaction_headers": {
+      "total_count": 15,
+      "purchase_count": 15
+    },
+    "transaction_lines": {
+      "total_count": 12,
+      "purchase_lines_count": 12
+    },
+    "stock_levels": {
+      "total_count": 1
+    },
+    "stock_movements": {
+      "total_count": 2
+    }
+  },
+  "test_conditions": {
+    "environment": "development",
+    "backend_status": "healthy",
+    "frontend_status": "healthy", 
+    "database_status": "healthy"
+  }
+}

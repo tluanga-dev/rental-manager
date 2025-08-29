@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-08-27T19:34:06.765Z",
+  "database_snapshot": {
+    "transactions": 15,
+    "transactionLines": 12,
+    "stockLevels": 1,
+    "stockMovements": 2,
+    "inventoryUnits": 0
+  },
+  "changes_from_baseline": {
+    "transactions": 0,
+    "transactionLines": 0,
+    "stockLevels": 0,
+    "stockMovements": 0
+  }
+}

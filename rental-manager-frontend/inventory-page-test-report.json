@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-08-27T19:41:16.792Z",
+  "tests": {
+    "environment": {
+      "status": "PASSED",
+      "details": "Environment healthy"
+    },
+    "authentication": {
+      "status": "FAILED",
+      "error": "Waiting for selector `input[type=\"email\"]` failed: Waiting failed: 5000ms exceeded"
+    }
+  }
+}

@@ -11,7 +11,8 @@ import {
   Calendar,
   Package,
   Activity,
-  Clock
+  Clock,
+  AlertCircle
 } from 'lucide-react';
 import { inventoryUnitsApi } from '@/services/api/inventory-units';
 import { formatCurrencySync } from '@/lib/currency-utils';

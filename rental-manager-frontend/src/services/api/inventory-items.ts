@@ -60,29 +60,37 @@ export const inventoryItemsApi = {
     
     // Transform the backend response to match frontend expectations
     // Backend sends flat properties, but frontend expects nested stock_summary
-    const transformedItems: InventoryItemSummary[] = rawItems.map(item => ({
-      item_id: item.item_id,
-      sku: item.sku,
-      item_name: item.item_name,
-      category: item.category,
-      brand: item.brand,
-      stock_summary: {
-        total: item.total_quantity || item.total_units || 0,
-        available: item.available_quantity || 0,
-        reserved: item.reserved_quantity || 0,
-        rented: item.on_rent_quantity || 0,
-        in_maintenance: item.under_repair_quantity || 0,
-        damaged: item.damaged_quantity || 0,
-        stock_status: item.stock_status || 'OUT_OF_STOCK'
-      },
-      total_value: item.total_value || 0,
-      item_status: item.is_active ? 'ACTIVE' : 'INACTIVE',
-      purchase_price: item.purchase_price,
-      sale_price: item.sale_price,
-      rental_rate: item.rental_rate,
-      is_rentable: item.is_rentable || false,
-      is_salable: item.is_salable || false
-    }));
+    const transformedItems: InventoryItemSummary[] = rawItems.map(item => {
+      // Calculate total value from sale_price * total_quantity
+      // If sale_price is not set, use purchase_price, otherwise 0
+      const totalQty = item.total_quantity || item.total_units || 0;
+      const unitPrice = item.sale_price || item.purchase_price || 0;
+      const calculatedValue = totalQty * unitPrice;
+      
+      return {
+        item_id: item.item_id,
+        sku: item.sku,
+        item_name: item.item_name,
+        category: item.category,
+        brand: item.brand,
+        stock_summary: {
+          total: totalQty,
+          available: item.available_quantity || 0,
+          reserved: item.reserved_quantity || 0,
+          rented: item.on_rent_quantity || 0,
+          in_maintenance: item.under_repair_quantity || 0,
+          damaged: item.damaged_quantity || 0,
+          stock_status: item.stock_status || 'OUT_OF_STOCK'
+        },
+        total_value: item.total_value || calculatedValue || 0,
+        item_status: item.is_active ? 'ACTIVE' : 'INACTIVE',
+        purchase_price: item.purchase_price,
+        sale_price: item.sale_price,
+        rental_rate: item.rental_rate,
+        is_rentable: item.is_rentable || false,
+        is_salable: item.is_salable || false
+      };
+    });
     
     return transformedItems;
   },

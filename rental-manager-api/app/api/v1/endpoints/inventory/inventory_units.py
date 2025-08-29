@@ -10,6 +10,7 @@ from datetime import datetime, date
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status, Body
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.api.deps import get_db, get_current_user
 from app.services.inventory.inventory_service import InventoryService
@@ -557,6 +558,172 @@ async def record_maintenance(
     return unit
 
 
+@router.get("/{unit_id}/movements")
+async def get_unit_movements(
+    unit_id: UUID,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=500),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get stock movements for a specific unit.
+    
+    Retrieves movements based on the unit's item and location.
+    
+    Args:
+        unit_id: Unit ID
+        skip: Number of records to skip
+        limit: Maximum number of records to return
+        
+    Returns:
+        List of stock movements for the unit
+        
+    Raises:
+        404: Unit not found
+    """
+    from sqlalchemy import select
+    from app.models.inventory.inventory_unit import InventoryUnit
+    from app.models.inventory.stock_movement import StockMovement
+    from app.models.location import Location
+    from app.models.user import User
+    
+    # Get the unit first to get its item_id and location_id
+    result = await db.execute(
+        select(InventoryUnit).where(InventoryUnit.id == unit_id)
+    )
+    unit = result.scalar_one_or_none()
+    
+    if not unit:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Inventory unit not found"
+        )
+    
+    # Get movements for this item and location
+    query = (
+        select(StockMovement)
+        .options(
+            selectinload(StockMovement.location),
+            selectinload(StockMovement.performed_by)
+        )
+        .where(
+            StockMovement.item_id == unit.item_id,
+            StockMovement.location_id == unit.location_id
+        )
+        .order_by(StockMovement.movement_date.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    
+    result = await db.execute(query)
+    movements = result.scalars().all()
+    
+    # Format the response
+    movement_list = []
+    for mov in movements:
+        movement_list.append({
+            "id": str(mov.id),
+            "movement_date": mov.movement_date.isoformat() if mov.movement_date else mov.created_at.isoformat(),
+            "movement_type": mov.movement_type,
+            "quantity": abs(mov.quantity_change) if mov.quantity_change else 1,
+            "quantity_change": mov.quantity_change if mov.quantity_change else 0,
+            "from_location": None,  # Will be populated based on movement type
+            "to_location": mov.location.location_name if mov.location else None,
+            "location": mov.location.location_name if mov.location else None,
+            "performed_by": mov.performed_by.email if mov.performed_by else None,
+            "user": mov.performed_by.email if mov.performed_by else None,
+            "notes": mov.notes if mov.notes else None,
+            "reason": mov.reason if mov.reason else None,
+            "created_at": mov.created_at.isoformat() if mov.created_at else None
+        })
+    
+    return {
+        "success": True,
+        "data": movement_list,
+        "total": len(movement_list)
+    }
+
+
+@router.get("/{unit_id}/analytics")
+async def get_unit_analytics(
+    unit_id: UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get analytics data for a specific unit.
+    
+    Provides performance metrics and utilization statistics.
+    
+    Args:
+        unit_id: Unit ID
+        
+    Returns:
+        Analytics data including revenue, utilization, and rental history
+        
+    Raises:
+        404: Unit not found
+    """
+    from sqlalchemy import select, func
+    from app.models.inventory.inventory_unit import InventoryUnit
+    from datetime import datetime, timedelta
+    
+    # Get the unit first
+    result = await db.execute(
+        select(InventoryUnit).where(InventoryUnit.id == unit_id)
+    )
+    unit = result.scalar_one_or_none()
+    
+    if not unit:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Inventory unit not found"
+        )
+    
+    # Calculate analytics data
+    # For now, return mock data - will be implemented with actual rental system
+    analytics_data = {
+        "total_rentals": unit.rental_count if hasattr(unit, 'rental_count') else 0,
+        "total_revenue": float(unit.total_revenue) if hasattr(unit, 'total_revenue') and unit.total_revenue else 0.0,
+        "average_rental_duration": 0,
+        "utilization_rate": 0.0,
+        "total_days_rented": unit.total_rental_days if hasattr(unit, 'total_rental_days') else 0,
+        "last_rental_date": None,
+        "maintenance_count": len(unit.maintenance_history) if hasattr(unit, 'maintenance_history') and unit.maintenance_history else 0,
+        "damage_incidents": 0,
+        "days_since_purchase": 0,
+        "current_status": unit.status if hasattr(unit, 'status') else "AVAILABLE",
+        "condition": unit.condition if hasattr(unit, 'condition') else "GOOD"
+    }
+    
+    # Calculate days since purchase
+    if unit.purchase_date:
+        # Convert purchase_date to date if it's datetime
+        purchase_date = unit.purchase_date
+        if hasattr(purchase_date, 'date'):
+            purchase_date = purchase_date.date()
+        days_since_purchase = (datetime.utcnow().date() - purchase_date).days
+        analytics_data["days_since_purchase"] = days_since_purchase
+        
+        # Calculate utilization rate (mock calculation)
+        if days_since_purchase > 0 and analytics_data["total_days_rented"] > 0:
+            analytics_data["utilization_rate"] = min(
+                analytics_data["total_days_rented"] / days_since_purchase,
+                1.0
+            )
+    
+    # Calculate average rental duration
+    if analytics_data["total_rentals"] > 0 and analytics_data["total_days_rented"] > 0:
+        analytics_data["average_rental_duration"] = round(
+            analytics_data["total_days_rented"] / analytics_data["total_rentals"],
+            1
+        )
+    
+    return {
+        "success": True,
+        "data": analytics_data
+    }
+
+
 @router.get("/{unit_id}/history", response_model=dict)
 async def get_unit_history(
     unit_id: UUID,
@@ -589,10 +756,13 @@ async def get_unit_history(
             detail="Inventory unit not found"
         )
     
-    # Get movement history
-    movements = await crud_movement.get_by_unit(
+    # Get movement history based on item and location
+    movements = await crud_movement.get_by_item(
         db,
-        unit_id=unit_id
+        item_id=unit.item_id,
+        location_id=unit.location_id,
+        skip=0,
+        limit=100
     )
     
     return {

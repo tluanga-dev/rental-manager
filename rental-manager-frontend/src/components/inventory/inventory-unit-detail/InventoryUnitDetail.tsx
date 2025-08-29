@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/breadcrumb';
 import { InventoryUnitTabs } from './InventoryUnitTabs';
 import { inventoryUnitsApi } from '@/services/api/inventory-units';
+import { inventoryItemsApi } from '@/services/api/inventory-items';
 import { cn } from '@/lib/utils';
 import type { InventoryUnitDetail as InventoryUnitDetailType, InventoryUnitStatus } from '@/types/inventory-items';
 
@@ -101,6 +102,22 @@ export function InventoryUnitDetail({ unitId, itemId, itemName, itemSku }: Inven
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  // Fetch item master data to get rentable status
+  const {
+    data: item,
+    isLoading: isLoadingItem,
+  } = useQuery({
+    queryKey: ['inventory-item', unit?.item_id],
+    queryFn: async () => {
+      if (!unit?.item_id) return null;
+      const result = await inventoryItemsApi.getItemDetail(unit.item_id);
+      console.log('📦 Item master fetched:', result);
+      return result;
+    },
+    enabled: !!unit?.item_id, // Only fetch when we have item_id
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
   const handleBack = () => {
     if (itemId) {
       router.push(`/inventory/items/${itemId}`);
@@ -121,7 +138,7 @@ export function InventoryUnitDetail({ unitId, itemId, itemName, itemSku }: Inven
     refetchUnit();
   };
 
-  if (isLoadingUnit) {
+  if (isLoadingUnit || isLoadingItem) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
@@ -279,6 +296,7 @@ export function InventoryUnitDetail({ unitId, itemId, itemName, itemSku }: Inven
       {/* Tabs for Unit Content */}
       <InventoryUnitTabs
         unit={unit}
+        item={item}
         unitId={unitId}
         activeTab={activeTab}
         onTabChange={setActiveTab}

@@ -163,7 +163,7 @@ export interface InventoryItemsFilterState {
 
 // Sort configuration
 export interface InventoryItemsSortConfig {
-  field: 'item_name' | 'sku' | 'stock_summary.total' | 'total_value' | 'item_status';
+  field: 'item_name' | 'sku' | 'stock_summary.total' | 'total_value' | 'item_status' | 'rental_rate';
   order: 'asc' | 'desc';
 }
 

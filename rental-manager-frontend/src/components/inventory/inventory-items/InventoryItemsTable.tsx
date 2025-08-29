@@ -161,6 +161,17 @@ export function InventoryItemsTable({
             </TableHead>
             <TableHead>Available</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 flex items-center gap-1"
+                onClick={() => onSort('rental_rate')}
+              >
+                Rental Rate
+                {renderSortIcon('rental_rate')}
+              </Button>
+            </TableHead>
             <TableHead className="text-right">
               <Button
                 variant="ghost"
@@ -194,7 +205,7 @@ export function InventoryItemsTable({
                           Rentable
                         </Badge>
                       )}
-                      {item.is_saleable && (
+                      {item.is_salable && (
                         <Badge variant="outline" className="text-xs">
                           Saleable
                         </Badge>
@@ -253,23 +264,38 @@ export function InventoryItemsTable({
                     </Badge>
                   </div>
                 </TableCell>
+                <TableCell>
+                  {item.is_rentable ? (
+                    item.rental_rate ? (
+                      <div className="flex flex-col">
+                        <span className="font-medium">
+                          {formatCurrencySync(item.rental_rate)}
+                        </span>
+                        <span className="text-xs text-muted-foreground">/day</span>
+                      </div>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">Not set</span>
+                    )
+                  ) : (
+                    <span className="text-muted-foreground text-sm">-</span>
+                  )}
+                </TableCell>
                 <TableCell className="text-right">
                   <div className="flex flex-col">
                     <span className="font-medium">
-                      {item.total_value === 0 ? (
-                        <span className="text-muted-foreground" title="No pricing data available">
-                          {formatCurrencySync(0)}
-                        </span>
-                      ) : (
+                      {item.total_value > 0 ? (
                         formatCurrencySync(item.total_value)
+                      ) : (
+                        <span className="text-muted-foreground" title="No pricing data available">
+                          -
+                        </span>
                       )}
                     </span>
-                    {item.sale_price && (
+                    {(item.sale_price || item.purchase_price) ? (
                       <span className="text-xs text-muted-foreground">
-                        @ {formatCurrencySync(item.sale_price)}
+                        @ {formatCurrencySync(item.sale_price || item.purchase_price || 0)}/unit
                       </span>
-                    )}
-                    {item.total_value === 0 && (
+                    ) : (
                       <span className="text-xs text-orange-600">
                         No price set
                       </span>

@@ -15,10 +15,11 @@ import { UnitMovementsTab } from './UnitMovementsTab';
 import { UnitRentalHistoryTab } from './UnitRentalHistoryTab';
 import { UnitAnalyticsTab } from './UnitAnalyticsTab';
 import { UnitMaintenanceTab } from './UnitMaintenanceTab';
-import type { InventoryUnitDetail } from '@/types/inventory-items';
+import type { InventoryUnitDetail, InventoryItemDetail } from '@/types/inventory-items';
 
 interface InventoryUnitTabsProps {
   unit: InventoryUnitDetail;
+  item?: InventoryItemDetail | null;
   unitId: string;
   activeTab: string;
   onTabChange: (tab: string) => void;
@@ -26,6 +27,7 @@ interface InventoryUnitTabsProps {
 
 export function InventoryUnitTabs({ 
   unit, 
+  item,
   unitId, 
   activeTab, 
   onTabChange 
@@ -36,7 +38,7 @@ export function InventoryUnitTabs({
       id: 'details',
       label: 'Unit Details',
       icon: Package,
-      content: <UnitDetailsTab unit={unit} />,
+      content: <UnitDetailsTab unit={unit} item={item} />,
     },
     {
       id: 'movements',
