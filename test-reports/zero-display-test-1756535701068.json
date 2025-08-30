@@ -1,0 +1,59 @@
+{
+  "timestamp": "2025-08-30T06:35:01.067Z",
+  "summary": {
+    "totalIssues": 3,
+    "fieldsChecked": 6,
+    "textIssuesFound": 1,
+    "unwantedTextFound": 1
+  },
+  "fieldResults": {
+    "Reorder Point": true,
+    "Rental Rate": true,
+    "Security Deposit": true,
+    "Sale Price": true,
+    "Warranty Period": false,
+    "Initial Stock Quantity": false
+  },
+  "textIssues": [
+    {
+      "pattern": "/\\s0\\s/g",
+      "matches": [
+        " 0 ",
+        "\n0\n"
+      ],
+      "count": 2
+    }
+  ],
+  "unwantedTexts": [
+    {
+      "text": "0",
+      "element": "DIV",
+      "className": "space-y-2",
+      "id": "",
+      "parentContext": "DIV"
+    }
+  ],
+  "detailedIssues": [
+    {
+      "field": "Warranty Period",
+      "fieldId": "warranty_period_days",
+      "issue": "Field shows \"0\" instead of placeholder",
+      "value": "0",
+      "placeholder": "e.g., 365"
+    },
+    {
+      "field": "Initial Stock Quantity",
+      "fieldId": "initial_stock_quantity",
+      "issue": "Field shows \"0\" instead of placeholder",
+      "value": "0",
+      "placeholder": "0"
+    },
+    {
+      "field": "Unknown",
+      "fieldId": "unknown",
+      "issue": "Unwanted text \"0\" displayed",
+      "element": "DIV",
+      "className": "space-y-2"
+    }
+  ]
+}

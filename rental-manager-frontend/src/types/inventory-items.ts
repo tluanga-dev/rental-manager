@@ -97,6 +97,42 @@ export interface InventoryItemDetail extends InventoryItemSummary {
   updated_at: string;
 }
 
+// Backend API response structure for inventory item detail
+export interface InventoryItemDetailResponse {
+  success: boolean;
+  data: {
+    item: {
+      id: string;
+      sku: string;
+      item_name: string;
+      description?: string;
+      image_url?: string;
+      purchase_price?: number;
+      sale_price?: number;
+      rental_rate?: number;
+      is_rentable: boolean;
+      is_salable: boolean;
+      is_active: boolean;
+      min_stock_level?: number;
+      max_stock_level?: number;
+      created_at: string;
+      updated_at: string;
+      category?: CategorySummary;
+      brand?: BrandSummary;
+    };
+    total_units: number;
+    available_units: number;
+    reserved_units: number;
+    rented_units: number;
+    maintenance_units: number;
+    damaged_units: number;
+    total_value: number;
+    stock_status: StockStatus;
+    location_breakdown: LocationStock[];
+    inventory_units?: any[];
+  };
+}
+
 // Individual inventory unit detail
 export interface InventoryUnitDetail {
   id: string;

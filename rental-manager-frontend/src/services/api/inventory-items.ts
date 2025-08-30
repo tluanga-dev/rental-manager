@@ -5,6 +5,7 @@ import { apiClient } from '@/lib/axios';
 import type {
   InventoryItemSummary,
   InventoryItemDetail,
+  InventoryItemDetailResponse,
   InventoryUnitDetail,
   StockMovementDetail,
   InventoryAnalytics,
@@ -101,21 +102,96 @@ export const inventoryItemsApi = {
   async getItemDetail(itemId: string): Promise<InventoryItemDetail> {
     try {
       // Use the items endpoint for detailed item information
-      const response = await apiClient.get<InventoryItemDetail>(
+      const response = await apiClient.get<InventoryItemDetailResponse>(
         `/inventory/items/${itemId}`
       );
       
-      // Handle both direct data and wrapped responses
-      const data = response.data;
+      // Handle the nested response structure with proper typing
+      const responseData: InventoryItemDetailResponse = response.data;
       
-      // If response is wrapped in a data object
-      if (data && typeof data === 'object' && 'data' in data) {
-        return (data as any).data;
+      console.log('🔍 API Response structure:', JSON.stringify(responseData, null, 2));
+      
+      // Backend returns the expected structure from InventoryItemDetailResponse
+      if (responseData?.data?.item) {
+        const backendItem = responseData.data.item;
+        
+        // Map backend fields to frontend InventoryItemDetail interface
+        const mappedItem: InventoryItemDetail = {
+          item_id: backendItem.id, // Map id to item_id
+          sku: backendItem.sku,
+          item_name: backendItem.item_name,
+          category: backendItem.category || { id: '', name: '', code: '' },
+          brand: backendItem.brand || { id: '', name: '' },
+          stock_summary: {
+            total: responseData.data.total_units || 0,
+            available: responseData.data.available_units || 0,
+            reserved: responseData.data.reserved_units || 0,
+            rented: responseData.data.rented_units || 0,
+            in_maintenance: responseData.data.maintenance_units || 0,
+            damaged: responseData.data.damaged_units || 0,
+            stock_status: responseData.data.stock_status || 'OUT_OF_STOCK'
+          },
+          total_value: responseData.data.total_value || 0,
+          item_status: backendItem.is_active ? 'ACTIVE' : 'INACTIVE',
+          purchase_price: backendItem.purchase_price,
+          sale_price: backendItem.sale_price,
+          rental_rate: backendItem.rental_rate,
+          is_rentable: backendItem.is_rentable || false,
+          is_salable: backendItem.is_salable || false,
+          description: backendItem.description,
+          image_url: backendItem.image_url,
+          location_breakdown: responseData.data.location_breakdown || [],
+          min_stock_level: backendItem.min_stock_level,
+          max_stock_level: backendItem.max_stock_level,
+          created_at: backendItem.created_at,
+          updated_at: backendItem.updated_at,
+        };
+        
+        console.log('✅ Mapped item detail:', mappedItem);
+        return mappedItem;
       }
       
-      return data;
+      // Fallback for different response structures
+      if (responseData?.data && !responseData.data.item) {
+        // Direct item data without nesting
+        const item = responseData.data;
+        return {
+          item_id: item.id || item.item_id,
+          sku: item.sku,
+          item_name: item.item_name,
+          category: item.category,
+          brand: item.brand,
+          stock_summary: item.stock_summary || {
+            total: 0,
+            available: 0,
+            reserved: 0,
+            rented: 0,
+            in_maintenance: 0,
+            damaged: 0,
+            stock_status: 'OUT_OF_STOCK'
+          },
+          total_value: item.total_value || 0,
+          item_status: item.item_status || (item.is_active ? 'ACTIVE' : 'INACTIVE'),
+          purchase_price: item.purchase_price,
+          sale_price: item.sale_price,
+          rental_rate: item.rental_rate,
+          is_rentable: item.is_rentable || false,
+          is_salable: item.is_salable || false,
+          description: item.description,
+          image_url: item.image_url,
+          location_breakdown: item.location_breakdown || [],
+          min_stock_level: item.min_stock_level,
+          max_stock_level: item.max_stock_level,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+        };
+      }
+      
+      // If no data found
+      throw new Error('Invalid response structure from API');
+      
     } catch (error) {
-      console.error(`Error fetching item detail for ${itemId}:`, error);
+      console.error(`❌ Error fetching item detail for ${itemId}:`, error);
       throw error;
     }
   },
@@ -344,6 +420,109 @@ export const inventoryItemsApi = {
     } catch (error) {
       console.error(`Error fetching all inventory for item ${itemId}:`, error);
       return []; // Return empty array instead of throwing
+    }
+  },
+
+  /**
+   * Update an item's rentable status
+   */
+  async updateRentableStatus(itemId: string, isRentable: boolean): Promise<InventoryItemDetail> {
+    try {
+      console.log(`🔄 Updating rentable status for item ${itemId} to ${isRentable}`);
+      
+      // Use the correct endpoint - should be inventory/items not just items
+      const response = await apiClient.put<any>(
+        `/inventory/items/${itemId}`,
+        {
+          is_rentable: isRentable
+        }
+      );
+      
+      console.log('🔍 Update response:', JSON.stringify(response.data, null, 2));
+      
+      // Handle the response structure similar to getItemDetail
+      const responseData = response.data;
+      
+      // Backend returns updated item in nested structure
+      if (responseData?.data?.item) {
+        const backendItem = responseData.data.item;
+        
+        // Map the response using the same pattern as getItemDetail
+        const mappedItem: InventoryItemDetail = {
+          item_id: backendItem.id,
+          sku: backendItem.sku,
+          item_name: backendItem.item_name,
+          category: backendItem.category,
+          brand: backendItem.brand,
+          stock_summary: {
+            total: responseData.data.total_units || 0,
+            available: responseData.data.available_units || 0,
+            reserved: responseData.data.reserved_units || 0,
+            rented: responseData.data.rented_units || 0,
+            in_maintenance: responseData.data.maintenance_units || 0,
+            damaged: responseData.data.damaged_units || 0,
+            stock_status: responseData.data.stock_status || 'OUT_OF_STOCK'
+          },
+          total_value: responseData.data.total_value || 0,
+          item_status: backendItem.is_active ? 'ACTIVE' : 'INACTIVE',
+          purchase_price: backendItem.purchase_price,
+          sale_price: backendItem.sale_price,
+          rental_rate: backendItem.rental_rate,
+          is_rentable: backendItem.is_rentable || false,
+          is_salable: backendItem.is_salable || false,
+          description: backendItem.description,
+          image_url: backendItem.image_url,
+          location_breakdown: responseData.data.location_breakdown || [],
+          min_stock_level: backendItem.min_stock_level,
+          max_stock_level: backendItem.max_stock_level,
+          created_at: backendItem.created_at,
+          updated_at: backendItem.updated_at,
+        };
+        
+        console.log('✅ Updated item mapped successfully:', mappedItem);
+        return mappedItem;
+      }
+      
+      // Fallback if direct item data
+      if (responseData?.data && !responseData.data.item) {
+        const item = responseData.data;
+        return {
+          item_id: item.id || item.item_id,
+          sku: item.sku,
+          item_name: item.item_name,
+          category: item.category,
+          brand: item.brand,
+          stock_summary: item.stock_summary || {
+            total: 0,
+            available: 0,
+            reserved: 0,
+            rented: 0,
+            in_maintenance: 0,
+            damaged: 0,
+            stock_status: 'OUT_OF_STOCK'
+          },
+          total_value: item.total_value || 0,
+          item_status: item.item_status || (item.is_active ? 'ACTIVE' : 'INACTIVE'),
+          purchase_price: item.purchase_price,
+          sale_price: item.sale_price,
+          rental_rate: item.rental_rate,
+          is_rentable: item.is_rentable || false,
+          is_salable: item.is_salable || false,
+          description: item.description,
+          image_url: item.image_url,
+          location_breakdown: item.location_breakdown || [],
+          min_stock_level: item.min_stock_level,
+          max_stock_level: item.max_stock_level,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+        };
+      }
+      
+      throw new Error('Invalid response structure from update API');
+      
+    } catch (error) {
+      console.error(`❌ Error updating rentable status for item ${itemId}:`, error);
+      throw error;
     }
   },
 };

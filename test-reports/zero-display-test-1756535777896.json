@@ -1,0 +1,28 @@
+{
+  "timestamp": "2025-08-30T06:36:17.894Z",
+  "summary": {
+    "totalIssues": 0,
+    "fieldsChecked": 6,
+    "textIssuesFound": 1,
+    "unwantedTextFound": 0
+  },
+  "fieldResults": {
+    "Reorder Point": true,
+    "Rental Rate": true,
+    "Security Deposit": true,
+    "Sale Price": true,
+    "Warranty Period": true,
+    "Initial Stock Quantity": true
+  },
+  "textIssues": [
+    {
+      "pattern": "/\\s0\\s/g",
+      "matches": [
+        " 0 "
+      ],
+      "count": 1
+    }
+  ],
+  "unwantedTexts": [],
+  "detailedIssues": []
+}

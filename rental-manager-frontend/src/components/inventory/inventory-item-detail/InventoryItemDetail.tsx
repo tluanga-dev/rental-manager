@@ -42,6 +42,7 @@ export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProp
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('units');
   const [showPricingModal, setShowPricingModal] = useState(false);
+  const [currentItem, setCurrentItem] = useState<InventoryItemDetail | null>(null);
 
   // Use SKU if provided, otherwise fall back to ID
   const identifier = itemSku || itemId || '';
@@ -59,6 +60,7 @@ export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProp
       const result = await inventoryItemsApi.getItemDetail(identifier);
       console.log('📊 Item detail fetched:', result);
       console.log('📊 Stock summary:', result?.stock_summary);
+      setCurrentItem(result);
       return result;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
@@ -148,6 +150,12 @@ export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProp
     refetchUnits();
     if (activeTab === 'movements') refetchMovements();
     if (activeTab === 'analytics') refetchAnalytics();
+  };
+
+  const handleItemUpdate = (updatedItem: InventoryItemDetail) => {
+    setCurrentItem(updatedItem);
+    // Force refetch to ensure all data is synchronized
+    refetchItem();
   };
 
   if (isLoadingItem) {
@@ -286,12 +294,11 @@ export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProp
       <StockSummaryCards item={item} />
 
       {/* Pricing Information Card */}
-      {item.is_rentable && (
-        <PricingInfoCard 
-          item={item} 
-          onManagePricing={() => setShowPricingModal(true)}
-        />
-      )}
+      <PricingInfoCard 
+        item={currentItem || item} 
+        onManagePricing={() => setShowPricingModal(true)}
+        onItemUpdate={handleItemUpdate}
+      />
 
       {/* Full Width Tabs for All Content */}
       <InventoryUnitsTabs
@@ -307,7 +314,7 @@ export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProp
       />
 
       {/* Pricing Management Modal */}
-      {item.is_rentable && (
+      {(currentItem || item).is_rentable && (
         <PricingManagementModal
           isOpen={showPricingModal}
           onClose={() => setShowPricingModal(false)}
