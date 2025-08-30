@@ -146,9 +146,9 @@ async def get_unit_of_measurement_service(db: AsyncSession = Depends(get_db)) ->
     return UnitOfMeasurementService(repository)
 
 
-async def get_sku_generator(db: AsyncSession = Depends(get_db)) -> SKUGenerator:
+async def get_sku_generator() -> SKUGenerator:
     """Get SKU generator instance."""
-    return SKUGenerator(db)
+    return SKUGenerator()
 
 
 async def get_item_repository(db: AsyncSession = Depends(get_db)) -> ItemRepository:
@@ -157,12 +157,12 @@ async def get_item_repository(db: AsyncSession = Depends(get_db)) -> ItemReposit
 
 
 async def get_item_service(
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    sku_generator: SKUGenerator = Depends(get_sku_generator)
 ) -> ItemService:
     """Get item service instance."""
     repository = ItemRepository(db)
-    sku_generator = SKUGenerator(db)
-    return ItemService(repository, sku_generator)
+    return ItemService(repository, sku_generator, db)
 
 
 async def get_item_rental_blocking_service(

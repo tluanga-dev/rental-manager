@@ -2,6 +2,7 @@ from typing import List, Optional, Dict, Any, Tuple
 from uuid import UUID
 from datetime import datetime
 from decimal import Decimal
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.item import ItemRepository
 from app.models.item import Item
@@ -23,10 +24,11 @@ from app.core.errors import (
 class ItemService:
     """Service layer for item business logic."""
     
-    def __init__(self, repository: ItemRepository, sku_generator: SKUGenerator):
-        """Initialize service with repository and SKU generator."""
+    def __init__(self, repository: ItemRepository, sku_generator: SKUGenerator, session: AsyncSession):
+        """Initialize service with repository, SKU generator, and session."""
         self.repository = repository
         self.sku_generator = sku_generator
+        self.session = session
     
     async def create_item(
         self,
@@ -49,14 +51,11 @@ class ItemService:
         # Generate SKU if not provided
         sku = item_data.sku
         if not sku or sku == "AUTO":
-            # Temporary fix: Generate simple timestamp-based SKU to avoid async context issues
-            import time
-            import random
-            timestamp = int(time.time())
-            random_suffix = random.randint(100, 999)
-            sku = f"ITEM-{timestamp}-{random_suffix}"
-            # TODO: Revert to proper SKU generation after fixing async context issue
-            # sku = await self.sku_generator.generate_sku(item_data.category_id)
+            # Now using proper SKU generation with session parameter
+            sku = await self.sku_generator.generate_sku(
+                self.session,
+                category_id=item_data.category_id
+            )
         
         # Check if SKU already exists
         if await self.repository.exists_by_sku(sku):

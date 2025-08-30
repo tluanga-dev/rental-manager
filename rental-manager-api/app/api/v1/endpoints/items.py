@@ -2,6 +2,7 @@ from typing import Optional, List
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import JSONResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.services.item import ItemService
 from app.services.item_rental_blocking import ItemRentalBlockingService
@@ -16,7 +17,7 @@ from app.schemas.item import (
 )
 from app.core.dependencies import (
     get_item_service, get_item_rental_blocking_service, 
-    get_sku_generator, get_current_user_id
+    get_sku_generator, get_current_user_id, get_db
 )
 from app.core.errors import (
     NotFoundError, ConflictError, ValidationError,
@@ -493,11 +494,13 @@ async def generate_sku(
     category_id: Optional[UUID] = None,
     pattern: Optional[str] = None,
     prefix: Optional[str] = None,
-    sku_generator: SKUGenerator = Depends(get_sku_generator)
+    sku_generator: SKUGenerator = Depends(get_sku_generator),
+    db: AsyncSession = Depends(get_db)
 ):
     """Generate a new SKU."""
     try:
         sku = await sku_generator.generate_sku(
+            db,
             category_id=category_id,
             pattern=pattern,
             prefix=prefix
@@ -513,10 +516,11 @@ async def generate_sku(
 @router.post("/validate-sku-pattern/")
 async def validate_sku_pattern(
     pattern: str,
-    sku_generator: SKUGenerator = Depends(get_sku_generator)
+    sku_generator: SKUGenerator = Depends(get_sku_generator),
+    db: AsyncSession = Depends(get_db)
 ):
     """Validate a custom SKU pattern."""
-    return await sku_generator.validate_sku_pattern(pattern)
+    return await sku_generator.validate_sku_pattern(db, pattern)
 
 
 @router.get("/sku-patterns/")
@@ -529,10 +533,11 @@ async def get_available_patterns(
 
 @router.get("/sku-statistics/")
 async def get_sku_statistics(
-    sku_generator: SKUGenerator = Depends(get_sku_generator)
+    sku_generator: SKUGenerator = Depends(get_sku_generator),
+    db: AsyncSession = Depends(get_db)
 ):
     """Get SKU generation statistics."""
-    return await sku_generator.get_sku_statistics()
+    return await sku_generator.get_sku_statistics(db)
 
 
 # Import/Export
