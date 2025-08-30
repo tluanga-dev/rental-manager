@@ -575,11 +575,11 @@ export function ItemForm({
       {/* Pricing & Details */}
       <div>
           <div className="space-y-4">
-            {/* Sale Price and Initial Stock Quantity */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Sale Price, Initial Stock Quantity, and Reorder Point */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="sale_price">
-                  Sale Price (₹) <span className="text-gray-500 text-xs font-normal">(Optional - can be 0 for free items)</span>
+                  Sale Price (₹) <span className="text-gray-500 text-xs font-normal">(Optional)</span>
                 </Label>
                 <Input
                   id="sale_price"
@@ -609,22 +609,9 @@ export function ItemForm({
                   <p className="text-sm text-red-600">{errors.initial_stock_quantity.message}</p>
                 )}
               </div>
-            </div>
 
-            {/* Reorder Point */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label htmlFor="reorder_point" className="flex items-center space-x-2">
-                  <span>Reorder Point</span>
-                  <div className="group relative">
-                    <svg className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                    </svg>
-                    <div className="invisible group-hover:visible absolute z-50 bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 p-2 text-xs text-white bg-gray-900 rounded shadow-lg">
-                      Stock level at which to reorder this item. Alert will be triggered when stock drops to this level.
-                    </div>
-                  </div>
-                </Label>
+                <Label htmlFor="reorder_point">Reorder Point</Label>
                 <Input
                   id="reorder_point"
                   type="number"
@@ -637,33 +624,26 @@ export function ItemForm({
                 {errors.reorder_point && (
                   <p className="text-sm text-red-600">{errors.reorder_point.message}</p>
                 )}
-                {!errors.reorder_point && form.watch('initial_stock_quantity') && form.watch('reorder_point') && (
-                  <p className="text-xs text-gray-500">
-                    Alert when stock drops to {form.watch('reorder_point')} units
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                {/* Reorder Point Suggestions */}
-                {form.watch('initial_stock_quantity') && (
-                  <div className="mt-6 p-3 bg-slate-50 border border-slate-200 rounded-lg">
-                    <h4 className="text-xs font-semibold text-slate-800 mb-2">💡 Suggestion</h4>
-                    <div className="text-xs text-slate-700">
-                      <div>
-                        Recommended: {Math.ceil(Number(form.watch('initial_stock_quantity')) * 0.2)} 
-                        <span className="text-slate-600"> (20% of initial stock)</span>
-                      </div>
-                      <div className="text-xs text-gray-600 mt-1">
-                        This ensures you're alerted before running out of stock
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
-            {/* Rental and Security Deposit */}
+            {/* Reorder Point Suggestions */}
+            {form.watch('initial_stock_quantity') && (
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                <h4 className="text-xs font-semibold text-slate-800 mb-2">💡 Reorder Point Suggestion</h4>
+                <div className="text-xs text-slate-700">
+                  <div>
+                    Recommended: {Math.ceil(Number(form.watch('initial_stock_quantity')) * 0.2)} 
+                    <span className="text-slate-600"> (20% of initial stock)</span>
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">
+                    This ensures you're alerted before running out of stock
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Rental Rate, Rental Period and Security Deposit */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="rental_rate_per_period" className="flex items-center gap-1">
