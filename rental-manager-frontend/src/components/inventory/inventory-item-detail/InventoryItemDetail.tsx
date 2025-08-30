@@ -25,6 +25,7 @@ import { ProductInfoCard } from './ProductInfoCard';
 import { StockSummaryCards } from './StockSummaryCards';
 import { InventoryUnitsTabs } from './InventoryUnitsTabs';
 import { PricingInfoCard } from './PricingInfoCard';
+import { RentalStatusBlock } from './RentalStatusBlock';
 import { PricingManagementModal } from '@/components/rental-pricing/PricingManagementModal';
 import { inventoryItemsApi } from '@/services/api/inventory-items';
 import type { 
@@ -292,6 +293,16 @@ export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProp
 
       {/* Stock Summary Cards - Horizontal Strip */}
       <StockSummaryCards item={item} />
+
+      {/* Rental Status Block */}
+      <RentalStatusBlock 
+        item={currentItem || item}
+        onManagePricing={() => setShowPricingModal(true)}
+        onManageRental={() => {
+          // TODO: Add rental management functionality
+          console.log('Manage rental clicked for item:', item.item_id);
+        }}
+      />
 
       {/* Pricing Information Card */}
       <PricingInfoCard 

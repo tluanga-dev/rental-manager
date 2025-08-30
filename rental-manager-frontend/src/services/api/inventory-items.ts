@@ -525,4 +525,32 @@ export const inventoryItemsApi = {
       throw error;
     }
   },
+
+  /**
+   * Get current rental status for a specific item
+   * Returns active rentals for this item's units
+   */
+  async getCurrentRentalStatus(itemId: string): Promise<any[]> {
+    try {
+      console.log(`🔍 Fetching current rental status for item ${itemId}`);
+      
+      // For now, return mock data until we have the backend endpoint
+      // In a real implementation, this would query active rentals for this item
+      const mockRentals = [];
+      
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      console.log(`✅ Current rentals fetched for item ${itemId}:`, mockRentals);
+      return mockRentals;
+      
+      // TODO: Implement actual API call when backend endpoint is available
+      // const response = await apiClient.get<any[]>(`/inventory/items/${itemId}/current-rentals`);
+      // return response.data;
+      
+    } catch (error) {
+      console.error(`❌ Error fetching current rental status for item ${itemId}:`, error);
+      return []; // Return empty array on error
+    }
+  },
 };
