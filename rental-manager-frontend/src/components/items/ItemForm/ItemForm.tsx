@@ -97,12 +97,11 @@ export function ItemForm({
       rental_rate_per_period: initialData?.rental_rate_per_period || undefined,
       rental_period: initialData?.rental_period ? parseInt(initialData.rental_period.toString()) : DEFAULT_RENTAL_PERIOD_VALUE,
       sale_price: initialData?.sale_price || undefined,
-      purchase_price: initialData?.purchase_price || undefined,
-      initial_stock_quantity: initialData?.initial_stock_quantity || 0,
+      initial_stock_quantity: initialData?.initial_stock_quantity !== undefined ? initialData.initial_stock_quantity : undefined,
       security_deposit: initialData?.security_deposit || undefined,
       serial_number_required: initialData?.serial_number_required || false,
-      warranty_period_days: initialData?.warranty_period_days ? parseInt(initialData.warranty_period_days.toString()) : 0,
-      reorder_point: initialData?.reorder_point || 0,
+      warranty_period_days: initialData?.warranty_period_days ? parseInt(initialData.warranty_period_days.toString()) : undefined,
+      reorder_point: initialData?.reorder_point || undefined,
       is_rentable: initialData?.is_rentable ?? true,
       is_salable: initialData?.is_salable ?? false,
     },
@@ -192,12 +191,11 @@ export function ItemForm({
         rental_rate_per_period: initialData.rental_rate_per_period || undefined,
         rental_period: initialData.rental_period ? parseInt(initialData.rental_period.toString()) : DEFAULT_RENTAL_PERIOD_VALUE,
         sale_price: initialData.sale_price || undefined,
-        purchase_price: initialData.purchase_price || undefined,
-        initial_stock_quantity: initialData.initial_stock_quantity || 0,
+        initial_stock_quantity: initialData.initial_stock_quantity !== undefined ? initialData.initial_stock_quantity : undefined,
         security_deposit: initialData.security_deposit || undefined,
         serial_number_required: initialData.serial_number_required || false,
-        warranty_period_days: initialData.warranty_period_days ? parseInt(initialData.warranty_period_days.toString()) : 0,
-        reorder_point: initialData.reorder_point || 0,
+        warranty_period_days: initialData.warranty_period_days ? parseInt(initialData.warranty_period_days.toString()) : undefined,
+        reorder_point: initialData.reorder_point || undefined,
         is_rentable: initialData.is_rentable ?? true,
         is_salable: initialData.is_salable ?? false,
       });
@@ -269,7 +267,6 @@ export function ItemForm({
       unit_of_measurement_id: data.unit_of_measurement_id && data.unit_of_measurement_id.trim() !== '' ? data.unit_of_measurement_id : null,
       rental_rate_per_day: data.rental_rate_per_period && data.rental_rate_per_period > 0 ? data.rental_rate_per_period : null,
       sale_price: isNaN(data.sale_price) ? null : (data.sale_price || 0),
-      cost_price: data.purchase_price && data.purchase_price > 0 ? data.purchase_price : null,
       reorder_level: data.reorder_point || null,
       security_deposit: isNaN(data.security_deposit) ? null : (data.security_deposit && data.security_deposit > 0 ? data.security_deposit : null),
       description: data.description && data.description.trim() !== '' ? data.description.trim() : null,
@@ -293,7 +290,7 @@ export function ItemForm({
   const handleErrorDialogAction = useCallback((action: string, data?: any) => {
     switch (action) {
       case 'suggest_alternatives':
-        if (data?.suggestedName && formData) {
+        if (data?.suggestedName) {
           // Update form with suggested name
           form.setValue('item_name', data.suggestedName);
           setErrorDialog({ open: false });
@@ -578,24 +575,8 @@ export function ItemForm({
       {/* Pricing & Details */}
       <div>
           <div className="space-y-4">
-            {/* Purchase Price, Sale Price, and Initial Stock Quantity */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="purchase_price">Purchase Price (₹)</Label>
-                <Input
-                  id="purchase_price"
-                  type="number"
-                  step="1"
-                  min="0"
-                  {...form.register('purchase_price')}
-                  placeholder="Enter purchase price (optional)"
-                  className={cn('h-9', errors.purchase_price ? 'border-red-500' : '')}
-                />
-                {errors.purchase_price && (
-                  <p className="text-sm text-red-600">{errors.purchase_price.message}</p>
-                )}
-              </div>
-
+            {/* Sale Price and Initial Stock Quantity */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="sale_price">
                   Sale Price (₹) <span className="text-gray-500 text-xs font-normal">(Optional - can be 0 for free items)</span>

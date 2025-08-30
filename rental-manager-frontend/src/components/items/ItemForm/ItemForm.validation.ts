@@ -49,19 +49,11 @@ export const itemFormSchema = z.object({
     },
     z.number().min(0, 'Sale price cannot be negative').optional()
   ),
-  purchase_price: z.preprocess(
+  initial_stock_quantity: z.preprocess(
     (val) => {
       if (val === '' || val === null || val === undefined) return undefined;
       const num = Number(val);
       return isNaN(num) ? undefined : num;
-    },
-    z.number().min(0, 'Purchase price cannot be negative').optional()
-  ),
-  initial_stock_quantity: z.preprocess(
-    (val) => {
-      if (val === '' || val === null || val === undefined) return 0;
-      const num = Number(val);
-      return isNaN(num) ? 0 : num;
     },
     z.number().min(0, 'Initial stock quantity cannot be negative').optional()
   ),
@@ -78,11 +70,11 @@ export const itemFormSchema = z.object({
   serial_number_required: z.boolean().default(false),
   warranty_period_days: z.preprocess(
     (val) => {
-      if (val === '' || val === null || val === undefined) return 0;
+      if (val === '' || val === null || val === undefined) return undefined;
       const num = parseInt(String(val));
-      return isNaN(num) ? 0 : Math.max(0, num); // Ensure positive integer
+      return isNaN(num) ? undefined : Math.max(0, num); // Ensure positive integer
     },
-    z.number().int().min(0, 'Warranty period must be a positive integer')
+    z.number().int().min(0, 'Warranty period must be a positive integer').optional()
   ),
   reorder_point: z.preprocess(
     (val) => {
