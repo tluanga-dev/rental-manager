@@ -105,6 +105,12 @@ class Item(RentalManagerBaseModel):
         comment="Brief description for listings"
     )
     
+    model_number = Column(
+        String(100),
+        nullable=True,
+        comment="Model number of the item"
+    )
+    
     # Foreign Key Relationships
     brand_id = Column(
         SA_UUID(as_uuid=True), 
@@ -341,6 +347,7 @@ class Item(RentalManagerBaseModel):
         unit_of_measurement_id: Optional[UUID] = None,
         description: Optional[str] = None,
         short_description: Optional[str] = None,
+        model_number: Optional[str] = None,
         is_rentable: bool = True,
         is_salable: bool = True,
         cost_price: Optional[Decimal] = None,
@@ -376,6 +383,7 @@ class Item(RentalManagerBaseModel):
         self.unit_of_measurement_id = unit_of_measurement_id
         self.description = description
         self.short_description = short_description
+        self.model_number = model_number
         self.is_rentable = is_rentable
         self.is_salable = is_salable
         self.cost_price = cost_price
@@ -620,6 +628,7 @@ class Item(RentalManagerBaseModel):
             "sku": self.sku,
             "description": self.description,
             "short_description": self.short_description,
+            "model_number": self.model_number,
             "brand_id": str(self.brand_id) if self.brand_id else None,
             "category_id": str(self.category_id) if self.category_id else None,
             "unit_of_measurement_id": str(self.unit_of_measurement_id) if self.unit_of_measurement_id else None,

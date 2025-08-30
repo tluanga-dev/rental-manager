@@ -3,12 +3,15 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { 
   DollarSign,
   Settings,
+  TrendingUp,
 } from 'lucide-react';
 import { formatCurrencySync } from '@/lib/currency-utils';
 import { EnableRentalButton } from './EnableRentalButton';
+import { useItemPricingTiers } from '@/hooks/useRentalPricing';
 import type { InventoryItemDetail } from '@/types/inventory-items';
 
 interface PricingInfoCardProps {
@@ -23,6 +26,9 @@ export function PricingInfoCard({ item, onManagePricing, onItemUpdate }: Pricing
     console.warn('PricingInfoCard: item prop is null or undefined');
     return null;
   }
+
+  // Fetch pricing tiers for this item
+  const { data: pricingTiers = [], isLoading: isLoadingTiers } = useItemPricingTiers(item.item_id);
 
   if (!item.is_rentable) {
     return (
@@ -85,8 +91,57 @@ export function PricingInfoCard({ item, onManagePricing, onItemUpdate }: Pricing
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Simplified Current Pricing Display */}
-        {item.rental_rate ? (
+        {isLoadingTiers ? (
+          <div className="space-y-2">
+            <div className="animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+              <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+            </div>
+          </div>
+        ) : pricingTiers.length > 0 ? (
+          /* Display Tiered Pricing */
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-green-600" />
+              <span className="text-sm font-medium">Tiered Pricing Configured</span>
+              <Badge variant="secondary" className="text-xs">
+                {pricingTiers.length} tier{pricingTiers.length > 1 ? 's' : ''}
+              </Badge>
+            </div>
+            
+            {/* Show default tier */}
+            {(() => {
+              const defaultTier = pricingTiers.find(tier => tier.is_default) || pricingTiers[0];
+              return defaultTier ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      {defaultTier.tier_name} Rate:
+                    </span>
+                    <span className="font-medium text-lg">
+                      {formatCurrencySync(defaultTier.daily_equivalent_rate || defaultTier.rate_per_period / (defaultTier.period_days || 1))}/day
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>
+                      Period: {defaultTier.period_value || defaultTier.period_days || defaultTier.period_hours || 1}{' '}
+                      {defaultTier.period_unit === 'HOUR' ? 
+                        `hour${(defaultTier.period_value || defaultTier.period_hours || 1) > 1 ? 's' : ''}` :
+                        `day${(defaultTier.period_value || defaultTier.period_days || 1) > 1 ? 's' : ''}`
+                      }
+                    </span>
+                    <span>Total: {formatCurrencySync(defaultTier.rate_per_period)}</span>
+                  </div>
+                </div>
+              ) : null;
+            })()}
+            
+            <p className="text-xs text-muted-foreground">
+              Multiple pricing tiers available. Use "Manage Pricing" to view all tiers and rates.
+            </p>
+          </div>
+        ) : item.rental_rate ? (
+          /* Display Basic Rental Rate */
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Daily Rental Rate:</span>
@@ -97,6 +152,7 @@ export function PricingInfoCard({ item, onManagePricing, onItemUpdate }: Pricing
             </p>
           </div>
         ) : (
+          /* No Pricing Configured */
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">
               No rental pricing configured for this item.

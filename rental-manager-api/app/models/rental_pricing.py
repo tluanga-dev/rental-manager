@@ -40,6 +40,12 @@ class PeriodType(str, PyEnum):
     CUSTOM = "CUSTOM"
 
 
+class PeriodUnit(str, PyEnum):
+    """Period unit definitions for flexible pricing."""
+    HOUR = "HOUR"
+    DAY = "DAY"
+
+
 class RentalPricing(RentalManagerBaseModel):
     """
     Rental pricing tiers for items.
@@ -93,9 +99,21 @@ class RentalPricing(RentalManagerBaseModel):
     
     period_days = Column(
         Integer,
+        nullable=True,
+        comment="Number of days this pricing period represents (for DAY unit)"
+    )
+    
+    period_hours = Column(
+        Integer,
+        nullable=True,
+        comment="Number of hours this pricing period represents (for HOUR unit)"
+    )
+    
+    period_unit = Column(
+        String(10),
         nullable=False,
-        default=1,
-        comment="Number of days this pricing period represents"
+        default=PeriodUnit.DAY.value,
+        comment="Unit of measure for the rental period (HOUR or DAY)"
     )
     
     rate_per_period = Column(
@@ -108,13 +126,25 @@ class RentalPricing(RentalManagerBaseModel):
     min_rental_days = Column(
         Integer,
         nullable=True,
-        comment="Minimum rental duration in days to qualify for this rate"
+        comment="Minimum rental duration in days to qualify for this rate (deprecated - use min_rental_periods)"
     )
     
     max_rental_days = Column(
         Integer,
         nullable=True,
-        comment="Maximum rental duration in days for this rate (null = unlimited)"
+        comment="Maximum rental duration in days for this rate (deprecated - use max_rental_periods)"
+    )
+    
+    min_rental_periods = Column(
+        Integer,
+        nullable=True,
+        comment="Minimum rental duration in periods to qualify for this rate"
+    )
+    
+    max_rental_periods = Column(
+        Integer,
+        nullable=True,
+        comment="Maximum rental duration in periods for this rate (null = unlimited)"
     )
     
     # Effective Period
@@ -188,8 +218,8 @@ class RentalPricing(RentalManagerBaseModel):
     __table_args__ = (
         # Ensure logical constraints
         CheckConstraint(
-            'period_days > 0',
-            name='ck_rental_pricing_period_days_positive'
+            '(period_unit = \'DAY\' AND period_days > 0 AND period_hours IS NULL) OR (period_unit = \'HOUR\' AND period_hours > 0 AND period_days IS NULL)',
+            name='ck_rental_pricing_period_unit_consistency'
         ),
         CheckConstraint(
             'rate_per_period >= 0',
@@ -206,6 +236,18 @@ class RentalPricing(RentalManagerBaseModel):
         CheckConstraint(
             'min_rental_days IS NULL OR max_rental_days IS NULL OR min_rental_days <= max_rental_days',
             name='ck_rental_pricing_min_max_days_logical'
+        ),
+        CheckConstraint(
+            'min_rental_periods IS NULL OR min_rental_periods > 0',
+            name='ck_rental_pricing_min_periods_positive'
+        ),
+        CheckConstraint(
+            'max_rental_periods IS NULL OR max_rental_periods > 0',
+            name='ck_rental_pricing_max_periods_positive'
+        ),
+        CheckConstraint(
+            'min_rental_periods IS NULL OR max_rental_periods IS NULL OR min_rental_periods <= max_rental_periods',
+            name='ck_rental_pricing_min_max_periods_logical'
         ),
         CheckConstraint(
             'seasonal_multiplier > 0',
@@ -240,10 +282,14 @@ class RentalPricing(RentalManagerBaseModel):
         item_id: UUID,
         tier_name: str,
         rate_per_period: Decimal,
-        period_days: int = 1,
+        period_days: Optional[int] = None,
+        period_hours: Optional[int] = None,
+        period_unit: PeriodUnit = PeriodUnit.DAY,
         period_type: PeriodType = PeriodType.DAILY,
         min_rental_days: Optional[int] = None,
         max_rental_days: Optional[int] = None,
+        min_rental_periods: Optional[int] = None,
+        max_rental_periods: Optional[int] = None,
         is_default: bool = False,
         pricing_strategy: PricingStrategy = PricingStrategy.FIXED,
         **kwargs
@@ -255,10 +301,14 @@ class RentalPricing(RentalManagerBaseModel):
             item_id: ID of the item this pricing applies to
             tier_name: Name of this pricing tier
             rate_per_period: Rate charged per period
-            period_days: Number of days this period represents
+            period_days: Number of days this period represents (for DAY unit)
+            period_hours: Number of hours this period represents (for HOUR unit)
+            period_unit: Unit of measure for the rental period (HOUR or DAY)
             period_type: Type of period
-            min_rental_days: Minimum rental duration in days
-            max_rental_days: Maximum rental duration in days
+            min_rental_days: Minimum rental duration in days (deprecated)
+            max_rental_days: Maximum rental duration in days (deprecated)
+            min_rental_periods: Minimum rental duration in periods
+            max_rental_periods: Maximum rental duration in periods
             is_default: Whether this is the default pricing tier
             pricing_strategy: Strategy used for this tier
             **kwargs: Additional BaseModel fields
@@ -267,10 +317,14 @@ class RentalPricing(RentalManagerBaseModel):
         self.item_id = item_id
         self.tier_name = tier_name
         self.rate_per_period = rate_per_period
-        self.period_days = period_days
+        self.period_days = period_days if period_unit == PeriodUnit.DAY else None
+        self.period_hours = period_hours if period_unit == PeriodUnit.HOUR else None
+        self.period_unit = period_unit.value if isinstance(period_unit, PeriodUnit) else period_unit
         self.period_type = period_type.value if isinstance(period_type, PeriodType) else period_type
         self.min_rental_days = min_rental_days
         self.max_rental_days = max_rental_days
+        self.min_rental_periods = min_rental_periods
+        self.max_rental_periods = max_rental_periods
         self.is_default = is_default
         self.pricing_strategy = pricing_strategy.value if isinstance(pricing_strategy, PricingStrategy) else pricing_strategy
         self._validate()
@@ -280,9 +334,21 @@ class RentalPricing(RentalManagerBaseModel):
         if self.rate_per_period < 0:
             raise ValueError("Rate per period cannot be negative")
         
-        if self.period_days <= 0:
-            raise ValueError("Period days must be positive")
+        # Validate period unit consistency
+        if self.period_unit == PeriodUnit.DAY.value:
+            if self.period_days is None or self.period_days <= 0:
+                raise ValueError("Period days must be positive for DAY unit")
+            if self.period_hours is not None:
+                raise ValueError("Period hours must be None for DAY unit")
+        elif self.period_unit == PeriodUnit.HOUR.value:
+            if self.period_hours is None or self.period_hours <= 0:
+                raise ValueError("Period hours must be positive for HOUR unit")
+            if self.period_days is not None:
+                raise ValueError("Period days must be None for HOUR unit")
+        else:
+            raise ValueError(f"Invalid period unit: {self.period_unit}")
         
+        # Legacy validation for backward compatibility
         if self.min_rental_days is not None and self.min_rental_days <= 0:
             raise ValueError("Minimum rental days must be positive")
         
@@ -293,6 +359,18 @@ class RentalPricing(RentalManagerBaseModel):
             self.max_rental_days is not None and 
             self.min_rental_days > self.max_rental_days):
             raise ValueError("Minimum rental days cannot be greater than maximum rental days")
+        
+        # New period-based validation
+        if self.min_rental_periods is not None and self.min_rental_periods <= 0:
+            raise ValueError("Minimum rental periods must be positive")
+        
+        if self.max_rental_periods is not None and self.max_rental_periods <= 0:
+            raise ValueError("Maximum rental periods must be positive")
+        
+        if (self.min_rental_periods is not None and 
+            self.max_rental_periods is not None and 
+            self.min_rental_periods > self.max_rental_periods):
+            raise ValueError("Minimum rental periods cannot be greater than maximum rental periods")
     
     @validates('rate_per_period')
     def validate_rate(self, key, value):
@@ -303,9 +381,16 @@ class RentalPricing(RentalManagerBaseModel):
     
     @validates('period_days')
     def validate_period_days(self, key, value):
-        """Validate period days is positive."""
-        if value <= 0:
+        """Validate period days is positive when provided."""
+        if value is not None and value <= 0:
             raise ValueError("Period days must be positive")
+        return value
+    
+    @validates('period_hours')
+    def validate_period_hours(self, key, value):
+        """Validate period hours is positive when provided."""
+        if value is not None and value <= 0:
+            raise ValueError("Period hours must be positive")
         return value
     
     @validates('min_rental_days', 'max_rental_days')
@@ -365,6 +450,30 @@ class RentalPricing(RentalManagerBaseModel):
         
         return total_cost.quantize(Decimal('0.01'))
     
+    def get_period_value(self) -> int:
+        """
+        Get the period value (days or hours) based on the unit.
+        
+        Returns:
+            Period value in the appropriate unit
+        """
+        if self.period_unit == PeriodUnit.DAY.value:
+            return self.period_days or 1
+        else:  # HOUR
+            return self.period_hours or 1
+    
+    def get_period_hours(self) -> int:
+        """
+        Get the period duration in hours for calculations.
+        
+        Returns:
+            Period duration in hours
+        """
+        if self.period_unit == PeriodUnit.DAY.value:
+            return (self.period_days or 1) * 24
+        else:  # HOUR
+            return self.period_hours or 1
+    
     def get_daily_equivalent_rate(self) -> Decimal:
         """
         Get the equivalent daily rate for comparison.
@@ -372,25 +481,44 @@ class RentalPricing(RentalManagerBaseModel):
         Returns:
             Daily equivalent rate
         """
-        daily_rate = (self.rate_per_period / Decimal(str(self.period_days))) * self.seasonal_multiplier
+        if self.period_unit == PeriodUnit.DAY.value:
+            daily_rate = (self.rate_per_period / Decimal(str(self.period_days or 1))) * self.seasonal_multiplier
+        else:  # HOUR
+            hours_per_day = 24
+            daily_rate = (self.rate_per_period / Decimal(str(self.period_hours or 1)) * hours_per_day) * self.seasonal_multiplier
+        
         return daily_rate.quantize(Decimal('0.01'))
     
     @property
     def display_name(self) -> str:
         """Get display name for this pricing tier."""
-        return f"{self.tier_name} ({self.period_type.lower()})"
+        period_value = self.get_period_value()
+        unit = "hour" if self.period_unit == PeriodUnit.HOUR.value else "day"
+        unit_suffix = "s" if period_value > 1 else ""
+        return f"{self.tier_name} ({period_value} {unit}{unit_suffix})"
     
     @property
     def duration_description(self) -> str:
         """Get human-readable duration description."""
-        if self.min_rental_days is None and self.max_rental_days is None:
+        # Use new period-based constraints if available
+        min_periods = self.min_rental_periods
+        max_periods = self.max_rental_periods
+        
+        # Fallback to legacy day-based constraints
+        if min_periods is None and max_periods is None:
+            min_periods = self.min_rental_days
+            max_periods = self.max_rental_days
+        
+        if min_periods is None and max_periods is None:
             return "Any duration"
-        elif self.min_rental_days is None:
-            return f"Up to {self.max_rental_days} days"
-        elif self.max_rental_days is None:
-            return f"{self.min_rental_days}+ days"
+        elif min_periods is None:
+            period_desc = f"{max_periods} period{'s' if max_periods and max_periods > 1 else ''}"
+            return f"Up to {period_desc}"
+        elif max_periods is None:
+            period_desc = f"{min_periods} period{'s' if min_periods and min_periods > 1 else ''}"
+            return f"{period_desc}+ minimum"
         else:
-            return f"{self.min_rental_days}-{self.max_rental_days} days"
+            return f"{min_periods}-{max_periods} periods"
     
     def to_dict(self) -> dict:
         """Convert model to dictionary."""
@@ -400,9 +528,14 @@ class RentalPricing(RentalManagerBaseModel):
             "tier_name": self.tier_name,
             "period_type": self.period_type,
             "period_days": self.period_days,
+            "period_hours": self.period_hours,
+            "period_unit": self.period_unit,
+            "period_value": self.get_period_value(),
             "rate_per_period": float(self.rate_per_period),
             "min_rental_days": self.min_rental_days,
             "max_rental_days": self.max_rental_days,
+            "min_rental_periods": self.min_rental_periods,
+            "max_rental_periods": self.max_rental_periods,
             "effective_date": self.effective_date.isoformat() if self.effective_date else None,
             "expiry_date": self.expiry_date.isoformat() if self.expiry_date else None,
             "is_default": self.is_default,
@@ -423,14 +556,18 @@ class RentalPricing(RentalManagerBaseModel):
     
     def __str__(self) -> str:
         """String representation of pricing tier."""
-        return f"{self.tier_name} - ${self.rate_per_period}/{self.period_days}d"
+        period_value = self.get_period_value()
+        unit = "h" if self.period_unit == PeriodUnit.HOUR.value else "d"
+        return f"{self.tier_name} - ${self.rate_per_period}/{period_value}{unit}"
     
     def __repr__(self) -> str:
         """Developer representation of pricing tier."""
+        period_value = self.get_period_value()
+        unit = "h" if self.period_unit == PeriodUnit.HOUR.value else "d"
         return (
             f"RentalPricing(id={self.id}, item_id={self.item_id}, "
             f"tier='{self.tier_name}', rate={self.rate_per_period}, "
-            f"period={self.period_days}d, active={self.is_active})"
+            f"period={period_value}{unit}, active={self.is_active})"
         )
 
 

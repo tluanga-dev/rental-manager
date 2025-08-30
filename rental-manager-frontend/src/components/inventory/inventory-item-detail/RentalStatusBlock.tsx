@@ -21,6 +21,7 @@ import { formatCurrencySync } from '@/lib/currency-utils';
 import { RentalStatusIndicator } from '@/components/rental-blocking/RentalStatusIndicator';
 import RentalStatusBadge from '@/components/rentals/RentalStatusBadge';
 import { inventoryItemsApi } from '@/services/api/inventory-items';
+import { useItemPricingTiers } from '@/hooks/useRentalPricing';
 import type { RentalStatusBlockProps, CurrentRentalInfo } from './RentalStatusBlock.types';
 
 export function RentalStatusBlock({ 
@@ -38,6 +39,9 @@ export function RentalStatusBlock({
     staleTime: 1000 * 60 * 2, // 2 minutes
     enabled: !!item.item_id && item.is_rentable,
   });
+
+  // Fetch pricing tiers for enhanced pricing display
+  const { data: pricingTiers = [] } = useItemPricingTiers(item.item_id);
 
   const totalUnits = item.stock_summary?.total || 0;
   const availableUnits = item.stock_summary?.available || 0;
@@ -208,9 +212,36 @@ export function RentalStatusBlock({
               <div className="flex items-center gap-2">
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm font-medium">Pricing</span>
+                {pricingTiers.length > 0 && (
+                  <Badge variant="outline" className="text-xs">
+                    {pricingTiers.length} tier{pricingTiers.length > 1 ? 's' : ''}
+                  </Badge>
+                )}
               </div>
               
-              {item.rental_rate ? (
+              {pricingTiers.length > 0 ? (
+                /* Display Tiered Pricing */
+                (() => {
+                  const defaultTier = pricingTiers.find(tier => tier.is_default) || pricingTiers[0];
+                  return (
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">{defaultTier.tier_name}:</span>
+                        <span className="text-sm font-medium">
+                          {formatCurrencySync(defaultTier.daily_equivalent_rate || defaultTier.rate_per_period / defaultTier.period_days)}/day
+                        </span>
+                      </div>
+                      {item.security_deposit && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground">Deposit:</span>
+                          <span className="text-sm font-medium">{formatCurrencySync(item.security_deposit)}</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()
+              ) : item.rental_rate ? (
+                /* Display Basic Pricing */
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Daily Rate:</span>
@@ -224,6 +255,7 @@ export function RentalStatusBlock({
                   )}
                 </div>
               ) : (
+                /* No Pricing */
                 <div className="flex items-center gap-2">
                   <Info className="h-4 w-4 text-amber-500" />
                   <span className="text-sm text-muted-foreground">No pricing configured</span>

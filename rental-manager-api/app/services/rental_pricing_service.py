@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
 from sqlalchemy.orm import selectinload
 
-from app.models.rental_pricing import RentalPricing, PricingStrategy, PeriodType
+from app.models.rental_pricing import RentalPricing, PricingStrategy, PeriodType, PeriodUnit
 from app.models.item import Item
 from app.crud.rental_pricing import rental_pricing_crud
 from app.schemas.rental_pricing import (
@@ -155,6 +155,183 @@ class RentalPricingService:
         
         return [RentalPricingResponse.model_validate(pricing) for pricing in db_pricing_list]
     
+    async def calculate_rental_pricing_flexible(
+        self,
+        item_id: UUID,
+        rental_hours: Optional[int] = None,
+        rental_days: Optional[int] = None,
+        calculation_date: Optional[date] = None,
+        optimization_strategy: PricingOptimizationStrategy = PricingOptimizationStrategy.LOWEST_COST
+    ) -> RentalPricingCalculationResponse:
+        """
+        Calculate optimal rental pricing for given duration with flexible period support.
+        
+        Args:
+            item_id: Item ID
+            rental_hours: Rental duration in hours (for hourly pricing)
+            rental_days: Rental duration in days (for daily pricing)
+            calculation_date: Date for calculation
+            optimization_strategy: Strategy for selecting optimal pricing
+            
+        Returns:
+            Pricing calculation results
+        """
+        if calculation_date is None:
+            calculation_date = date.today()
+        
+        if not rental_hours and not rental_days:
+            raise ValidationError("Either rental_hours or rental_days must be provided")
+        
+        # Convert to total hours for unified calculation
+        total_hours = rental_hours or (rental_days * 24)
+        effective_days = rental_days or (rental_hours / 24)
+        
+        # Get all applicable pricing tiers for this item
+        query = select(RentalPricing).where(
+            and_(
+                RentalPricing.item_id == item_id,
+                RentalPricing.is_active == True,
+                RentalPricing.effective_date <= calculation_date,
+                and_(
+                    RentalPricing.expiry_date.is_(None),
+                    RentalPricing.expiry_date >= calculation_date
+                ) if RentalPricing.expiry_date is not None else True
+            )
+        )
+        result = await self.session.execute(query)
+        all_tiers = result.scalars().all()
+        
+        # Filter applicable tiers based on flexible periods
+        applicable_tiers = []
+        for tier in all_tiers:
+            if self._is_tier_applicable_flexible(tier, total_hours, effective_days):
+                applicable_tiers.append(tier)
+        
+        if not applicable_tiers:
+            # Fallback to item's default daily rate if available
+            query = select(Item).where(Item.id == item_id)
+            result = await self.session.execute(query)
+            item = result.scalars().first()
+            if item and item.rental_rate_per_day:
+                total_cost = item.rental_rate_per_day * effective_days
+                return RentalPricingCalculationResponse(
+                    item_id=item_id,
+                    rental_days=int(effective_days),
+                    applicable_tiers=[],
+                    recommended_tier=None,
+                    total_cost=total_cost,
+                    daily_equivalent_rate=item.rental_rate_per_day,
+                    savings_compared_to_daily=None
+                )
+            else:
+                raise NotFoundError(f"No applicable pricing found for item {item_id}")
+        
+        # Convert to response objects and calculate costs
+        tier_responses = []
+        for tier in applicable_tiers:
+            tier_resp = RentalPricingResponse.model_validate(tier)
+            tier_resp.period_value = tier.get_period_value()
+            tier_responses.append(tier_resp)
+        
+        # Select recommended tier based on strategy
+        recommended_tier = None
+        best_cost = None
+        daily_baseline = None
+        
+        # Find daily rate baseline for comparison
+        daily_tier = next((t for t in applicable_tiers if t.period_unit == PeriodUnit.DAY.value and t.get_period_value() == 1), None)
+        if daily_tier:
+            daily_baseline = self._calculate_flexible_cost(daily_tier, total_hours, effective_days)
+        
+        for tier in applicable_tiers:
+            try:
+                cost = self._calculate_flexible_cost(tier, total_hours, effective_days)
+                
+                if optimization_strategy == PricingOptimizationStrategy.LOWEST_COST:
+                    if best_cost is None or cost < best_cost:
+                        best_cost = cost
+                        recommended_tier = next(tr for tr in tier_responses if tr.id == tier.id)
+                
+            except (ValueError, ZeroDivisionError) as e:
+                logger.warning(f"Could not calculate cost for tier {tier.id}: {e}")
+                continue
+        
+        # If no recommended tier found, use first applicable tier
+        if not recommended_tier and tier_responses:
+            recommended_tier = tier_responses[0]
+            best_cost = self._calculate_flexible_cost(applicable_tiers[0], total_hours, effective_days)
+        
+        # Calculate savings compared to daily rate
+        savings = None
+        if daily_baseline and best_cost and daily_baseline > best_cost:
+            savings = daily_baseline - best_cost
+        
+        return RentalPricingCalculationResponse(
+            item_id=item_id,
+            rental_days=int(effective_days),
+            applicable_tiers=tier_responses,
+            recommended_tier=recommended_tier,
+            total_cost=best_cost or Decimal("0"),
+            daily_equivalent_rate=best_cost / Decimal(str(effective_days)) if best_cost and effective_days > 0 else Decimal("0"),
+            savings_compared_to_daily=savings
+        )
+    
+    def _is_tier_applicable_flexible(self, tier: RentalPricing, total_hours: int, effective_days: float) -> bool:
+        """
+        Check if a pricing tier applies to the given duration.
+        
+        Args:
+            tier: Pricing tier
+            total_hours: Total rental duration in hours
+            effective_days: Effective rental duration in days
+            
+        Returns:
+            True if tier is applicable
+        """
+        # Check period-based constraints first (new system)
+        if tier.min_rental_periods is not None or tier.max_rental_periods is not None:
+            if tier.period_unit == PeriodUnit.HOUR.value:
+                rental_periods = total_hours / tier.get_period_value()
+            else:  # DAY
+                rental_periods = effective_days / tier.get_period_value()
+            
+            if tier.min_rental_periods and rental_periods < tier.min_rental_periods:
+                return False
+            if tier.max_rental_periods and rental_periods > tier.max_rental_periods:
+                return False
+            
+            return True
+        
+        # Fallback to legacy day-based constraints
+        if tier.min_rental_days and effective_days < tier.min_rental_days:
+            return False
+        if tier.max_rental_days and effective_days > tier.max_rental_days:
+            return False
+        
+        return True
+    
+    def _calculate_flexible_cost(self, tier: RentalPricing, total_hours: int, effective_days: float) -> Decimal:
+        """
+        Calculate cost for a pricing tier with flexible period support.
+        
+        Args:
+            tier: Pricing tier
+            total_hours: Total rental duration in hours
+            effective_days: Effective rental duration in days
+            
+        Returns:
+            Total rental cost
+        """
+        if tier.period_unit == PeriodUnit.HOUR.value:
+            periods_needed = total_hours / tier.get_period_value()
+        else:  # DAY
+            periods_needed = effective_days / tier.get_period_value()
+        
+        base_cost = tier.rate_per_period * Decimal(str(periods_needed))
+        total_cost = base_cost * tier.seasonal_multiplier
+        
+        return total_cost.quantize(Decimal('0.01'))
+
     async def calculate_rental_pricing(
         self,
         item_id: UUID,

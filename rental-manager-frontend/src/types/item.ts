@@ -30,17 +30,11 @@ export interface ItemNested {
   brand_id?: BrandNested | null;
   category_id?: CategoryNested | null;
   unit_of_measurement_id: UnitOfMeasurementNested;
-  rental_rate_per_period: number;
-  rental_period: string;
-  sale_price: number;
-  purchase_price: number;
   initial_stock_quantity: number;
-  security_deposit: number;
   description?: string | null;
   specifications?: string | null;
   model_number?: string | null;
   serial_number_required: boolean;
-  warranty_period_days: string;
   reorder_point: number;
   is_rentable: boolean;
   is_saleable: boolean;
@@ -61,16 +55,8 @@ export interface Item {
   specifications?: string;
   model_number?: string;
   
-  // Pricing fields
-  rental_rate_per_period?: number;
-  rental_period?: number | string; // Number of days or string
-  sale_price?: number;
-  purchase_price?: number;
-  security_deposit?: number;
-  
   // Inventory fields
   serial_number_required?: boolean;
-  warranty_period_days?: string;
   reorder_point?: number;
   initial_stock_quantity?: number; // Stock information from API
   
@@ -134,17 +120,11 @@ export interface CreateItemRequest {
   brand_id?: string;
   category_id?: string;
   unit_of_measurement_id?: string;
-  rental_rate_per_period?: number;
-  rental_period?: number; // Positive integer days
-  sale_price?: number;
-  purchase_price?: number;
   initial_stock_quantity?: number; // Required for creation
-  security_deposit?: number;
   description?: string;
   specifications?: string;
   model_number?: string;
   serial_number_required?: boolean;
-  warranty_period_days?: number; // Non-negative integer days
   reorder_point?: number;
   is_rentable?: boolean;
   is_saleable?: boolean;
@@ -161,16 +141,8 @@ export interface UpdateItemRequest {
   specifications?: string;
   model_number?: string;
   
-  // Pricing fields
-  rental_rate_per_period?: number;
-  rental_period?: number; // Number of days
-  sale_price?: number;
-  purchase_price?: number;
-  security_deposit?: number;
-  
   // Inventory fields
   serial_number_required?: boolean;
-  warranty_period_days?: string;
   reorder_point?: number;
   
   // Item availability flags
@@ -233,10 +205,7 @@ export interface ItemStockUpdate {
 }
 
 export interface ItemPriceUpdate {
-  rental_rate_per_period?: number;
-  rental_period?: number; // Number of days
-  sale_price?: number;
-  security_deposit?: number;
+  // Pricing now handled through separate pricing system
 }
 
 export interface ItemAvailability {

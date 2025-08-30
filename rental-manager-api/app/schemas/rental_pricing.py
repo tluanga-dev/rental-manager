@@ -30,16 +30,26 @@ class PeriodType(str, Enum):
     CUSTOM = "CUSTOM"
 
 
+class PeriodUnit(str, Enum):
+    """Period unit definitions for flexible pricing."""
+    HOUR = "HOUR"
+    DAY = "DAY"
+
+
 # Base schemas
 class RentalPricingBase(BaseModel):
     """Base schema for rental pricing."""
     
     tier_name: str = Field(..., min_length=1, max_length=100, description="Name for this pricing tier")
     period_type: PeriodType = Field(default=PeriodType.DAILY, description="Type of rental period")
-    period_days: int = Field(default=1, ge=1, description="Number of days this pricing period represents")
+    period_days: Optional[int] = Field(None, ge=1, description="Number of days this pricing period represents (for DAY unit)")
+    period_hours: Optional[int] = Field(None, ge=1, description="Number of hours this pricing period represents (for HOUR unit)")
+    period_unit: PeriodUnit = Field(default=PeriodUnit.DAY, description="Unit of measure for the rental period")
     rate_per_period: Decimal = Field(..., ge=0, decimal_places=2, description="Rate charged per period")
-    min_rental_days: Optional[int] = Field(None, ge=1, description="Minimum rental duration in days")
-    max_rental_days: Optional[int] = Field(None, ge=1, description="Maximum rental duration in days")
+    min_rental_days: Optional[int] = Field(None, ge=1, description="Minimum rental duration in days (deprecated)")
+    max_rental_days: Optional[int] = Field(None, ge=1, description="Maximum rental duration in days (deprecated)")
+    min_rental_periods: Optional[int] = Field(None, ge=1, description="Minimum rental duration in periods")
+    max_rental_periods: Optional[int] = Field(None, ge=1, description="Maximum rental duration in periods")
     effective_date: date = Field(default_factory=date.today, description="When this pricing becomes effective")
     expiry_date: Optional[date] = Field(None, description="When this pricing expires")
     is_default: bool = Field(default=False, description="Whether this is the default pricing tier")
@@ -58,11 +68,34 @@ class RentalPricingBase(BaseModel):
         return v.strip()
     
     @model_validator(mode='after')
+    def validate_period_unit_consistency(self):
+        """Validate period unit consistency with period values."""
+        if self.period_unit == PeriodUnit.DAY:
+            if self.period_days is None or self.period_days <= 0:
+                raise ValueError('period_days must be provided and positive for DAY unit')
+            if self.period_hours is not None:
+                raise ValueError('period_hours must be None for DAY unit')
+        elif self.period_unit == PeriodUnit.HOUR:
+            if self.period_hours is None or self.period_hours <= 0:
+                raise ValueError('period_hours must be provided and positive for HOUR unit')
+            if self.period_days is not None:
+                raise ValueError('period_days must be None for HOUR unit')
+        return self
+    
+    @model_validator(mode='after')
     def validate_rental_days_logic(self):
         """Validate min/max rental days logic."""
         if self.min_rental_days is not None and self.max_rental_days is not None:
             if self.min_rental_days > self.max_rental_days:
                 raise ValueError('Minimum rental days cannot be greater than maximum rental days')
+        return self
+    
+    @model_validator(mode='after')
+    def validate_rental_periods_logic(self):
+        """Validate min/max rental periods logic."""
+        if self.min_rental_periods is not None and self.max_rental_periods is not None:
+            if self.min_rental_periods > self.max_rental_periods:
+                raise ValueError('Minimum rental periods cannot be greater than maximum rental periods')
         return self
     
     @model_validator(mode='after')
@@ -85,9 +118,13 @@ class RentalPricingUpdate(BaseModel):
     tier_name: Optional[str] = Field(None, min_length=1, max_length=100)
     period_type: Optional[PeriodType] = None
     period_days: Optional[int] = Field(None, ge=1)
+    period_hours: Optional[int] = Field(None, ge=1)
+    period_unit: Optional[PeriodUnit] = None
     rate_per_period: Optional[Decimal] = Field(None, ge=0, decimal_places=2)
     min_rental_days: Optional[int] = Field(None, ge=1)
     max_rental_days: Optional[int] = Field(None, ge=1)
+    min_rental_periods: Optional[int] = Field(None, ge=1)
+    max_rental_periods: Optional[int] = Field(None, ge=1)
     effective_date: Optional[date] = None
     expiry_date: Optional[date] = None
     is_default: Optional[bool] = None
@@ -135,6 +172,7 @@ class RentalPricingResponse(RentalPricingInDB):
     display_name: Optional[str] = Field(None, description="Display name for this pricing tier")
     duration_description: Optional[str] = Field(None, description="Human-readable duration description")
     daily_equivalent_rate: Optional[Decimal] = Field(None, description="Equivalent daily rate for comparison")
+    period_value: Optional[int] = Field(None, description="Period value (days or hours) based on unit")
 
 
 # Bulk operations

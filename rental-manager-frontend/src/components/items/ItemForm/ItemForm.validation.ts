@@ -25,30 +25,6 @@ export const itemFormSchema = z.object({
     .optional(),
     
   // Pricing fields
-  rental_rate_per_period: z.preprocess(
-    (val) => {
-      if (val === '' || val === null || val === undefined) return undefined;
-      const num = Number(val);
-      return isNaN(num) ? undefined : num;
-    },
-    z.number().min(0, 'Rental rate cannot be negative').optional()
-  ),
-  rental_period: z.preprocess(
-    (val) => {
-      if (val === '' || val === null || val === undefined) return 1;
-      const num = parseInt(String(val));
-      return isNaN(num) ? 1 : Math.max(1, num); // Ensure positive integer, minimum 1
-    },
-    z.number().int().min(1, 'Rental period must be at least 1 day')
-  ),
-  sale_price: z.preprocess(
-    (val) => {
-      if (val === '' || val === null || val === undefined) return undefined;
-      const num = Number(val);
-      return isNaN(num) ? undefined : num;
-    },
-    z.number().min(0, 'Sale price cannot be negative').optional()
-  ),
   initial_stock_quantity: z.preprocess(
     (val) => {
       if (val === '' || val === null || val === undefined) return undefined;
@@ -57,25 +33,9 @@ export const itemFormSchema = z.object({
     },
     z.number().min(0, 'Initial stock quantity cannot be negative').optional()
   ),
-  security_deposit: z.preprocess(
-    (val) => {
-      if (val === '' || val === null || val === undefined) return undefined;
-      const num = Number(val);
-      return isNaN(num) ? undefined : num;
-    },
-    z.number().min(0, 'Security deposit cannot be negative').optional()
-  ),
   
   // Inventory fields
   serial_number_required: z.boolean().default(false),
-  warranty_period_days: z.preprocess(
-    (val) => {
-      if (val === '' || val === null || val === undefined) return undefined;
-      const num = parseInt(String(val));
-      return isNaN(num) ? undefined : Math.max(0, num); // Ensure positive integer
-    },
-    z.number().int().min(0, 'Warranty period must be a positive integer').optional()
-  ),
   reorder_point: z.preprocess(
     (val) => {
       if (val === '' || val === null || val === undefined) return undefined;
@@ -88,15 +48,6 @@ export const itemFormSchema = z.object({
   // Item availability flags
   is_rentable: z.boolean().default(true),
   is_salable: z.boolean().default(false),
-}).refine((data) => {
-  // Validate rental period is required for rentable items
-  if (data.is_rentable) {
-    return data.rental_period !== undefined && data.rental_period !== '';
-  }
-  return true;
-}, {
-  message: 'Rental period is required when item is available for rental',
-  path: ['rental_period'],
 });
 // Sale price validation removed - sale price is now optional and can be 0 for saleable items
 // This allows free items, promotional items, and dynamic pricing
@@ -116,16 +67,7 @@ export const updateItemFormSchema = z.object({
   description: z.string().optional(),
   specifications: z.string().optional(),
   model_number: z.string().optional(),
-  purchase_price: z.number().optional(),
-  rental_price_per_day: z.number().optional(),
-  rental_price_per_week: z.number().optional(),
-  rental_price_per_month: z.number().optional(),
-  sale_price: z.number().optional(),
-  security_deposit: z.number().optional(),
-  minimum_rental_days: z.string().optional(),
-  maximum_rental_days: z.string().optional(),
   serial_number_required: z.boolean().optional(),
-  warranty_period_days: z.string().optional(),
   reorder_point: z.number().min(0, 'Reorder point cannot be negative').optional(),
   is_rentable: z.boolean().optional(),
   is_salable: z.boolean().optional(),

@@ -94,13 +94,8 @@ export function ItemForm({
       description: initialData?.description || '',
       specifications: initialData?.specifications || '',
       model_number: initialData?.model_number || '',
-      rental_rate_per_period: initialData?.rental_rate_per_period || undefined,
-      rental_period: initialData?.rental_period ? parseInt(initialData.rental_period.toString()) : DEFAULT_RENTAL_PERIOD_VALUE,
-      sale_price: initialData?.sale_price || undefined,
       initial_stock_quantity: initialData?.initial_stock_quantity !== undefined ? initialData.initial_stock_quantity : undefined,
-      security_deposit: initialData?.security_deposit || undefined,
       serial_number_required: initialData?.serial_number_required || false,
-      warranty_period_days: initialData?.warranty_period_days ? parseInt(initialData.warranty_period_days.toString()) : undefined,
       reorder_point: initialData?.reorder_point || undefined,
       is_rentable: initialData?.is_rentable ?? true,
       is_salable: initialData?.is_salable ?? false,
@@ -111,7 +106,7 @@ export function ItemForm({
 
   // Watch form values for real-time validation
   const watchedValues = watch();
-  const { item_name, is_rentable, is_salable, rental_period, sale_price } = watchedValues;
+  const { item_name, is_rentable, is_salable } = watchedValues;
 
   // Item validation hook for real-time duplicate checking
   const itemValidation = useItemValidation({
@@ -163,15 +158,10 @@ export function ItemForm({
       return false;
     }
 
-    // If rental is enabled, rental period is required
-    if (is_rentable && (!rental_period || rental_period < 1)) {
-      return false;
-    }
-
-    // Sale price is now optional - can be 0 or null for saleable items
+    // No additional validation needed for rental/sale flags
 
     return true;
-  }, [item_name, is_rentable, rental_period]);
+  }, [item_name, is_rentable]);
 
   const isRentable = watch('is_rentable');
   const isSalable = watch('is_salable');
@@ -188,13 +178,8 @@ export function ItemForm({
         description: initialData.description || '',
         specifications: initialData.specifications || '',
         model_number: initialData.model_number || '',
-        rental_rate_per_period: initialData.rental_rate_per_period || undefined,
-        rental_period: initialData.rental_period ? parseInt(initialData.rental_period.toString()) : DEFAULT_RENTAL_PERIOD_VALUE,
-        sale_price: initialData.sale_price || undefined,
         initial_stock_quantity: initialData.initial_stock_quantity !== undefined ? initialData.initial_stock_quantity : undefined,
-        security_deposit: initialData.security_deposit || undefined,
         serial_number_required: initialData.serial_number_required || false,
-        warranty_period_days: initialData.warranty_period_days ? parseInt(initialData.warranty_period_days.toString()) : undefined,
         reorder_point: initialData.reorder_point || undefined,
         is_rentable: initialData.is_rentable ?? true,
         is_salable: initialData.is_salable ?? false,
@@ -235,16 +220,10 @@ export function ItemForm({
         category_id: data.category_id,
         brand_id: data.brand_id,
         unit_of_measurement_id: data.unit_of_measurement_id,
-        rental_rate_per_period: data.rental_rate_per_period || 0,
-        rental_period: data.rental_period?.toString() || '1',
-        sale_price: data.sale_price || 0,
-        purchase_price: data.purchase_price || 0,
-        security_deposit: data.security_deposit || 0,
         description: data.description || null,
         specifications: data.specifications || null,
         model_number: data.model_number || null,
         serial_number_required: data.serial_number_required || false,
-        warranty_period_days: data.warranty_period_days?.toString() || '0',
         reorder_point: data.reorder_point || 0,
         initial_stock_quantity: data.initial_stock_quantity || 0,
         is_rentable: data.is_rentable ?? true,
@@ -265,10 +244,7 @@ export function ItemForm({
       brand_id: data.brand_id && data.brand_id.trim() !== '' ? data.brand_id : null,
       category_id: data.category_id && data.category_id.trim() !== '' ? data.category_id : null,
       unit_of_measurement_id: data.unit_of_measurement_id && data.unit_of_measurement_id.trim() !== '' ? data.unit_of_measurement_id : null,
-      rental_rate_per_day: data.rental_rate_per_period && data.rental_rate_per_period > 0 ? data.rental_rate_per_period : null,
-      sale_price: isNaN(data.sale_price) ? null : (data.sale_price || 0),
       reorder_level: data.reorder_point || null,
-      security_deposit: isNaN(data.security_deposit) ? null : (data.security_deposit && data.security_deposit > 0 ? data.security_deposit : null),
       description: data.description && data.description.trim() !== '' ? data.description.trim() : null,
       notes: data.specifications && data.specifications.trim() !== '' ? data.specifications.trim() : null,
       requires_serial_number: data.serial_number_required || false,
@@ -378,14 +354,8 @@ export function ItemForm({
                         if (checked) {
                           form.setValue('is_rentable', true);
                           form.setValue('is_salable', false);
-                          // Clear sale_price when switching to rentable
-                          form.setValue('sale_price', undefined);
                         } else {
                           form.setValue('is_rentable', false);
-                          // Clear rental fields when unchecked
-                          form.setValue('rental_rate_per_period', undefined);
-                          form.setValue('rental_period', DEFAULT_RENTAL_PERIOD_VALUE);
-                          form.setValue('security_deposit', undefined);
                         }
                       }}
                     />
@@ -405,14 +375,8 @@ export function ItemForm({
                         if (checked) {
                           form.setValue('is_salable', true);
                           form.setValue('is_rentable', false);
-                          // Clear rental fields when switching to saleable
-                          form.setValue('rental_rate_per_period', undefined);
-                          form.setValue('rental_period', DEFAULT_RENTAL_PERIOD_VALUE);
-                          form.setValue('security_deposit', undefined);
                         } else {
                           form.setValue('is_salable', false);
-                          // Clear sale_price when unchecked
-                          form.setValue('sale_price', undefined);
                         }
                       }}
                     />
@@ -513,8 +477,8 @@ export function ItemForm({
               </div>
             )}
 
-            {/* Model, Warranty, and Specifications */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* Model Number and Specifications */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="model_number">Model Number</Label>
                 <Input
@@ -527,35 +491,7 @@ export function ItemForm({
                   <p className="text-sm text-red-600">{errors.model_number.message}</p>
                 )}
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="warranty_period_days">Warranty (days)</Label>
-                <Input
-                  id="warranty_period_days"
-                  type="number"
-                  min="0"
-                  step="1"
-                  {...form.register('warranty_period_days', {
-                    valueAsNumber: true,
-                    setValueAs: (value) => {
-                      const num = parseInt(value);
-                      return isNaN(num) ? 0 : Math.max(0, num);
-                    }
-                  })}
-                  onFocus={(e) => {
-                    // Clear field if it contains the default value
-                    if (e.target.value === '0') {
-                      e.target.select();
-                    }
-                  }}
-                  placeholder="e.g., 365"
-                  className={cn('h-9', errors.warranty_period_days ? 'border-red-500' : '')}
-                />
-                {errors.warranty_period_days && (
-                  <p className="text-sm text-red-600">{errors.warranty_period_days.message}</p>
-                )}
-              </div>
-
+              
               <div className="space-y-2">
                 <Label htmlFor="specifications">Specifications</Label>
                 <Input
@@ -575,26 +511,8 @@ export function ItemForm({
       {/* Pricing & Details */}
       <div>
           <div className="space-y-4">
-            {/* Sale Price, Initial Stock Quantity, and Reorder Point */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="sale_price">
-                  Sale Price (₹) <span className="text-gray-500 text-xs font-normal">(Optional)</span>
-                </Label>
-                <Input
-                  id="sale_price"
-                  type="number"
-                  step="1"
-                  min="0"
-                  {...form.register('sale_price')}
-                  placeholder="0"
-                  className={cn('h-9', errors.sale_price ? 'border-red-500' : '')}
-                />
-                {errors.sale_price && (
-                  <p className="text-sm text-red-600">{errors.sale_price.message}</p>
-                )}
-              </div>
-
+            {/* Initial Stock Quantity and Reorder Point */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="initial_stock_quantity">Initial Stock Qty *</Label>
                 <Input
@@ -643,88 +561,6 @@ export function ItemForm({
               </div>
             )}
 
-            {/* Rental Rate, Rental Period and Security Deposit */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="rental_rate_per_period" className="flex items-center gap-1">
-                  Rental Rate (₹)
-                </Label>
-                <Input
-                  id="rental_rate_per_period"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  disabled={!isRentable}
-                  {...form.register('rental_rate_per_period')}
-                  placeholder={isRentable ? "" : "Not applicable"}
-                  className={cn(
-                    'h-9', 
-                    errors.rental_rate_per_period ? 'border-red-500' : '',
-                    !isRentable ? 'bg-gray-100 text-gray-500' : ''
-                  )}
-                />
-                {errors.rental_rate_per_period && (
-                  <p className="text-sm text-red-600">{errors.rental_rate_per_period.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="rental_period" className="flex items-center gap-1">
-                  Rental Period in Days
-                  {isRentable && <span className="text-red-500">*</span>}
-                </Label>
-                <Input
-                  id="rental_period"
-                  type="number"
-                  min="1"
-                  step="1"
-                  disabled={!isRentable}
-                  {...form.register('rental_period', {
-                    valueAsNumber: true,
-                    setValueAs: (value) => {
-                      const num = parseInt(value);
-                      return isNaN(num) ? 1 : Math.max(1, num);
-                    }
-                  })}
-                  onFocus={(e) => {
-                    // Clear field if it contains the default value
-                    if (e.target.value === '1' || e.target.value === '0') {
-                      e.target.select();
-                    }
-                  }}
-                  placeholder={isRentable ? "1" : "Not applicable"}
-                  className={cn(
-                    'h-9', 
-                    errors.rental_period ? 'border-red-500' : '',
-                    !isRentable ? 'bg-gray-100 text-gray-500' : ''
-                  )}
-                />
-                {errors.rental_period && (
-                  <p className="text-sm text-red-600">{errors.rental_period.message}</p>
-                )}
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="security_deposit">Security Deposit (₹)</Label>
-                <Input
-                  id="security_deposit"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  disabled={!isRentable}
-                  {...form.register('security_deposit')}
-                  placeholder={isRentable ? "0.00" : "Not applicable"}
-                  className={cn(
-                    'h-9', 
-                    errors.security_deposit ? 'border-red-500' : '',
-                    !isRentable ? 'bg-gray-100 text-gray-500' : ''
-                  )}
-                />
-                {errors.security_deposit && (
-                  <p className="text-sm text-red-600">{errors.security_deposit.message}</p>
-                )}
-              </div>
-            </div>
           </div>
       </div>
 
@@ -804,7 +640,6 @@ export function ItemForm({
             <span className="font-medium">Required fields missing:</span>
             <ul className="mt-1 ml-4 list-disc">
               {!item_name?.trim() && <li>Item name</li>}
-              {is_rentable && (!rental_period || rental_period < 1) && <li>Rental period (when available for rental)</li>}
             </ul>
           </AlertDescription>
         </Alert>

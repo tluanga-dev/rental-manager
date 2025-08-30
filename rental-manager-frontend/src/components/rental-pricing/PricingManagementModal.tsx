@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Trash2, Edit2, Plus, AlertCircle, Check } from 'lucide-react';
@@ -40,6 +41,7 @@ interface PricingManagementModalProps {
   itemId: string;
   itemName: string;
   currentDailyRate?: number;
+  onPricingUpdated?: () => void;
 }
 
 export function PricingManagementModal({
@@ -48,6 +50,7 @@ export function PricingManagementModal({
   itemId,
   itemName,
   currentDailyRate,
+  onPricingUpdated,
 }: PricingManagementModalProps) {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('existing');
@@ -63,9 +66,11 @@ export function PricingManagementModal({
   const [customTierName, setCustomTierName] = useState('');
   const [customPeriodType, setCustomPeriodType] = useState('DAILY');
   const [customPeriodDays, setCustomPeriodDays] = useState('1');
+  const [customPeriodHours, setCustomPeriodHours] = useState('1');
+  const [customPeriodUnit, setCustomPeriodUnit] = useState('DAY');
   const [customRate, setCustomRate] = useState('');
-  const [customMinDays, setCustomMinDays] = useState('');
-  const [customMaxDays, setCustomMaxDays] = useState('');
+  const [customMinPeriods, setCustomMinPeriods] = useState('');
+  const [customMaxPeriods, setCustomMaxPeriods] = useState('');
   const [customIsDefault, setCustomIsDefault] = useState(false);
   
   // Form states for editing
@@ -90,52 +95,100 @@ export function PricingManagementModal({
         },
       });
       
+      // Show success message
+      toast.success('Standard pricing tiers created successfully');
+      
       // Reset form and refresh
       setStandardDaily('');
       setWeeklyDiscount('10');
       setMonthlyDiscount('20');
       setActiveTab('existing');
       refetch();
-    } catch (error) {
+      // Notify parent component of pricing update
+      onPricingUpdated?.();
+    } catch (error: any) {
       console.error('Error creating standard pricing:', error);
+      
+      // Show user-friendly error message
+      const errorMessage = error?.response?.data?.detail || 
+                          error?.response?.data?.message || 
+                          error?.message || 
+                          'Failed to create standard pricing';
+      
+      toast.error(errorMessage);
     }
   };
 
   const handleCreateCustomPricing = async () => {
     try {
-      const periodDays = customPeriodType === 'DAILY' ? 1 :
-                        customPeriodType === 'WEEKLY' ? 7 :
-                        customPeriodType === 'MONTHLY' ? 30 :
-                        parseInt(customPeriodDays);
-
-      await rentalPricingApi.createPricingTier({
+      const pricingData: any = {
         item_id: itemId,
         tier_name: customTierName,
         period_type: customPeriodType,
-        period_days: periodDays,
+        period_unit: customPeriodUnit,
         rate_per_period: parseFloat(customRate),
-        min_rental_days: customMinDays ? parseInt(customMinDays) : null,
-        max_rental_days: customMaxDays ? parseInt(customMaxDays) : null,
         is_default: customIsDefault,
         is_active: true,
         priority: 100,
-      });
+      };
+
+      // Set period value based on unit
+      if (customPeriodUnit === 'DAY') {
+        const periodDays = customPeriodType === 'DAILY' ? 1 :
+                          customPeriodType === 'WEEKLY' ? 7 :
+                          customPeriodType === 'MONTHLY' ? 30 :
+                          parseInt(customPeriodDays);
+        pricingData.period_days = periodDays;
+        pricingData.period_hours = null;
+      } else {
+        // For HOUR unit
+        const periodHours = customPeriodType === 'HOURLY' ? 1 : parseInt(customPeriodHours);
+        pricingData.period_hours = periodHours;
+        pricingData.period_days = null;
+      }
+
+      // Set rental period constraints
+      if (customMinPeriods) {
+        pricingData.min_rental_periods = parseInt(customMinPeriods);
+      }
+      if (customMaxPeriods) {
+        pricingData.max_rental_periods = parseInt(customMaxPeriods);
+      }
+
+      console.log('Creating pricing tier with data:', pricingData);
+      
+      await rentalPricingApi.createPricingTier(pricingData);
+
+      // Show success message
+      toast.success('Pricing tier created successfully');
 
       // Reset form
       setCustomTierName('');
       setCustomPeriodType('DAILY');
       setCustomPeriodDays('1');
+      setCustomPeriodHours('1');
+      setCustomPeriodUnit('DAY');
       setCustomRate('');
-      setCustomMinDays('');
-      setCustomMaxDays('');
+      setCustomMinPeriods('');
+      setCustomMaxPeriods('');
       setCustomIsDefault(false);
       setActiveTab('existing');
       
       // Invalidate queries
       queryClient.invalidateQueries({ queryKey: ['rental-pricing'] });
       refetch();
-    } catch (error) {
+      // Notify parent component of pricing update
+      onPricingUpdated?.();
+    } catch (error: any) {
       console.error('Error creating custom pricing:', error);
+      
+      // Show user-friendly error message
+      const errorMessage = error?.response?.data?.detail || 
+                          error?.response?.data?.message || 
+                          error?.message || 
+                          'Failed to create pricing tier';
+      
+      toast.error(errorMessage);
     }
   };
 
@@ -152,6 +205,8 @@ export function PricingManagementModal({
       
       setEditingTier(null);
       refetch();
+      // Notify parent component of pricing update
+      onPricingUpdated?.();
     } catch (error) {
       console.error('Error updating tier:', error);
     }
@@ -162,6 +217,8 @@ export function PricingManagementModal({
       await deletePricingTier.mutateAsync(tierId);
       setDeleteConfirm(null);
       refetch();
+      // Notify parent component of pricing update
+      onPricingUpdated?.();
     } catch (error) {
       console.error('Error deleting tier:', error);
     }
@@ -229,7 +286,13 @@ export function PricingManagementModal({
                         </div>
                         <div className="grid grid-cols-3 gap-3">
                           <div>
-                            <Label htmlFor={`rate-${tier.id}`}>Rate per {tier.period_days} day(s)</Label>
+                            <Label htmlFor={`rate-${tier.id}`}>
+                              Rate per {tier.period_value || tier.period_days || tier.period_hours || 1}{' '}
+                              {tier.period_unit === 'HOUR' ? 
+                                `hour${(tier.period_value || tier.period_hours || 1) > 1 ? 's' : ''}` :
+                                `day${(tier.period_value || tier.period_days || 1) > 1 ? 's' : ''}`
+                              }
+                            </Label>
                             <Input
                               id={`rate-${tier.id}`}
                               type="number"
@@ -239,21 +302,23 @@ export function PricingManagementModal({
                             />
                           </div>
                           <div>
-                            <Label htmlFor={`min-${tier.id}`}>Min Days (optional)</Label>
+                            <Label htmlFor={`min-${tier.id}`}>Min Periods (optional)</Label>
                             <Input
                               id={`min-${tier.id}`}
                               type="number"
                               value={editMinDays}
                               onChange={(e) => setEditMinDays(e.target.value)}
+                              placeholder="Min rental periods"
                             />
                           </div>
                           <div>
-                            <Label htmlFor={`max-${tier.id}`}>Max Days (optional)</Label>
+                            <Label htmlFor={`max-${tier.id}`}>Max Periods (optional)</Label>
                             <Input
                               id={`max-${tier.id}`}
                               type="number"
                               value={editMaxDays}
                               onChange={(e) => setEditMaxDays(e.target.value)}
+                              placeholder="Max rental periods"
                             />
                           </div>
                         </div>
@@ -311,7 +376,13 @@ export function PricingManagementModal({
                         <div className="grid grid-cols-4 gap-4 text-sm">
                           <div>
                             <span className="text-muted-foreground">Period:</span>
-                            <p className="font-medium">{tier.period_days} day(s)</p>
+                            <p className="font-medium">
+                              {tier.period_value || tier.period_days || tier.period_hours || 1}{' '}
+                              {tier.period_unit === 'HOUR' ? 
+                                `hour${(tier.period_value || tier.period_hours || 1) > 1 ? 's' : ''}` :
+                                `day${(tier.period_value || tier.period_days || 1) > 1 ? 's' : ''}`
+                              }
+                            </p>
                           </div>
                           <div>
                             <span className="text-muted-foreground">Rate:</span>
@@ -320,13 +391,13 @@ export function PricingManagementModal({
                           <div>
                             <span className="text-muted-foreground">Daily Equivalent:</span>
                             <p className="font-medium">
-                              {formatCurrencySync(tier.daily_equivalent_rate || tier.rate_per_period / tier.period_days)}/day
+                              {formatCurrencySync(tier.daily_equivalent_rate || tier.rate_per_period / (tier.period_days || 1))}/day
                             </p>
                           </div>
                           <div>
                             <span className="text-muted-foreground">Rental Range:</span>
                             <p className="font-medium">
-                              {tier.min_rental_days || 1} - {tier.max_rental_days || '∞'} days
+                              {tier.min_rental_periods || tier.min_rental_days || 1} - {tier.max_rental_periods || tier.max_rental_days || '∞'} periods
                             </p>
                           </div>
                         </div>
@@ -428,11 +499,35 @@ export function PricingManagementModal({
                   id="tier-name"
                   value={customTierName}
                   onChange={(e) => setCustomTierName(e.target.value)}
-                  placeholder="e.g., Weekend Special"
+                  placeholder="e.g., Weekend Special, 4-Hour Block"
                 />
               </div>
               
               <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="period-unit">Period Unit</Label>
+                  <Select 
+                    value={customPeriodUnit} 
+                    onValueChange={(value) => {
+                      setCustomPeriodUnit(value);
+                      // Reset period type when switching units
+                      if (value === 'HOUR') {
+                        setCustomPeriodType('HOURLY');
+                      } else {
+                        setCustomPeriodType('DAILY');
+                      }
+                    }}
+                  >
+                    <SelectTrigger id="period-unit">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="HOUR">Hours</SelectItem>
+                      <SelectItem value="DAY">Days</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
                 <div>
                   <Label htmlFor="period-type">Period Type</Label>
                   <Select value={customPeriodType} onValueChange={setCustomPeriodType}>
@@ -440,31 +535,59 @@ export function PricingManagementModal({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="DAILY">Daily</SelectItem>
-                      <SelectItem value="WEEKLY">Weekly</SelectItem>
-                      <SelectItem value="MONTHLY">Monthly</SelectItem>
-                      <SelectItem value="CUSTOM">Custom</SelectItem>
+                      {customPeriodUnit === 'DAY' ? (
+                        <>
+                          <SelectItem value="DAILY">Daily</SelectItem>
+                          <SelectItem value="WEEKLY">Weekly</SelectItem>
+                          <SelectItem value="MONTHLY">Monthly</SelectItem>
+                          <SelectItem value="CUSTOM">Custom Days</SelectItem>
+                        </>
+                      ) : (
+                        <>
+                          <SelectItem value="HOURLY">Hourly</SelectItem>
+                          <SelectItem value="CUSTOM">Custom Hours</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
-                
-                <div>
-                  <Label htmlFor="period-days">
-                    {customPeriodType === 'CUSTOM' ? 'Period Days' : 'Period Days (auto)'}
-                  </Label>
-                  <Input
-                    id="period-days"
-                    type="number"
-                    value={
+              </div>
+              
+              <div>
+                <Label htmlFor="period-value">
+                  {customPeriodUnit === 'DAY' ? 
+                    (customPeriodType === 'CUSTOM' ? 'Number of Days' : 'Days (auto)') :
+                    (customPeriodType === 'CUSTOM' ? 'Number of Hours' : 'Hours (auto)')
+                  }
+                </Label>
+                <Input
+                  id="period-value"
+                  type="number"
+                  min="1"
+                  value={
+                    customPeriodUnit === 'DAY' ? (
                       customPeriodType === 'DAILY' ? '1' :
                       customPeriodType === 'WEEKLY' ? '7' :
                       customPeriodType === 'MONTHLY' ? '30' :
                       customPeriodDays
+                    ) : (
+                      customPeriodType === 'HOURLY' ? '1' :
+                      customPeriodHours
+                    )
+                  }
+                  onChange={(e) => {
+                    if (customPeriodUnit === 'DAY') {
+                      setCustomPeriodDays(e.target.value);
+                    } else {
+                      setCustomPeriodHours(e.target.value);
                     }
-                    onChange={(e) => setCustomPeriodDays(e.target.value)}
-                    disabled={customPeriodType !== 'CUSTOM'}
-                  />
-                </div>
+                  }}
+                  disabled={customPeriodType !== 'CUSTOM'}
+                  placeholder="e.g., 10 days, 4 hours, 11 days"
+                />
+                <p className="text-sm text-muted-foreground mt-1">
+                  Examples: {customPeriodUnit === 'DAY' ? '10 days, 11 days, 14 days' : '4 hours, 8 hours, 12 hours'}
+                </p>
               </div>
               
               <div>
@@ -481,25 +604,36 @@ export function PricingManagementModal({
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="min-rental">Min Rental Days (optional)</Label>
+                  <Label htmlFor="min-rental">Min Rental Periods (optional)</Label>
                   <Input
                     id="min-rental"
                     type="number"
-                    value={customMinDays}
-                    onChange={(e) => setCustomMinDays(e.target.value)}
-                    placeholder="e.g., 2"
+                    min="1"
+                    value={customMinPeriods}
+                    onChange={(e) => setCustomMinPeriods(e.target.value)}
+                    placeholder="e.g., 1"
                   />
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Minimum: 1 period = {customPeriodUnit === 'DAY' ? 
+                      `${customPeriodType === 'DAILY' ? '1' : customPeriodType === 'WEEKLY' ? '7' : customPeriodType === 'MONTHLY' ? '30' : customPeriodDays || '1'} day(s)` :
+                      `${customPeriodType === 'HOURLY' ? '1' : customPeriodHours || '1'} hour(s)`
+                    }
+                  </p>
                 </div>
                 
                 <div>
-                  <Label htmlFor="max-rental">Max Rental Days (optional)</Label>
+                  <Label htmlFor="max-rental">Max Rental Periods (optional)</Label>
                   <Input
                     id="max-rental"
                     type="number"
-                    value={customMaxDays}
-                    onChange={(e) => setCustomMaxDays(e.target.value)}
-                    placeholder="e.g., 7"
+                    min="1"
+                    value={customMaxPeriods}
+                    onChange={(e) => setCustomMaxPeriods(e.target.value)}
+                    placeholder="e.g., 5"
                   />
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Leave empty for unlimited rental duration
+                  </p>
                 </div>
               </div>
               
@@ -512,9 +646,46 @@ export function PricingManagementModal({
                 <Label htmlFor="is-default">Set as default tier</Label>
               </div>
               
+              {/* Show validation hints */}
+              {(!customTierName || !customRate || 
+                (customPeriodType === 'CUSTOM' && customPeriodUnit === 'DAY' && (!customPeriodDays || parseInt(customPeriodDays) < 1)) ||
+                (customPeriodType === 'CUSTOM' && customPeriodUnit === 'HOUR' && (!customPeriodHours || parseInt(customPeriodHours) < 1))) && (
+                <Alert className="mt-2">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="text-sm">
+                    {!customTierName && <div>• Please enter a tier name</div>}
+                    {!customRate && <div>• Please enter a rate per period</div>}
+                    {customPeriodType === 'CUSTOM' && customPeriodUnit === 'DAY' && (!customPeriodDays || parseInt(customPeriodDays) < 1) && (
+                      <div>• Please enter number of days (must be at least 1)</div>
+                    )}
+                    {customPeriodType === 'CUSTOM' && customPeriodUnit === 'HOUR' && (!customPeriodHours || parseInt(customPeriodHours) < 1) && (
+                      <div>• Please enter number of hours (must be at least 1)</div>
+                    )}
+                  </AlertDescription>
+                </Alert>
+              )}
+              
               <Button
-                onClick={handleCreateCustomPricing}
-                disabled={!customTierName || !customRate}
+                onClick={() => {
+                  console.log('Button clicked! Current state:', {
+                    customTierName,
+                    customRate,
+                    customPeriodType,
+                    customPeriodUnit,
+                    customPeriodDays,
+                    customPeriodHours,
+                    customMinPeriods,
+                    customMaxPeriods,
+                    customIsDefault
+                  });
+                  handleCreateCustomPricing();
+                }}
+                disabled={
+                  !customTierName || 
+                  !customRate || 
+                  (customPeriodType === 'CUSTOM' && customPeriodUnit === 'DAY' && (!customPeriodDays || parseInt(customPeriodDays) < 1)) ||
+                  (customPeriodType === 'CUSTOM' && customPeriodUnit === 'HOUR' && (!customPeriodHours || parseInt(customPeriodHours) < 1))
+                }
                 className="w-full"
               >
                 <Plus className="h-4 w-4 mr-2" />

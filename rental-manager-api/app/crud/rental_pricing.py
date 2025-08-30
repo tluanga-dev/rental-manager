@@ -89,8 +89,15 @@ class RentalPricingCRUD:
                     raise ConflictError(f"Item already has a default pricing tier: {existing_default.tier_name}")
             
             # Create pricing tier
+            # Ensure correct period values based on unit
+            pricing_data = obj_in.dict()
+            if pricing_data.get('period_unit') == 'HOUR':
+                pricing_data['period_days'] = None  # Explicitly set to None for HOUR unit
+            elif pricing_data.get('period_unit') == 'DAY':
+                pricing_data['period_hours'] = None  # Explicitly set to None for DAY unit
+            
             db_obj = RentalPricing(
-                **obj_in.dict(),
+                **pricing_data,
                 created_by=created_by
             )
             db.add(db_obj)

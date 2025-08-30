@@ -230,22 +230,22 @@ api.interceptors.response.use(
     }
 
     // Enhanced error logging for debugging
-    const logErrorDetails = (error: AxiosError) => {
+    const logErrorDetails = (error: AxiosError, request?: any) => {
       const timestamp = new Date().toISOString();
-      const requestId = originalRequest?.headers?.['X-Request-ID'] || 'unknown';
+      const requestId = request?.headers?.['X-Request-ID'] || error.config?.headers?.['X-Request-ID'] || 'unknown';
       
       console.group(`🚨 API Error [${timestamp}]`);
       console.error('Request ID:', requestId);
-      console.error('Endpoint:', `${originalRequest?.method?.toUpperCase()} ${originalRequest?.url}`);
+      console.error('Endpoint:', `${error.config?.method?.toUpperCase()} ${error.config?.url}`);
       console.error('Status Code:', error.response?.status);
       console.error('Status Text:', error.response?.statusText);
       
       // Log request details
-      if (originalRequest) {
+      if (error.config) {
         console.group('📤 Request Details');
-        console.log('Headers:', originalRequest.headers);
-        if (originalRequest.data) {
-          console.log('Body:', originalRequest.data);
+        console.log('Headers:', error.config.headers);
+        if (error.config.data) {
+          console.log('Body:', error.config.data);
         }
         console.groupEnd();
       }
@@ -282,7 +282,7 @@ api.interceptors.response.use(
     };
 
     // Log detailed error information
-    logErrorDetails(error);
+    logErrorDetails(error, originalRequest);
 
     // Handle specific error responses
     if (error.response?.status === 403) {

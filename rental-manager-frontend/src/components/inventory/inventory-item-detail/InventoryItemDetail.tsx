@@ -332,6 +332,10 @@ export function InventoryItemDetail({ itemId, itemSku }: InventoryItemDetailProp
           itemId={item.item_id}
           itemName={item.item_name}
           currentDailyRate={item.rental_rate}
+          onPricingUpdated={() => {
+            // Refresh item data to pick up updated pricing
+            refetchItem();
+          }}
         />
       )}
     </div>

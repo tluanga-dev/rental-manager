@@ -12,6 +12,7 @@ class ItemBase(BaseModel):
     sku: Optional[str] = Field(None, min_length=1, max_length=50, description="Stock Keeping Unit")
     description: Optional[str] = Field(None, max_length=5000, description="Detailed item description")
     short_description: Optional[str] = Field(None, max_length=500, description="Brief description")
+    model_number: Optional[str] = Field(None, max_length=100, description="Model number")
     brand_id: Optional[UUID] = Field(None, description="Brand ID")
     category_id: Optional[UUID] = Field(None, description="Category ID")
     unit_of_measurement_id: Optional[UUID] = Field(None, description="Unit of measurement ID")
@@ -31,9 +32,6 @@ class ItemBase(BaseModel):
     
     # Pricing
     cost_price: Optional[Decimal] = Field(None, ge=0, description="Cost price")
-    sale_price: Optional[Decimal] = Field(None, ge=0, description="Sale price")
-    rental_rate_per_day: Optional[Decimal] = Field(None, ge=0, description="Daily rental rate")
-    security_deposit: Optional[Decimal] = Field(None, ge=0, description="Security deposit amount")
     
     # Inventory management
     reorder_level: Optional[int] = Field(None, ge=0, description="Minimum stock level")
@@ -44,9 +42,8 @@ class ItemBase(BaseModel):
     notes: Optional[str] = Field(None, max_length=5000, description="Additional notes")
     tags: Optional[str] = Field(None, max_length=1000, description="Comma-separated tags")
     
-    # Maintenance and warranty
+    # Maintenance
     last_maintenance_date: Optional[datetime] = Field(None, description="Last maintenance date")
-    warranty_expiry_date: Optional[datetime] = Field(None, description="Warranty expiry date")
     
     @field_validator('item_name')
     @classmethod
@@ -64,7 +61,7 @@ class ItemBase(BaseModel):
             return v.strip().upper()
         return v
     
-    @field_validator('cost_price', 'sale_price')
+    @field_validator('cost_price')
     @classmethod
     def validate_pricing(cls, v, info):
         """Validate pricing relationships."""
@@ -91,9 +88,6 @@ class ItemBase(BaseModel):
         if not self.is_rentable and not self.is_salable:
             raise ValueError('Item must be either rentable or salable (or both)')
         
-        if self.cost_price and self.sale_price:
-            if self.sale_price <= self.cost_price:
-                raise ValueError('Sale price must be greater than cost price')
 
 
 class ItemCreate(ItemBase):
@@ -108,6 +102,7 @@ class ItemUpdate(BaseModel):
     sku: Optional[str] = Field(None, min_length=1, max_length=50, description="Stock Keeping Unit")
     description: Optional[str] = Field(None, max_length=5000, description="Detailed item description")
     short_description: Optional[str] = Field(None, max_length=500, description="Brief description")
+    model_number: Optional[str] = Field(None, max_length=100, description="Model number")
     brand_id: Optional[UUID] = Field(None, description="Brand ID")
     category_id: Optional[UUID] = Field(None, description="Category ID")
     unit_of_measurement_id: Optional[UUID] = Field(None, description="Unit of measurement ID")
@@ -127,9 +122,6 @@ class ItemUpdate(BaseModel):
     
     # Pricing
     cost_price: Optional[Decimal] = Field(None, ge=0, description="Cost price")
-    sale_price: Optional[Decimal] = Field(None, ge=0, description="Sale price")
-    rental_rate_per_day: Optional[Decimal] = Field(None, ge=0, description="Daily rental rate")
-    security_deposit: Optional[Decimal] = Field(None, ge=0, description="Security deposit amount")
     
     # Inventory management
     reorder_level: Optional[int] = Field(None, ge=0, description="Minimum stock level")
@@ -141,9 +133,8 @@ class ItemUpdate(BaseModel):
     tags: Optional[str] = Field(None, max_length=1000, description="Comma-separated tags")
     is_active: Optional[bool] = Field(None, description="Item active status")
     
-    # Maintenance and warranty
+    # Maintenance
     last_maintenance_date: Optional[datetime] = Field(None, description="Last maintenance date")
-    warranty_expiry_date: Optional[datetime] = Field(None, description="Warranty expiry date")
     
     @field_validator('item_name')
     @classmethod
@@ -196,7 +187,6 @@ class ItemResponse(ItemBase):
     profit_margin: Optional[Decimal] = Field(None, description="Profit margin percentage")
     dimensions: Optional[str] = Field(None, description="Formatted dimensions string")
     is_maintenance_due: bool = Field(False, description="Whether maintenance is due")
-    is_warranty_expired: bool = Field(False, description="Whether warranty has expired")
     can_be_rented: bool = Field(False, description="Whether item can currently be rented")
     can_be_sold: bool = Field(False, description="Whether item can currently be sold")
     
@@ -220,8 +210,6 @@ class ItemSummary(BaseModel):
     category_id: Optional[UUID] = Field(None, description="Category ID")
     is_rentable: bool = Field(True, description="Whether item can be rented")
     is_salable: bool = Field(True, description="Whether item can be sold")
-    sale_price: Optional[Decimal] = Field(None, description="Sale price")
-    rental_rate_per_day: Optional[Decimal] = Field(None, description="Daily rental rate")
     status: str = Field(..., description="Item status")
     is_active: bool = Field(True, description="Item active status")
     created_at: datetime = Field(..., description="Item creation timestamp")
@@ -264,10 +252,6 @@ class ItemFilter(BaseModel):
     is_rental_blocked: Optional[bool] = Field(None, description="Filter by rental blocking status")
     
     # Price range filters
-    min_sale_price: Optional[Decimal] = Field(None, ge=0, description="Minimum sale price")
-    max_sale_price: Optional[Decimal] = Field(None, ge=0, description="Maximum sale price")
-    min_rental_rate: Optional[Decimal] = Field(None, ge=0, description="Minimum rental rate")
-    max_rental_rate: Optional[Decimal] = Field(None, ge=0, description="Maximum rental rate")
     
     # Date filters
     created_after: Optional[datetime] = Field(None, description="Filter by creation date (after)")
@@ -307,7 +291,7 @@ class ItemSort(BaseModel):
     def validate_field(cls, v):
         allowed_fields = [
             'item_name', 'sku', 'created_at', 'updated_at', 'status', 'is_active',
-            'sale_price', 'rental_rate_per_day', 'cost_price', 'brand_name', 'category_name'
+            'cost_price', 'brand_name', 'category_name'
         ]
         if v not in allowed_fields:
             raise ValueError(f'Sort field must be one of: {", ".join(allowed_fields)}')
@@ -332,7 +316,6 @@ class ItemStats(BaseModel):
     both_rentable_salable: int = Field(..., description="Items that are both rentable and salable")
     rental_blocked_items: int = Field(..., description="Number of rental blocked items")
     maintenance_due_items: int = Field(..., description="Items with maintenance due")
-    warranty_expired_items: int = Field(..., description="Items with expired warranty")
     
     # By category/brand stats
     items_by_category: List[dict] = Field(..., description="Item count by category")
@@ -340,8 +323,6 @@ class ItemStats(BaseModel):
     items_by_status: List[dict] = Field(..., description="Item count by status")
     
     # Pricing stats
-    avg_sale_price: Optional[Decimal] = Field(None, description="Average sale price")
-    avg_rental_rate: Optional[Decimal] = Field(None, description="Average rental rate")
     avg_cost_price: Optional[Decimal] = Field(None, description="Average cost price")
     total_inventory_value: Optional[Decimal] = Field(None, description="Total inventory value")
 
@@ -420,6 +401,7 @@ class ItemExport(BaseModel):
     sku: str
     description: Optional[str]
     short_description: Optional[str]
+    model_number: Optional[str]
     brand_name: Optional[str]
     category_name: Optional[str]
     category_path: Optional[str]
@@ -432,9 +414,6 @@ class ItemExport(BaseModel):
     is_salable: bool
     requires_serial_number: bool
     cost_price: Optional[Decimal]
-    sale_price: Optional[Decimal]
-    rental_rate_per_day: Optional[Decimal]
-    security_deposit: Optional[Decimal]
     profit_margin: Optional[Decimal]
     reorder_level: Optional[int]
     maximum_stock_level: Optional[int]
@@ -457,6 +436,7 @@ class ItemImport(BaseModel):
     sku: Optional[str] = Field(None, min_length=1, max_length=50)
     description: Optional[str] = Field(None, max_length=5000)
     short_description: Optional[str] = Field(None, max_length=500)
+    model_number: Optional[str] = Field(None, max_length=100)
     brand_name: Optional[str] = Field(None, description="Brand name (will be resolved to ID)")
     category_name: Optional[str] = Field(None, description="Category name (will be resolved to ID)")
     unit_name: Optional[str] = Field(None, description="Unit name (will be resolved to ID)")
@@ -476,9 +456,6 @@ class ItemImport(BaseModel):
     
     # Pricing
     cost_price: Optional[Decimal] = Field(None, ge=0)
-    sale_price: Optional[Decimal] = Field(None, ge=0)
-    rental_rate_per_day: Optional[Decimal] = Field(None, ge=0)
-    security_deposit: Optional[Decimal] = Field(None, ge=0)
     
     # Inventory
     reorder_level: Optional[int] = Field(None, ge=0)
@@ -519,9 +496,6 @@ class ItemImport(BaseModel):
         if not self.is_rentable and not self.is_salable:
             raise ValueError('Item must be either rentable or salable (or both)')
         
-        if self.cost_price and self.sale_price:
-            if self.sale_price <= self.cost_price:
-                raise ValueError('Sale price must be greater than cost price')
 
 
 class ItemImportResult(BaseModel):
@@ -572,15 +546,9 @@ class ItemPricingUpdate(BaseModel):
     """Schema for updating item pricing."""
     
     cost_price: Optional[Decimal] = Field(None, ge=0, description="New cost price")
-    sale_price: Optional[Decimal] = Field(None, ge=0, description="New sale price")
-    rental_rate_per_day: Optional[Decimal] = Field(None, ge=0, description="New rental rate")
-    security_deposit: Optional[Decimal] = Field(None, ge=0, description="New security deposit")
     
     def model_post_init(self, __context) -> None:
         """Validate pricing relationships."""
-        if self.cost_price and self.sale_price:
-            if self.sale_price <= self.cost_price:
-                raise ValueError('Sale price must be greater than cost price')
 
 
 class ItemDuplicate(BaseModel):

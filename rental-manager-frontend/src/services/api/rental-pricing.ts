@@ -8,14 +8,21 @@ export interface RentalPricingTier {
   item_id: string;
   tier_name: string;
   period_type: 'HOURLY' | 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'CUSTOM';
-  period_days: number;
+  period_days?: number;  // Optional for HOUR unit
+  period_hours?: number; // For HOUR unit
+  period_unit?: 'HOUR' | 'DAY'; // Unit of measure
+  period_value?: number; // Computed value (days or hours)
   rate_per_period: number;
-  min_rental_days?: number;
-  max_rental_days?: number;
+  min_rental_days?: number; // Deprecated
+  max_rental_days?: number; // Deprecated
+  min_rental_periods?: number; // New period-based constraint
+  max_rental_periods?: number; // New period-based constraint
   is_default: boolean;
   is_active: boolean;
   priority: number;
   daily_equivalent_rate?: number;
+  display_name?: string;
+  duration_description?: string;
 }
 
 export interface RentalPricingCalculation {
