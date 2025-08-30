@@ -84,8 +84,11 @@ class ItemService:
         # Create item
         item = await self.repository.create(create_data)
         
+        # Get the created item with relationships loaded
+        item_with_relations = await self.repository.get_by_id(item.id, include_relations=True)
+        
         # Convert to response
-        return await self._to_response(item)
+        return await self._to_response(item_with_relations)
     
     async def get_item(self, item_id: UUID) -> ItemResponse:
         """Get item by ID.
@@ -193,7 +196,10 @@ class ItemService:
         if not updated_item:
             raise NotFoundError(f"Item with id {item_id} not found")
         
-        return await self._to_response(updated_item)
+        # Get the updated item with relationships loaded
+        item_with_relations = await self.repository.get_by_id(updated_item.id, include_relations=True)
+        
+        return await self._to_response(item_with_relations)
     
     async def delete_item(self, item_id: UUID) -> bool:
         """Soft delete an item.
@@ -450,7 +456,10 @@ class ItemService:
         # Save changes
         await self.repository.update(item_id, pricing_data)
         
-        return await self._to_response(item)
+        # Get the updated item with relationships loaded
+        item_with_relations = await self.repository.get_by_id(item_id, include_relations=True)
+        
+        return await self._to_response(item_with_relations)
     
     async def duplicate_item(
         self,
@@ -531,7 +540,10 @@ class ItemService:
         # Create the new item
         new_item = await self.repository.create(new_item_data)
         
-        return await self._to_response(new_item)
+        # Get the created item with relationships loaded
+        item_with_relations = await self.repository.get_by_id(new_item.id, include_relations=True)
+        
+        return await self._to_response(item_with_relations)
     
     async def bulk_operation(
         self,
